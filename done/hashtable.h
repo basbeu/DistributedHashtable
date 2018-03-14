@@ -15,16 +15,11 @@
 /*
  * Definition of type for local hash-tables keys
  */
-/* TODO WEEK 04:
- * Définir ici le type pps_key_t (et supprimer ces trois lignes de commentaire).
- */
-
+typedef char pps_key_t;
 /*
  * Definition of type for local hash-tables values
  */
-/* TODO WEEK 04:
- * Définir ici le type pps_value_t (et supprimer ces trois lignes de commentaire).
- */
+typedef int32_t pps_value_t;
 
 /*
  * key-value pair
@@ -32,6 +27,10 @@
 /* TODO WEEK 04:
  * Définir ici le type kv_pair_t (et...).
  */
+typedef struct {
+	pps_key_t key;
+	pps_value_t value;
+} kv_pair_t;
 
 /*
  * Definition of type for local hash-tables buckets
@@ -39,6 +38,7 @@
 /* TODO WEEK 04:
  * Définir ici le type bucket_t (et...).
  */
+typedef pps_value_t bucket_t;
 
 /*
  * Definition of local hash-table type
@@ -47,6 +47,7 @@
 /* TODO WEEK 04:
  * Définir ici le type Htable_t (et...).
  */
+typedef bucket_t Htable_t[HTABLE_SIZE];
 
 // Only from week 07
 #define NO_HTABLE ((Htable_t) NULL)
@@ -66,8 +67,7 @@ typedef void kv_list_t;
  * Définir le bon type de retour ici
  * (remplacer void et ces 4 lignes de commentaire).
  */
-void
-construct_Htable(size_t size);
+void construct_Htable(size_t size);
 
 /**
  * @brief delete the given hash-table
