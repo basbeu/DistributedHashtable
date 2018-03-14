@@ -1,10 +1,8 @@
-LDLIBS = -lcheck -lm -lrt -pthread
+LDLIBS = -lcheck -lm -lrt -pthread -lsubunit
 
-all: hashtable week04
+all: week04 clean
 
-hashtable: hashtable.o error.o
-	gcc -o hashtable hashtable.o error.o $(LDLIBS)
-week04: week04.o
+week04: week04.o hashtable.o error.o
 	gcc -o week04 week04.o $(LDLIBS)
 
 
@@ -13,4 +11,4 @@ week04.o: week04.c tests.h hashtable.h
 error.o: error.c error.h
 
 clean :
-	rm edit hashtable.o week04.o
+	rm error.o hashtable.o week04.o
