@@ -23,5 +23,9 @@ pps_value_t get_Htable_value(Htable_t table, pps_key_t key){
 }
 
 size_t hash_function(pps_key_t key, size_t table_size){
+	if(table_size > HTABLE_SIZE){
+		return 0;
+	}
+	
 	return key % table_size;
 }
