@@ -3,7 +3,7 @@ LDLIBS = -lcheck -lm -lrt -pthread -lsubunit
 all: week04 clean
 
 week04: week04.o hashtable.o error.o
-	gcc -o week04 week04.o $(LDLIBS)
+	gcc -o week04 week04.o hashtable.o $(LDLIBS)
 
 
 hashtable.o: hashtable.c error.h hashtable.h

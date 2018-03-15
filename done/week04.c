@@ -15,7 +15,15 @@
 
 START_TEST(add_value_does_retrieve_same_value)
 {
-    puts("Ecrivez ici vos tests et SUPPRIMEZ ce puts");
+    Htable_t table;
+
+	const pps_key_t cle = 'c';
+	const pps_value_t valeur_mise = 42;
+	add_Htable_value(table, cle, valeur_mise);
+
+	const pps_value_t valeur_lue = get_Htable_value(table, cle);
+
+	ck_assert_int_eq(valeur_mise, valeur_lue);
 }
 END_TEST
 
