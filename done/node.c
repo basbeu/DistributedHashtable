@@ -11,9 +11,9 @@
 #include "node.h"
  
 error_code node_init(node_t *node, const char *ip, uint16_t port, size_t _unused node_id){
-	if(node == NULL){
-		return ERR_BAD_PARAMETER;
-	}
+	M_REQUIRE_NON_NULL(node);
+	M_REQUIRE_NON_NULL(ip);
+	
 	struct sockaddr_in srv_addr;
 	
 	error_code err = get_server_addr(ip, port, &srv_addr);

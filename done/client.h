@@ -22,6 +22,11 @@
  * Définir ici le type client_t
  * (et supprimer ces trois lignes de commentaire).
  */
+ typedef struct{
+	 const char* name;
+	 node_t node;
+	 int socket;
+}client_t;
 
 /**
  * @brief client_init function arguments.
@@ -31,6 +36,10 @@
  * Définir ici le type client_init_args_t
  * (et supprimer ces trois lignes de commentaire).
  */
+ typedef struct{
+	 client_t* client;
+	 const char* name;
+}client_init_args_t;
 
 /**
  * @brief does all the work to be done at the end of life of a client
@@ -43,4 +52,4 @@ void client_end(client_t *client);
  * @param client the client to initialize
  * @return some error code, if any.
  */
-error_code client_init(client_init_args_t);
+error_code client_init(client_init_args_t client_to_init);
