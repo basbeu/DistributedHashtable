@@ -16,10 +16,9 @@
 /**
  * @brief node data structure
  */
-/* TODO WEEK 05:
- * Définir ici le type node_t
- * (et supprimer ces trois lignes de commentaire).
- */
+ typedef struct{
+	 struct sockaddr_in srv_addr;
+}node_t;
 
 /**
  * @brief node initialization function
