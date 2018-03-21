@@ -19,6 +19,7 @@
 
 #include "system.h"
 #include "config.h"
+#include "hashtable.h"
 
 int main(void){
 
@@ -33,7 +34,7 @@ int main(void){
         socklen_t addr_len = sizeof(cli_addr);
         memset(&cli_addr, 0, addr_len);
         unsigned long int in_msg;
-        ssize_t in_msg_len = recvfrom(s, &in_msg, sizeof(in_msg), 0,
+        ssize_t in_msg_len = recvfrom(socket, &in_msg, sizeof(in_msg), 0,
                                       (struct sockaddr *) &cli_addr, &addr_len);
                    
          unsigned long int request = ntohl(in_msg); 
@@ -66,7 +67,7 @@ int main(void){
 		}
 		
 		unsigned int out_msg = htonl(response);
-		sendto(s, &out_msg, out_msg_len, 0, (struct sockaddr *) &cli_addr, addr_len);
+		sendto(socket, &out_msg, out_msg_len, 0, (struct sockaddr *) &cli_addr, addr_len);
 			
 	}
 

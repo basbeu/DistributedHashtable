@@ -45,7 +45,7 @@
 		
 	}while(!ferror(stdin));
  
-	client_end(client);
+	client_end(&client);
 	
 	return 0;
  }
