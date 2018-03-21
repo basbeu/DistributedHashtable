@@ -8,6 +8,7 @@
  
  #include "client.h"
  #include "system.h"
+ #include "config.h"
 
 void client_end(client_t *client){
 	node_end(&client->node);

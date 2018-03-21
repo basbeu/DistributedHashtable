@@ -7,7 +7,6 @@
  */
   
 #include "system.h"
-#include "error.h"
 #include "node.h"
  
 error_code node_init(node_t *node, const char *ip, uint16_t port, size_t _unused node_id){
@@ -20,4 +19,8 @@ error_code node_init(node_t *node, const char *ip, uint16_t port, size_t _unused
 	node->srv_addr = srv_addr;
 	
 	return err;
+}
+
+void node_end(node_t *node){
+
 }

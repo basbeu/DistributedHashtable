@@ -18,10 +18,6 @@
 /**
  * @brief client state
  */
-/* TODO WEEK 05:
- * Définir ici le type client_t
- * (et supprimer ces trois lignes de commentaire).
- */
  typedef struct{
 	 const char* name;
 	 node_t node;
@@ -31,10 +27,6 @@
 /**
  * @brief client_init function arguments.
  *        To be defined in week 05 and THEN UPDATED in week 10.
- */
-/* TODO WEEK 05:
- * Définir ici le type client_init_args_t
- * (et supprimer ces trois lignes de commentaire).
  */
  typedef struct{
 	 client_t* client;
