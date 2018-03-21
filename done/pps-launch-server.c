@@ -33,11 +33,11 @@ int main(void){
 		struct sockaddr_in cli_addr;
         socklen_t addr_len = sizeof(cli_addr);
         memset(&cli_addr, 0, addr_len);
-        unsigned long int in_msg;
+        unsigned long in_msg;
         ssize_t in_msg_len = recvfrom(socket, &in_msg, sizeof(in_msg), 0,
                                       (struct sockaddr *) &cli_addr, &addr_len);
                    
-         unsigned long int request = ntohl(in_msg); 
+         unsigned long request = ntohl(in_msg); 
          
         //Declare response       
         pps_value_t response = 0;

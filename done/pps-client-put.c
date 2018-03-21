@@ -27,23 +27,39 @@
 	 
 	pps_key_t key = 0;
 	pps_value_t value = 0;
+	
+	int j1 = 0;
+	int j2 = 0;
  
 	do{
-		int j1 = 0;
-		int j2 = 0;
+		
 		j1 = scanf("%c", &key);
-		j2 = scanf("%d", &value);
-		if(j1 != 1 || j2 != 1){
+		if(j1 != 1){
 			printf("FAIL\n");
-		}
-		else{
-			pair.key = key;
-			pair.value = value;
-			network_put(client, pair.key, pair.value);
-			printf("OK\n");
+			while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
 		}
 		
-	}while(!ferror(stdin));
+		else{
+			j2 = scanf("%d", &value);
+			
+			printf("j1 : %d, j2 : %d", key, value);
+			
+			if(j2 != 1){
+				printf("FAIL\n");
+				while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
+			}
+			
+			else{
+				pair.key = key;
+				pair.value = value;
+				network_put(client, pair.key, pair.value);
+				printf("OK\n");
+				while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
+			}
+		}
+		
+		
+	}while(!feof(stdin) && !ferror(stdin) && j1 != -1 && j2 != -1);
  
 	client_end(&client);
 	
