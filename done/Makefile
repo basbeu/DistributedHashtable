@@ -28,4 +28,4 @@ week04.o: week04.c tests.h hashtable.h
 error.o: error.c error.h
 
 clean :
-	rm error.o hashtable.o week04.o
+	rm error.o hashtable.o week04.o pps-client-put.o pps-client-get.o pps-launch-server.o system.o client.o network.o node.o
