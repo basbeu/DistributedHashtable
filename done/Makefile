@@ -1,5 +1,5 @@
 LDLIBS = -lcheck -lm -lrt -pthread -lsubunit
-LDFLAGS = -DDEBUG
+CFLAGS = -DDEBUG
 
 all: week04 pps-client-put pps-client-get pps-launch-server clean
 

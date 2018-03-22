@@ -51,6 +51,7 @@ int main(void){
 			pps_key_t key = request>>32;
 			pps_value_t value = request;
 			add_Htable_value(table, key, value);
+			debug_print("key : %d value : ", key,value);
 						
 		}
 		
