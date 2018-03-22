@@ -33,11 +33,18 @@ int main(void){
 		struct sockaddr_in cli_addr;
         socklen_t addr_len = sizeof(cli_addr);
         memset(&cli_addr, 0, addr_len);
-        unsigned long in_msg;
+        char in_msg[5];
         ssize_t in_msg_len = recvfrom(socket, &in_msg, sizeof(in_msg), 0,
                                       (struct sockaddr *) &cli_addr, &addr_len);
-                   
-         unsigned long request = ntohl(in_msg); 
+         
+         pps_key_t key = in_msg[0];
+         pps_value_t request = 0;
+                     
+         //unsigned long request = ntohl(in_msg); 
+         for(size_t i = 1; i < 5; ++i){
+			request <<= 8;
+			request = request|in_msg[i];
+		 }
          
         //Declare response       
         pps_value_t response = 0;
@@ -47,17 +54,20 @@ int main(void){
         
                 
 		//Writing request
-		if(in_msg_len == 5){
-			pps_key_t key = request>>32;
-			pps_value_t value = request;
+		if(in_msg_len == 5){			
+			//pps_key_t key = (pps_key_t)(request>>32);
+			//pps_value_t value = (pps_value_t) request;
+			debug_print("key : %d value : %d", key,request);
+			
+			pps_value_t value = ntohl(request);
 			add_Htable_value(table, key, value);
-			debug_print("key : %d value : ", key,value);
+			debug_print("key : %d value : %d", key,value);
 						
 		}
 		
 		//Reading request
 		else if(in_msg_len == 1){
-			pps_key_t key = request;
+			//pps_key_t key = request;
 			response = get_Htable_value(table, key);
 			out_msg_len = sizeof(response);			
 		}
