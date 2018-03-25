@@ -39,6 +39,9 @@ int main(void){
          
          pps_key_t key = in_msg[0];
          pps_value_t request = 0;
+         
+         //CONVERT KEY HERE
+			key = ntohl(key);
                      
          //unsigned long request = ntohl(in_msg); 
          for(size_t i = 1; i < 5; ++i){
@@ -58,6 +61,7 @@ int main(void){
 			//pps_key_t key = (pps_key_t)(request>>32);
 			//pps_value_t value = (pps_value_t) request;
 			debug_print("key : %d value : %d", key,request);
+			
 			
 			pps_value_t value = ntohl(request);
 			add_Htable_value(table, key, value);
