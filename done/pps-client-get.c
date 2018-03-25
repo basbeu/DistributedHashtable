@@ -24,7 +24,7 @@
 	client_init(args);
 	 
 	pps_key_t key = 0;
-	pps_key_t value = 0;
+	pps_value_t value = 0;
 	int j = 0;
  
 	do{

@@ -65,7 +65,7 @@ int main(void){
 		
 		//Wrong request
 		else{
-			debug_print("Wrong size of request, expected was 1 or 5, actual is %d.\n", in_msg_len);
+			debug_print("Wrong size of request, expected was 1 or 5, actual is %ld.\n", in_msg_len);
 		}
 		
 		unsigned int out_msg = htonl(response);
