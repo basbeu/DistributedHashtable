@@ -29,15 +29,6 @@
  
 	do{
 		j = scanf("%c", &key);
-		/*if(j != 1){
-			printf("FAIL\n");
-			while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
-		}
-		else{
-			network_get(client, key, &value);
-			printf("OK %d\n", value);
-			while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
-		}*/
 		if(j != -1){
 			error_code err = network_get(client, key, &value);
 			if(err == ERR_NONE){

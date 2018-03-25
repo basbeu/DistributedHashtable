@@ -39,8 +39,7 @@ int main(void){
          
          pps_key_t key = in_msg[0];
          pps_value_t request = 0;
-                              
-         //unsigned long request = ntohl(in_msg); 
+                               
          for(size_t i = 1; i < 5; ++i){
 			request <<= 8;
 			request = request|in_msg[i];
@@ -51,24 +50,15 @@ int main(void){
         
         //Declare size of response
         size_t out_msg_len = 0;
-        
                 
 		//Writing request
-		if(in_msg_len == 5){			
-			//pps_key_t key = (pps_key_t)(request>>32);
-			//pps_value_t value = (pps_value_t) request;
-			debug_print("key : %d value : %d", key,request);
-			
-			
+		if(in_msg_len == 5){		
 			pps_value_t value = ntohl(request);
-			add_Htable_value(table, key, value);
-			debug_print("key : %d value : %d", key,value);
-						
+			add_Htable_value(table, key, value);	
 		}
 		
 		//Reading request
 		else if(in_msg_len == 1){
-			//pps_key_t key = request;
 			response = get_Htable_value(table, key);
 			out_msg_len = sizeof(response);			
 		}
@@ -79,8 +69,7 @@ int main(void){
 		}
 		
 		unsigned int out_msg = htonl(response);
-		sendto(socket, &out_msg, out_msg_len, 0, (struct sockaddr *) &cli_addr, addr_len);
-			
+		sendto(socket, &out_msg, out_msg_len, 0, (struct sockaddr *) &cli_addr, addr_len);	
 	}
 
 	return 0;
