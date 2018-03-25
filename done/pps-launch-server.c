@@ -39,10 +39,7 @@ int main(void){
          
          pps_key_t key = in_msg[0];
          pps_value_t request = 0;
-         
-         //CONVERT KEY HERE
-			key = ntohl(key);
-                     
+                              
          //unsigned long request = ntohl(in_msg); 
          for(size_t i = 1; i < 5; ++i){
 			request <<= 8;
