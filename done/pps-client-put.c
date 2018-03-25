@@ -32,7 +32,6 @@
 	int j2 = 0;
  
 	do{
-		
 		j1 = scanf("%c", &key);
 		j2 = scanf("%d", &value);
 		/*if(j1 != 1){
@@ -73,7 +72,7 @@
 		
 		while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
 		
-	}while(!feof(stdin) && !ferror(stdin) && j1 != -1 && j2 != -1);
+	}while(!feof(stdin) && !ferror(stdin)); //&& j1 != -1 && j2 != -1);
  
 	client_end(&client);
 	

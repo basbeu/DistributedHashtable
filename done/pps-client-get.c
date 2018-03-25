@@ -25,9 +25,9 @@
 	 
 	pps_key_t key = 0;
 	pps_key_t value = 0;
+	int j = 0;
  
 	do{
-		int j = 0;
 		j = scanf("%c", &key);
 		/*if(j != 1){
 			printf("FAIL\n");
@@ -48,7 +48,7 @@
 			}			
 		}	
 		while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
-	}while(!feof(stdin) && !ferror(stdin) && j != -1);
+	}while(!feof(stdin) && !ferror(stdin));
  
 	client_end(&client);
 	
