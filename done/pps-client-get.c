@@ -29,7 +29,7 @@
 	do{
 		int j = 0;
 		j = scanf("%c", &key);
-		if(j != 1){
+		/*if(j != 1){
 			printf("FAIL\n");
 			while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
 		}
@@ -37,9 +37,18 @@
 			network_get(client, key, &value);
 			printf("OK %d\n", value);
 			while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
-		}
-		
-	}while(!feof(stdin) && !ferror(stdin) );
+		}*/
+		if(j != -1){
+			error_code err = network_get(client, key, &value);
+			if(err == ERR_NONE){
+				printf("OK %d\n", value);
+			}
+			else{
+				printf("FAIL\n");
+			}			
+		}	
+		while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
+	}while(!feof(stdin) && !ferror(stdin) && j != -1);
  
 	client_end(&client);
 	

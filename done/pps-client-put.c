@@ -34,7 +34,8 @@
 	do{
 		
 		j1 = scanf("%c", &key);
-		if(j1 != 1){
+		j2 = scanf("%d", &value);
+		/*if(j1 != 1){
 			printf("FAIL\n");
 			while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
 		}
@@ -45,7 +46,7 @@
 			printf("j1 : %d, j2 : %d", key, value);
 			
 			if(j2 != 1){
-				printf("FAIL\n");
+				
 				while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
 			}
 			
@@ -56,8 +57,21 @@
 				printf("OK\n");
 				while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
 			}
+		}*/
+		
+		if(j1 != -1 && j2 != -1){
+			pair.key = key;
+			pair.value = value;
+			error_code err = network_put(client, pair.key, pair.value);
+			if(err == ERR_NONE){
+				printf("OK\n");
+			}
+			else{
+				printf("FAIL\n");
+			}			
 		}
 		
+		while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
 		
 	}while(!feof(stdin) && !ferror(stdin) && j1 != -1 && j2 != -1);
  
