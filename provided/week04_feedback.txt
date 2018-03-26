@@ -1,0 +1,24 @@
+Submission correctly tagged with: 'week04' (sha: 6296b6cdcfdf242e959fbe601df43ed02e1e4b69)
+--------
+Checking for expected files
+Found expected file done/tests.h on tag week04
+Found expected file done/system.h on master, not on tag week04
+Found expected file done/config.h on master, not on tag week04
+Found expected file done/network.h on master, not on tag week04
+Found expected file done/hashtable.c on tag week04
+Found expected file done/Makefile on tag week04
+Found expected file done/client.h on master, not on tag week04
+Found expected file done/util.c on master, not on tag week04
+Found expected file done/week04.c on tag week04
+Found expected file done/util.h on master, not on tag week04
+Found expected file done/node_list.h on master, not on tag week04
+Found expected file done/ring.h on master, not on tag week04
+Didn't find expected file done/test-hashtable.c on master or on tag week04
+Found expected file done/hashtable.h on tag week04
+Found expected file done/node.h on master, not on tag week04
+Found expected file done/args.h on master, not on tag week04
+Found expected file done/error.c on tag week04
+Found expected file done/system.c on master, not on tag week04
+Found expected file done/error.h on tag week04
+--------
+Unable to build executable 'test-hashtable'
