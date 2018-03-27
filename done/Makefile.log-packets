@@ -1,1 +1,9 @@
-../provided/week05/Makefile.log-packets
+TARGETS ?= log-packets.so
+
+default: $(TARGETS)
+
+%.so: %.c
+	gcc -shared -fPIC $< -o $@ -ldl
+
+clean:
+	rm -f $(TARGETS)
