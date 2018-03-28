@@ -21,7 +21,10 @@
 	client_init_args_t args;
 	args.client = &client;
 	args.name = "Client";
-	client_init(args);
+	if(client_init(args) != ERR_NONE){
+		printf("FAIL\n");
+		return 0;
+	}
 	kv_pair_t pair;
 	memset(&pair, 0, sizeof(pair));
 	 

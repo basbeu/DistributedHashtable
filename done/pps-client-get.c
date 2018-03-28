@@ -21,7 +21,10 @@
 	client_init_args_t args;
 	args.client = &client;
 	args.name = "Client";
-	client_init(args);
+	if(client_init(args) != ERR_NONE){
+		printf("FAIL\n");
+		return 0;
+	}
 	 
 	pps_key_t key = 0;
 	pps_value_t value = 0;

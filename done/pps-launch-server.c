@@ -28,6 +28,9 @@
 int main(void){
 
 	Htable_t table;
+	(void)memset(&table, 0, sizeof(bucket_t)*HTABLE_SIZE);
+	debug_print("size of : %zu", sizeof(table));
+	debug_print("size of : %zu", sizeof(bucket_t)*HTABLE_SIZE);
 	int socket;
 	size_t to = 0;
 	socket = get_socket(to);
@@ -36,16 +39,21 @@ int main(void){
 	uint16_t port = 0;
 	
 	printf("IP port? ");
+	int i = 0;
+		int j = 0;
+	do{
+		i = scanf("%s", address);
+		j = scanf("%" SCNu16, &port);
+		while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
+	}while(i != 1 && j != 1);
 	
-	scanf("%s", address);
-	scanf("%" SCNu16, &port);
 	
 	bind_server(socket, address, port);
 	
 	debug_print("\nListening on : %s, port : %" PRIu16 "\n", address, port);
 	
 	while(1){
-		debug_print("waiting",0);
+		debug_print("Waiting for request", 0);
 		struct sockaddr_in cli_addr;
         socklen_t addr_len = sizeof(cli_addr);
         memset(&cli_addr, 0, addr_len);
@@ -66,12 +74,10 @@ int main(void){
         
         //Declare size of response
         size_t out_msg_len = 0;
-        debug_print("msg length : %d",in_msg_len); 
 		//Writing request
 		if(in_msg_len == 5){		
 			pps_value_t value = ntohl(request);
 			add_Htable_value(table, key, value);
-			debug_print("%d %c\n", value, key);	
 		}
 		
 		//Reading request
