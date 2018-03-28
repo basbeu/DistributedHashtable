@@ -47,20 +47,23 @@ node_list_t *get_nodes(){
 			return NULL;
 	}
 	else{
-		while(!feof(server_list_file) && !ferror(server_list_file)){
-			fscanf(server_list_file, "%s", address);
-			fscanf(server_list_file, "%" SCNu16, &port);
+		while(fscanf(server_list_file, "%s", address) == 1 && fscanf(server_list_file, "%" SCNu16, &port) == 1 && !feof(server_list_file) && !ferror(server_list_file)){
+			//fscanf(server_list_file, "%s", address);
+			//fscanf(server_list_file, "%" SCNu16, &port);
+			debug_print("Adress is : %s, port : %" PRIu16 "\n", address, port);
 			if(port <= 0 || port > 65535){
+				fclose(server_list_file);
 				return NULL;
 			}
 			else{
 				
 				error_code err = node_init(&temp_node, address, port, 0);
 				if(err != ERR_NONE){
+					fclose(server_list_file);
 					return NULL;
 				}
 				else{
-					complete_list->list_of_nodes = realloc(complete_list->list_of_nodes, complete_list->allocated+1); 
+					complete_list->list_of_nodes = realloc(complete_list->list_of_nodes, (complete_list->allocated+1)*sizeof(node_t)); 
 					 complete_list->list_of_nodes[complete_list->size] = temp_node;
 					 ++complete_list->allocated;
 					 ++complete_list->size;
@@ -68,9 +71,8 @@ node_list_t *get_nodes(){
 			}
 			
 		}
-		return complete_list;
-		
 		fclose(server_list_file);
+		return complete_list;		
 	}
 	
 	

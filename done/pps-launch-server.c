@@ -36,10 +36,13 @@ int main(void){
 	uint16_t port = 0;
 	
 	printf("IP port? ");
+	
 	scanf("%s", address);
 	scanf("%" SCNu16, &port);
 	
 	bind_server(socket, address, port);
+	
+	debug_print("\nListening on : %s, port : %" PRIu16 "\n", address, port);
 	
 	while(1){
 		struct sockaddr_in cli_addr;

@@ -38,6 +38,7 @@
 			if(j2 != -1){
 				pair.key = key;
 				pair.value = value;
+				debug_print("Trying to insert : %c, %u...\n", key, value);
 				error_code err = network_put(client, pair.key, pair.value);
 				if(err == ERR_NONE){
 					printf("OK\n");
