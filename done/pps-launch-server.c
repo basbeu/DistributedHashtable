@@ -45,13 +45,14 @@ int main(void){
 	debug_print("\nListening on : %s, port : %" PRIu16 "\n", address, port);
 	
 	while(1){
+		debug_print("waiting",0);
 		struct sockaddr_in cli_addr;
         socklen_t addr_len = sizeof(cli_addr);
         memset(&cli_addr, 0, addr_len);
         char in_msg[5];
         ssize_t in_msg_len = recvfrom(socket, &in_msg, sizeof(in_msg), 0,
                                       (struct sockaddr *) &cli_addr, &addr_len);
-         
+         debug_print("received",0);
          pps_key_t key = in_msg[0];
          pps_value_t request = 0;
                                
@@ -65,11 +66,12 @@ int main(void){
         
         //Declare size of response
         size_t out_msg_len = 0;
-                
+        debug_print("msg length : %d",in_msg_len); 
 		//Writing request
 		if(in_msg_len == 5){		
 			pps_value_t value = ntohl(request);
-			add_Htable_value(table, key, value);	
+			add_Htable_value(table, key, value);
+			debug_print("%d %c\n", value, key);	
 		}
 		
 		//Reading request
