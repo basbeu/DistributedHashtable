@@ -1,24 +1,22 @@
-Submission correctly tagged with: 'week04' (sha: 6296b6cdcfdf242e959fbe601df43ed02e1e4b69)
+Submission correctly tagged with: 'week04-rev' (sha: 4d6fae421cf0b0f5668607cbfbfac0ebb766d6af)
 --------
 Checking for expected files
-Found expected file done/tests.h on tag week04
-Found expected file done/system.h on master, not on tag week04
-Found expected file done/config.h on master, not on tag week04
-Found expected file done/network.h on master, not on tag week04
-Found expected file done/hashtable.c on tag week04
-Found expected file done/Makefile on tag week04
-Found expected file done/client.h on master, not on tag week04
-Found expected file done/util.c on master, not on tag week04
-Found expected file done/week04.c on tag week04
-Found expected file done/util.h on master, not on tag week04
-Found expected file done/node_list.h on master, not on tag week04
-Found expected file done/ring.h on master, not on tag week04
-Didn't find expected file done/test-hashtable.c on master or on tag week04
-Found expected file done/hashtable.h on tag week04
-Found expected file done/node.h on master, not on tag week04
-Found expected file done/args.h on master, not on tag week04
-Found expected file done/error.c on tag week04
-Found expected file done/system.c on master, not on tag week04
-Found expected file done/error.h on tag week04
+Found expected file done/hashtable.c on tag week04-rev
+Found expected file done/Makefile on tag week04-rev
+Found expected file done/week04.c on tag week04-rev
+Found expected file done/hashtable.h on tag week04-rev
 --------
-Unable to build executable 'test-hashtable'
+Test test-hashtable returned code 1
+stdout:
+Running suite(s): hashtable.h
+66%: Checks: 6, Failures: 2, Errors: 0
+test-hashtable.c:69:P:hashtable:add_value_does_retrieve_same_value:0: Passed
+test-hashtable.c:88:P:hashtable:add_value_twice_erase_older:0: Passed
+test-hashtable.c:134:P:hashtable:add_with_NULL_table_return_ERR_BAD_PARAMETER:0: Passed
+test-hashtable.c:99:P:hash_function:should_be_in_range:0: Passed
+test-hashtable.c:107:F:hash_function:zero_size_return_0:0: Assertion 'hash_function(*key, 0) == 0' failed: hash_function(*key, 0) == 18446744073709551615, 0 == 0
+test-hashtable.c:116:F:hash_function:invalid_size_return_0:0: Assertion 'hash_function(*key, size) == 0' failed: hash_function(*key, size) == 18446744073709551615, 0 == 0
+
+------
+stderr:
+
