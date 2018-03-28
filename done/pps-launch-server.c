@@ -20,14 +20,26 @@
 #include "system.h"
 #include "config.h"
 #include "hashtable.h"
+#include <inttypes.h> // for uint16_t
+#include <string.h> // for memset()
+
+#define ADD_LENGTH 15
 
 int main(void){
 
-	Htable_t table[HTABLE_SIZE];
+	Htable_t table;
 	int socket;
 	size_t to = 0;
 	socket = get_socket(to);
-	bind_server(socket, PPS_DEFAULT_IP, PPS_DEFAULT_PORT);
+	char address[ADD_LENGTH];
+	(void)memset(&address, 0, ADD_LENGTH);
+	uint16_t port = 0;
+	
+	printf("IP port? ");
+	scanf("%s", address);
+	scanf("%" SCNu16, &port);
+	
+	bind_server(socket, address, port);
 	
 	while(1){
 		struct sockaddr_in cli_addr;

@@ -12,6 +12,9 @@
 #include <string.h> // for memset()
 #include "config.h"
 #define ADD_LENGTH 15
+#define DOUBLE_SIZE_OF_LIST 2
+
+node_list_t* enlarge_list_of_nodes(node_list_t* list);
 
 node_list_t *node_list_new(){
 	node_list_t* node_list_r = NULL;
@@ -40,7 +43,6 @@ node_list_t *get_nodes(){
 	char address[ADD_LENGTH];
 	(void)memset(&address, 0, ADD_LENGTH);
 	uint16_t port = 0;
-	size_t index = 0;
 	if(server_list_file == NULL){
 			return NULL;
 	}
@@ -59,11 +61,9 @@ node_list_t *get_nodes(){
 				}
 				else{
 					complete_list->list_of_nodes = realloc(complete_list->list_of_nodes, complete_list->allocated+1); 
-					 complete_list->list_of_nodes[index] = temp_node;
-					 complete_list->allocated ++;
-					 complete_list->size++;
-					index++;
-					index++;
+					 complete_list->list_of_nodes[complete_list->size] = temp_node;
+					 ++complete_list->allocated;
+					 ++complete_list->size;
 				}
 			}
 			
@@ -77,8 +77,16 @@ node_list_t *get_nodes(){
 }
 
 error_code node_list_add(node_list_t *list, node_t node){
-	
-
+	M_REQUIRE_NON_NULL(list);
+	M_REQUIRE_NON_NULL(list->list_of_nodes);
+	while(list->size >= list->allocated){
+		if(enlarge_list_of_nodes(list) == NULL){
+			return ERR_NOMEM;
+		}
+	}
+	list->list_of_nodes[list->size] = node;
+	++list->size;
+	return ERR_NONE;
 }
 
 
@@ -91,9 +99,20 @@ void node_list_free(node_list_t *list){
 		free(list);
 		list = NULL;	
 	}
-	
 }
 
-node_list_t* enlarge(node_list_t* list){
-	
+node_list_t* enlarge_list_of_nodes(node_list_t* list){
+	node_list_t* result = list;
+	if(result != NULL){
+		node_t* const old_list_of_nodes = result->list_of_nodes;
+		result->allocated*=DOUBLE_SIZE_OF_LIST;
+		if((result->allocated > SIZE_MAX / sizeof(node_t)) ||
+			((result->list_of_nodes = realloc(result->list_of_nodes,
+										result->allocated * sizeof(node_t))) == NULL)){
+			result->list_of_nodes = old_list_of_nodes;
+			result->allocated/=DOUBLE_SIZE_OF_LIST;
+			result = NULL;
+		}	
+	}
+	return result;
 }
