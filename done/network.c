@@ -7,24 +7,6 @@
  */
 #include "network.h"
 
-/*
-error_code send_request(client_t client,pps_key_t* data, pps_value_t *value, size_t size_data){
-	M_REQUIRE_NON_NULL(data);
-	M_REQUIRE_NON_NULL(value);
-	
-	error_code error = ERR_NONE;
-	
-	ssize_t out_msg_len = sendto(client.socket, data, size_data, 0,(struct sockaddr *)&client.node.srv_addr, sizeof(client.node.srv_addr));
-		
-    ssize_t in_msg_len = recv(client.socket, value, sizeof(value), 0);
-	
-	if (out_msg_len == -1 || in_msg_len == -1){
-		error = ERR_NETWORK;
-	}
-	
-	return error;
-}*/
-
 error_code send_request2(node_t node, int socket, pps_key_t* data, pps_value_t *value, size_t size_data){
 	M_REQUIRE_NON_NULL(data);
 	M_REQUIRE_NON_NULL(value);

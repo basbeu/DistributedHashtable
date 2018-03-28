@@ -20,7 +20,6 @@
  */
  typedef struct{
 	 const char* name;
-	 //node_t node;
 	 node_list_t* list_servers;
 	 int socket;
 }client_t;
