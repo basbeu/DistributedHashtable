@@ -17,7 +17,7 @@
  * @brief list of nodes
  */
 struct node_list {
-    node_t* listOfNodes;
+    node_t* list_of_nodes;
     size_t allocated;
     size_t size;
 };
