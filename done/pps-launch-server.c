@@ -25,15 +25,23 @@
 
 #define ADD_LENGTH 15
 
+void send_answer(int socket, pps_value_t response, size_t out_msg_len, const struct sockaddr_in* const cli_addr, socklen_t addr_len);
+
 int main(void){
 
 	Htable_t table;
 	(void)memset(&table, 0, sizeof(bucket_t)*HTABLE_SIZE);
 	debug_print("size of : %zu", sizeof(table));
 	debug_print("size of : %zu", sizeof(bucket_t)*HTABLE_SIZE);
+	
 	int socket;
 	size_t to = 0;
 	socket = get_socket(to);
+	if(socket == -1){
+		debug_print("Unable to get a socket");
+		return 1;
+	}
+	
 	char address[ADD_LENGTH];
 	(void)memset(&address, 0, ADD_LENGTH);
 	uint16_t port = 0;
@@ -48,7 +56,11 @@ int main(void){
 	}while(i != 1 && j != 1);
 	
 	
-	bind_server(socket, address, port);
+	error_code err = bind_server(socket, address, port);
+	if(err != ERR_NONE){
+		debug_print("Unable to bind server");
+		return 1;
+	}
 	
 	debug_print("\nListening on : %s, port : %" PRIu16 "\n", address, port);
 	
@@ -74,16 +86,19 @@ int main(void){
         
         //Declare size of response
         size_t out_msg_len = 0;
+        
 		//Writing request
 		if(in_msg_len == 5){		
 			pps_value_t value = ntohl(request);
 			add_Htable_value(table, key, value);
+			send_answer(socket, response, out_msg_len, &cli_addr, addr_len);
 		}
 		
 		//Reading request
 		else if(in_msg_len == 1){
 			response = get_Htable_value(table, key);
-			out_msg_len = sizeof(response);			
+			out_msg_len = sizeof(response);	
+			send_answer(socket, response, out_msg_len, &cli_addr, addr_len);	
 		}
 		
 		//Wrong request
@@ -91,9 +106,14 @@ int main(void){
 			debug_print("Wrong size of request, expected was 1 or 5, actual is %ld.\n", in_msg_len);
 		}
 		
-		unsigned int out_msg = htonl(response);
-		sendto(socket, &out_msg, out_msg_len, 0, (struct sockaddr *) &cli_addr, addr_len);	
+		/*unsigned int out_msg = htonl(response);
+		sendto(socket, &out_msg, out_msg_len, 0, (struct sockaddr *) &cli_addr, addr_len);	*/
 	}
 
 	return 0;
+}
+
+void send_answer(int socket, pps_value_t response, size_t out_msg_len, const struct sockaddr_in* const cli_addr, socklen_t addr_len){
+	unsigned int out_msg = htonl(response);
+	sendto(socket, &out_msg, out_msg_len, 0, (struct sockaddr *) cli_addr, addr_len);
 }
