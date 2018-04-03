@@ -38,7 +38,7 @@ int main(void){
 	size_t to = 0;
 	socket = get_socket(to);
 	if(socket == -1){
-		debug_print("Unable to get a socket");
+		debug_print("Unable to get a socket", 0);
 		return 1;
 	}
 	
@@ -58,7 +58,7 @@ int main(void){
 	
 	error_code err = bind_server(socket, address, port);
 	if(err != ERR_NONE){
-		debug_print("Unable to bind server");
+		debug_print("Unable to bind server", 0);
 		return 1;
 	}
 	
