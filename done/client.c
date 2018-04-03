@@ -24,7 +24,7 @@ error_code client_init(client_init_args_t client_to_init){
 	if(client_to_init.client->list_servers != NULL){
 		client_to_init.client->name = client_to_init.name;
 		
-		if(client_to_init.client->socket = get_socket(TIMEOUT_CLIENT) == -1){
+		if((client_to_init.client->socket = get_socket(TIMEOUT_CLIENT)) == -1){
 			return ERR_NETWORK;
 		}
 		
