@@ -105,9 +105,6 @@ int main(void){
 		else{
 			debug_print("Wrong size of request, expected was 1 or 5, actual is %ld.\n", in_msg_len);
 		}
-		
-		/*unsigned int out_msg = htonl(response);
-		sendto(socket, &out_msg, out_msg_len, 0, (struct sockaddr *) &cli_addr, addr_len);	*/
 	}
 
 	return 0;
