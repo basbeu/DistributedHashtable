@@ -14,7 +14,6 @@ error_code node_init(node_t *node, const char *ip, uint16_t port, size_t _unused
 	M_REQUIRE_NON_NULL(ip);
 	
 	struct sockaddr_in srv_addr;
-	debug_print("RECEIVED port : %d",port); 
 	error_code err = get_server_addr(ip, port, &srv_addr);
 	node->srv_addr = srv_addr;
 		
