@@ -14,5 +14,19 @@ Found expected file done/pps-client-get.c on tag week05
 Found expected file done/client.c on tag week05
 Found expected file done/node.h on tag week05
 --------
-Unable to build target 'test-hashtable'
-Unable to build all targets
+
+-------------------------
+Running test scripts
+
+
+Test 05.basic.sh returned code 0
+stdout:
+>> running 05.basic.sh
+Test 1 (server launch): PASS
+Test 2 (client put): PASS
+Test 3 (client get): PASS
+SUCCESS
+
+------
+stderr:
+
