@@ -7,7 +7,7 @@
  */
 #include "network.h"
 
-error_code send_request2(node_t node, int socket, pps_key_t* data, pps_value_t *value, size_t size_data){
+error_code send_request(node_t node, int socket, pps_key_t* data, pps_value_t *value, size_t size_data){
 	M_REQUIRE_NON_NULL(data);
 	M_REQUIRE_NON_NULL(value);
 	
@@ -29,7 +29,7 @@ error_code network_get(client_t client, pps_key_t key, pps_value_t *value){
 	
 	error_code err = ERR_NETWORK;
 	for(size_t i = 0; i < client.list_servers->size && err != ERR_NONE; ++i){
-		err = send_request2(client.list_servers->list_of_nodes[i], client.socket, &key, value, 1);
+		err = send_request(client.list_servers->list_of_nodes[i], client.socket, &key, value, 1);
 	
 	}
 
@@ -50,7 +50,7 @@ error_code network_put(client_t client, pps_key_t key, pps_value_t value){
 	error_code err = ERR_NONE;
 	debug_print("%zu\n",client.list_servers->size);
 	for(size_t i = 0; i < client.list_servers->size; ++i){
-		error_code ans = send_request2(client.list_servers->list_of_nodes[i], client.socket, out_msg, &value, 5);
+		error_code ans = send_request(client.list_servers->list_of_nodes[i], client.socket, out_msg, &value, 5);
 		if(ans != ERR_NONE){
 			err = ans;
 		}   
