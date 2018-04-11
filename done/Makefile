@@ -1,10 +1,11 @@
 LDLIBS = -lcheck -lm -lrt -pthread -lsubunit
 CFLAGS = -DDEBUG
 
-all: week04 pps-client-put pps-client-get pps-launch-server clean
+#all: week04 pps-client-put pps-client-get pps-launch-server clean
+all: pps-client-put pps-client-get pps-launch-server clean
 
-week04: week04.o hashtable.o error.o 
-	gcc -o week04 week04.o hashtable.o $(LDLIBS)
+#week04: week04.o hashtable.o error.o 
+#	gcc -o week04 week04.o hashtable.o $(LDLIBS)
 
 pps-client-put: pps-client-put.o system.o client.o network.o node.o node_list.o
 	gcc -o pps-client-put pps-client-put.o system.o client.o network.o node.o node_list.o
