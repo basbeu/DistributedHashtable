@@ -28,20 +28,25 @@
 	kv_pair_t pair;
 	memset(&pair, 0, sizeof(pair));
 	 
-	pps_key_t key = 0;
-	pps_value_t value = 0;
+	//TODO init ??? 
+	pps_key_t key = NULL;
+	pps_value_t value = NULL;
 	
 	int j1 = 0;
 	int j2 = 0;
  
 	do{
-		j1 = scanf("%c", &key);	
+		char* key_temp = NULL;
+		j1 = scanf("%s", key_temp);
+		key = key_temp;	
 		if(j1 != -1){
-			j2 = scanf("%d", &value);
+			char* value_temp = NULL;
+			j2 = scanf("%s", value_temp);
+			value = value_temp;
 			if(j2 != -1){
 				pair.key = key;
 				pair.value = value;
-				debug_print("Trying to insert : %c, %u...\n", key, value);
+				debug_print("Trying to insert : %s, %s...\n", key, value);
 				error_code err = network_put(client, pair.key, pair.value);
 				if(err == ERR_NONE){
 					printf("OK\n");

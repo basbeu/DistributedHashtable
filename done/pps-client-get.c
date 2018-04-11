@@ -26,16 +26,19 @@
 		return 0;
 	}
 	 
-	pps_key_t key = 0;
-	pps_value_t value = 0;
+	//TODO init ???
+	pps_key_t key = NULL;
+	pps_value_t value = NULL;
 	int j = 0;
  
 	do{
-		j = scanf("%c", &key);
+		char* key_temp = NULL;
+		j = scanf("%s", key_temp);
+		key = key_temp;
 		if(j != -1){
 			error_code err = network_get(client, key, &value);
 			if(err == ERR_NONE){
-				printf("OK %d\n", value);
+				printf("OK %s\n", value);
 			}
 			else{
 				printf("FAIL\n");
