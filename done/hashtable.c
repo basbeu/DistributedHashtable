@@ -11,10 +11,10 @@
 #include <string.h>
 #include "config.h"
 
-typedef struct{
-		kv_pair_t* pair;
-		size_t size;
-}bucket;
+struct bucket_t{
+		kv_pair_t pair;
+		bucket_t* next;
+};
 
 error_code add_Htable_value(Htable_t table, pps_key_t key, pps_value_t value){
 	M_REQUIRE_NON_NULL(table.bucket);
@@ -33,39 +33,29 @@ error_code add_Htable_value(Htable_t table, pps_key_t key, pps_value_t value){
 	
 	
 	size_t index = hash_function(key, table.size);
-	bucket_t b_temp;
-	b_temp.pair.key = NULL;
-	b_temp.pair.value = NULL;
-	b_temp.next = NULL;
+	bucket_t* b_temp = calloc(1, sizeof(bucket_t));
+	b_temp->pair.key = NULL;
+	b_temp->pair.value = NULL;
+	b_temp->next = NULL;
+	bucket_t insert;
+	insert.pair.key = copied_key;
+	insert.pair.value = copied_value;
+	insert.next = NULL;
+	b_temp = table.bucket[index].next;
+	
 	if(get_Htable_value(table, key) == NULL){
-		if(table.bucket[index].pair.key == NULL){
-			table.bucket[index].pair.key = copied_key;
-			table.bucket[index].pair.value = copied_value;
-			table.bucket[index].next = NULL;
-			return ERR_NONE;
+
+		while(b_temp->next != NULL){
+			b_temp = b_temp->next;
 		}
-		else{
-			b_temp.pair.key = table.bucket[index].pair.key;
-			b_temp.pair.value = table.bucket[index].pair.value;
-			b_temp.next = table.bucket[index].next;
-			table.bucket[index].pair.key = copied_key;
-			table.bucket[index].pair.value = copied_value;
-			*table.bucket[index].next = b_temp;		
-			return ERR_NONE;	
-		}
+		
+		*b_temp->next = insert;
 	}
 	else{
-		b_temp.pair.key = table.bucket[index].pair.key;
-		b_temp.pair.value = table.bucket[index].pair.value;
-		b_temp.next = table.bucket[index].next;
-		do{
-			if(b_temp.pair.key == copied_key){
-				
-				return ERR_NONE;
-			}
-			
-		}while(b_temp.next != NULL)
-		
+		while(b_temp->pair.key != key){
+			b_temp = b_temp->next;
+		}
+		*b_temp = insert;
 	}
 		 
 	return ERR_NONE;
