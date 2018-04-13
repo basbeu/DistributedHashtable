@@ -38,12 +38,14 @@ typedef struct {
 /* TODO WEEK 04:
  * Définir ici le type bucket_t (et...).
  */
-
+/*
 typedef struct _buck{
 	kv_pair_t pair;
 	struct _buck* next;
 	//size_t size;
 }bucket_t;
+*/
+typedef struct bucket_t bucket_t;
 
 /*
  * Definition of local hash-table type
