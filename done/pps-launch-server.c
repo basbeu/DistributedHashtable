@@ -67,10 +67,11 @@ void decompose_msg(char* msg, size_t size_msg, pps_key_t key,pps_value_t value){
 
 int main(void){
 
-	Htable_t table;
-	(void)memset(&table, 0, sizeof(bucket_t)*HTABLE_SIZE);
+	Htable_t table = construct_Htable(256);
+	//(void)memset(&table, 0, sizeof(bucket_t)*HTABLE_SIZE);
+	
 	debug_print("size of : %zu", sizeof(table));
-	debug_print("size of : %zu", sizeof(bucket_t)*HTABLE_SIZE);
+	//debug_print("size of : %zu", sizeof(bucket_t)*HTABLE_SIZE);
 	
 	int socket;
 	size_t to = 0;

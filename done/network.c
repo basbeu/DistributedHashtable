@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include "network.h"
 #include "config.h"
-#include "string.h"
+#include <string.h>
 
 error_code send_request(node_t node, int socket, pps_key_t data, pps_value_t value, size_t size_data){
 	M_REQUIRE_NON_NULL(data);
@@ -65,8 +65,8 @@ size_t prepare_msg(char* out_msg, pps_key_t key, pps_value_t value){
 
 
 error_code network_put(client_t client, pps_key_t key, pps_value_t value){
-	M_EXIT_IF_TOO_LONG(key, MAX_MSG_ELEM_SIZE, "");
-	M_EXIT_IF_TOO_LONG(value, MAX_MSG_ELEM_SIZE, "");
+//	M_EXIT_IF_TOO_LONG(key, MAX_MSG_ELEM_SIZE, "");
+//	M_EXIT_IF_TOO_LONG(value, MAX_MSG_ELEM_SIZE, "");
 		
 	char* out_msg=NULL;
 	size_t size_msg = prepare_msg(out_msg, key, value);

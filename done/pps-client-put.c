@@ -42,6 +42,7 @@
 		if(j1 != -1){
 			char* value_temp = NULL;
 			j2 = scanf("%s", value_temp);
+			
 			value = value_temp;
 			if(j2 != -1){
 				pair.key = key;
