@@ -10,9 +10,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "config.h"
+#include <stdio.h>
+#include "util.h"
 
 struct bucket_t{
-		kv_pair_t pair;
+		kv_pair_t* pair;
 		bucket_t* next;
 };
 
@@ -24,40 +26,38 @@ error_code add_Htable_value(Htable_t table, pps_key_t key, pps_value_t value){
 	size_t value_len = strnlen(value, MAX_MSG_ELEM_SIZE)+1;
 	size_t key_len = strnlen(key, MAX_MSG_ELEM_SIZE)+1;
 	
-	char* val = NULL;
+	char* val = calloc(value_len, sizeof(char));
 	strncpy(val, value, value_len);
-	pps_value_t copied_value = val;;
-	char* k = NULL;
+	pps_value_t copied_value = val;
+	char* k = calloc(key_len, sizeof(char));
 	strncpy(k, key, key_len);	
 	pps_key_t copied_key = k;
-	
+	kv_pair_t final_pair;// = calloc(1, sizeof(kv_pair_t));
+	final_pair.value = copied_value;
+	final_pair.key = copied_key;
 	
 	size_t index = hash_function(key, table.size);
-	bucket_t* b_temp = calloc(1, sizeof(bucket_t));
-	b_temp->pair.key = NULL;
-	b_temp->pair.value = NULL;
-	b_temp->next = NULL;
-	bucket_t insert;
-	insert.pair.key = copied_key;
-	insert.pair.value = copied_value;
-	insert.next = NULL;
-	b_temp = table.bucket[index].next;
-	
-	if(get_Htable_value(table, key) == NULL){
+	bucket_t* b_temp;
 
-		while(b_temp->next != NULL){
-			b_temp = b_temp->next;
+	
+	b_temp = &table.bucket[index];
+	while(b_temp->pair->key != NULL){
+		if(strncmp(b_temp->pair->key, key, MAX_MSG_ELEM_SIZE) == 0){
+			/*b_temp->pair->key = copied_key;
+			b_temp->pair->value = copied_value;*/
+			b_temp->pair = &final_pair;
+			
+			return ERR_NONE;
 		}
-		
-		*b_temp->next = insert;
+		b_temp = b_temp->next;
 	}
-	else{
-		while(b_temp->pair.key != key){
-			b_temp = b_temp->next;
-		}
-		*b_temp = insert;
-	}
-		 
+	/*b_temp->pair->key = copied_key;
+	b_temp->pair->value = copied_value;*/
+	b_temp->pair = &final_pair;
+	
+	
+	free(val);
+	free(k);	 
 	return ERR_NONE;
 }
 
@@ -67,19 +67,17 @@ pps_value_t get_Htable_value(Htable_t table, pps_key_t key){
 		return NULL;
 	}
 	
-	bucket_t b; 
-	b.pair = table.bucket[hash_function(key, table.size)].pair;
-	b.next = table.bucket[hash_function(key, table.size)].next;
-	while(b.next != NULL){
-		if(b.pair.key == key){
-			return b.pair.value;
+	bucket_t* b = &table.bucket[hash_function(key, table.size)]; 
+
+	while(b->next != NULL){
+		if(strncmp(b->pair->key, key, MAX_MSG_ELEM_SIZE) == 0){
+			return b->pair->value;
 		}
-		b.pair = b.next->pair;
-		b.next = b.next->next;
+		b = b->next;
 	}
-	
-	if(b.pair.key == key){
-		return b.pair.value;
+
+	if(b->pair != NULL && b->pair->key != NULL && strncmp(b->pair->key, key, MAX_MSG_ELEM_SIZE) == 0){
+		return b->pair->value;
 	}
 	else{
 		return NULL;
@@ -88,15 +86,19 @@ pps_value_t get_Htable_value(Htable_t table, pps_key_t key){
 }
 
 Htable_t construct_Htable(size_t size){
-	bucket_t * bucket = calloc(size, sizeof(bucket_t));
 	Htable_t table;
-	if(bucket != NULL){
-		table.bucket = bucket;
+	table.bucket = calloc(size, sizeof(bucket_t));
+	
+	if(table.bucket != NULL){
 		table.size = size;
 		for(size_t i = 0; i < size; ++i){
-			kv_pair_t pair;
+			kv_pair_t* pair = calloc(1, sizeof(kv_pair_t));
+			pair->key = NULL;
+			pair->value = NULL;
+			/*kv_pair_t pair;
 			pair.key = NULL;
-			pair.value = NULL;
+			pair.value = NULL;*/
+			
 			table.bucket[i].pair = pair;
 			table.bucket[i].next = NULL;
 		}
@@ -114,8 +116,8 @@ void delete_Htable_and_content(Htable_t* table){
 		if(table->bucket != NULL){
 			for(size_t i = 0; i < table->size; ++i){
 			
-				table->bucket[i].pair.key = NULL;
-				table->bucket[i].pair.value = NULL;
+				table->bucket[i].pair->key = NULL;
+				table->bucket[i].pair->value = NULL;
 				free(table->bucket[i].next);
 				table->bucket[i].next = NULL;
 			
@@ -142,3 +144,49 @@ size_t hash_function(pps_key_t key, size_t table_size){
 
     return hash % table_size;
 }
+
+int main(void){
+	Htable_t table = construct_Htable(256);
+	
+	char* v = calloc(10, 1);
+	strncpy(v, "SAMARCH", 10);
+	pps_value_t value = v;
+	
+	char* k = calloc(10, 1);
+	strncpy(k, "25", 10);
+	pps_key_t key = k;
+	printf("%zu\n", hash_function(key, 256));
+	//add_Htable_value(table, key, value);
+
+	bucket_t bucket;
+	bucket.pair = calloc(1, sizeof(kv_pair_t));
+	bucket.pair->key = calloc(10, 1);
+	bucket.pair->value = calloc(10,1);
+	bucket.next = calloc(1, sizeof(bucket_t));
+	bucket.pair->value = value;
+	bucket.pair->key = key;
+	
+	//table.bucket[hash_function(key, 256)] = bucket;
+	//table.bucket[0] = bucket;
+	add_Htable_value(table, key, value);
+	pps_value_t val = get_Htable_value(table, key);
+	
+	//pps_value_t val = table.bucket[0].pair.value;
+	if(val !=NULL){
+		printf("%s\n", val);
+	}
+	else{
+		printf("NULL\n");
+	}
+	
+	free_const_ptr(bucket.pair->value);
+	free_const_ptr(bucket.pair->key);
+	free(bucket.next);
+	free(v);
+	free(k);
+	
+	return 1;
+
+}
+
+
