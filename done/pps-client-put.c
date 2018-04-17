@@ -14,6 +14,7 @@
  #include "client.h"
  #include "network.h"
  #include "node.h"
+ #include "config.h"
  
  
  int main(void){
@@ -25,6 +26,8 @@
 		printf("FAIL\n");
 		return 0;
 	}
+	
+	//??? vraiment utile un peu bcp de définition de variable
 	kv_pair_t pair;
 	memset(&pair, 0, sizeof(pair));
 	 
@@ -36,13 +39,13 @@
 	int j2 = 0;
  
 	do{
-		char* key_temp = NULL;
+		char* key_temp[MAX_MSG_ELEM_SIZE];
 		j1 = scanf("%s", key_temp);
 		key = key_temp;	
 		if(j1 != -1){
-			char* value_temp = NULL;
+			char* value_temp[MAX_MSG_ELEM_SIZE];
 			j2 = scanf("%s", value_temp);
-			
+
 			value = value_temp;
 			if(j2 != -1){
 				pair.key = key;
@@ -55,7 +58,7 @@
 				else{
 					printf("FAIL\n");
 				}		
-			}	
+			}
 		}
 		while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
 		
