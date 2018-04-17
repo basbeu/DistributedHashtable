@@ -68,7 +68,7 @@ pps_value_t get_Htable_value(Htable_t table, pps_key_t key){
 	}
 	
 	bucket_t* b = &table.bucket[hash_function(key, table.size)]; 
-
+	
 	while(b->next != NULL){
 		if(strncmp(b->pair->key, key, MAX_MSG_ELEM_SIZE) == 0){
 			return b->pair->value;
@@ -145,7 +145,7 @@ size_t hash_function(pps_key_t key, size_t table_size){
     return hash % table_size;
 }
 
-int main(void){
+/*int main(void){
 	Htable_t table = construct_Htable(256);
 	
 	char* v = calloc(10, 1);
@@ -187,6 +187,6 @@ int main(void){
 	
 	return 1;
 
-}
+}*/
 
 
