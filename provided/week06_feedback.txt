@@ -1,0 +1,150 @@
+Submission correctly tagged with: 'week06' (sha: a0a48891fe552aa428829e5ddcf4282def505394)
+--------
+Checking for expected files
+Found expected file done/node.c on tag week06
+Found expected file done/network.h on tag week06
+Found expected file done/network.c on tag week06
+Found expected file done/hashtable.c on tag week06
+Found expected file done/Makefile on tag week06
+Found expected file done/client.h on tag week06
+Found expected file done/pps-client-put.c on tag week06
+Found expected file done/log-packets.c on tag week06
+Found expected file done/node_list.h on tag week06
+Found expected file done/ring.h on tag week06
+Found expected file done/pps-launch-server.c on tag week06
+Found expected file done/hashtable.h on tag week06
+Found expected file done/pps-client-get.c on tag week06
+Found expected file done/client.c on tag week06
+Found expected file done/node.h on tag week06
+Found expected file done/node_list.c on tag week06
+--------
+Got error code 2 when running trying to build target 'test-hashtable' with command 'make test-hashtable'
+stdout: cc -DDEBUG    test-hashtable.c  -lcheck -lm -lrt -pthread -lsubunit -o test-hashtable
+<builtin>: recipe for target 'test-hashtable' failed
+
+---
+stderr: /tmp/ccnTNdcm.o: In function `add_value_does_retrieve_same_value':
+test-hashtable.c:(.text+0xac): undefined reference to `add_Htable_value'
+test-hashtable.c:(.text+0xfd): undefined reference to `get_Htable_value'
+/tmp/ccnTNdcm.o: In function `add_value_twice_erase_older':
+test-hashtable.c:(.text+0x2c6): undefined reference to `add_Htable_value'
+test-hashtable.c:(.text+0x31d): undefined reference to `add_Htable_value'
+test-hashtable.c:(.text+0x3b1): undefined reference to `get_Htable_value'
+/tmp/ccnTNdcm.o: In function `should_be_in_range':
+test-hashtable.c:(.text+0x4e4): undefined reference to `hash_function'
+/tmp/ccnTNdcm.o: In function `zero_size_return_0':
+test-hashtable.c:(.text+0x5aa): undefined reference to `hash_function'
+/tmp/ccnTNdcm.o: In function `invalid_size_return_0':
+test-hashtable.c:(.text+0x66c): undefined reference to `hash_function'
+/tmp/ccnTNdcm.o: In function `add_with_NULL_table_return_ERR_BAD_PARAMETER':
+test-hashtable.c:(.text+0x79c): undefined reference to `add_Htable_value'
+/tmp/ccnTNdcm.o: In function `get_with_NULL_table_return_0':
+test-hashtable.c:(.text+0x89f): undefined reference to `get_Htable_value'
+collect2: error: ld returned 1 exit status
+make: *** [test-hashtable] Error 1
+
+Got error code 2 when running trying to build target 'test-hashtable' with command 'make'
+stdout: cc -DDEBUG   -c -o week04.o week04.c
+cc -DDEBUG   -c -o hashtable.o hashtable.c
+cc -DDEBUG   -c -o error.o error.c
+gcc -o week04 week04.o hashtable.o -lcheck -lm -lrt -pthread -lsubunit
+cc -DDEBUG   -c -o pps-client-put.o pps-client-put.c
+cc -DDEBUG   -c -o system.o system.c
+cc -DDEBUG   -c -o client.o client.c
+cc -DDEBUG   -c -o network.o network.c
+<builtin>: recipe for target 'network.o' failed
+
+---
+stderr: client.c: In function ‘client_init’:
+client.c:31:32: warning: too many arguments for format [-Wformat-extra-args]
+   debug_print("client init\n",0);
+                                ^
+network.c: In function ‘network_get’:
+network.c:32:41: error: ‘node_list_t {aka struct node_list}’ has no member named ‘list_of_nodes’
+   err = send_request(client.list_servers->list_of_nodes[i], client.socket, &key, value, 1);
+                                         ^
+network.c: In function ‘network_put’:
+network.c:53:52: error: ‘node_list_t {aka struct node_list}’ has no member named ‘list_of_nodes’
+   error_code ans = send_request(client.list_servers->list_of_nodes[i], client.socket, out_msg, &value, 5);
+                                                    ^
+make: *** [network.o] Error 1
+
+Got error code 2 when running trying to build target 'test-hashtable' with command '[staff makefile]'
+Got error code 2 when running trying to build target 'test-hashtable' with command '[staff makefile]'
+Unable to build target 'test-hashtable'
+Got error code 2 when running trying to build target 'pps-client-get' with command 'make pps-client-get'
+stdout: cc -DDEBUG   -c -o pps-client-get.o pps-client-get.c
+cc -DDEBUG   -c -o network.o network.c
+<builtin>: recipe for target 'network.o' failed
+
+---
+stderr: network.c: In function ‘network_get’:
+network.c:32:41: error: ‘node_list_t {aka struct node_list}’ has no member named ‘list_of_nodes’
+   err = send_request(client.list_servers->list_of_nodes[i], client.socket, &key, value, 1);
+                                         ^
+network.c: In function ‘network_put’:
+network.c:53:52: error: ‘node_list_t {aka struct node_list}’ has no member named ‘list_of_nodes’
+   error_code ans = send_request(client.list_servers->list_of_nodes[i], client.socket, out_msg, &value, 5);
+                                                    ^
+make: *** [network.o] Error 1
+
+Got error code 2 when running trying to build target 'pps-client-get' with command 'make'
+stdout: cc -DDEBUG   -c -o network.o network.c
+<builtin>: recipe for target 'network.o' failed
+
+---
+stderr: network.c: In function ‘network_get’:
+network.c:32:41: error: ‘node_list_t {aka struct node_list}’ has no member named ‘list_of_nodes’
+   err = send_request(client.list_servers->list_of_nodes[i], client.socket, &key, value, 1);
+                                         ^
+network.c: In function ‘network_put’:
+network.c:53:52: error: ‘node_list_t {aka struct node_list}’ has no member named ‘list_of_nodes’
+   error_code ans = send_request(client.list_servers->list_of_nodes[i], client.socket, out_msg, &value, 5);
+                                                    ^
+make: *** [network.o] Error 1
+
+Got error code 2 when running trying to build target 'pps-client-get' with command '[staff makefile]'
+Got error code 2 when running trying to build target 'pps-client-get' with command '[staff makefile]'
+Unable to build target 'pps-client-get'
+Got error code 2 when running trying to build target 'pps-client-put' with command 'make pps-client-put'
+stdout: cc -DDEBUG   -c -o network.o network.c
+<builtin>: recipe for target 'network.o' failed
+
+---
+stderr: network.c: In function ‘network_get’:
+network.c:32:41: error: ‘node_list_t {aka struct node_list}’ has no member named ‘list_of_nodes’
+   err = send_request(client.list_servers->list_of_nodes[i], client.socket, &key, value, 1);
+                                         ^
+network.c: In function ‘network_put’:
+network.c:53:52: error: ‘node_list_t {aka struct node_list}’ has no member named ‘list_of_nodes’
+   error_code ans = send_request(client.list_servers->list_of_nodes[i], client.socket, out_msg, &value, 5);
+                                                    ^
+make: *** [network.o] Error 1
+
+Got error code 2 when running trying to build target 'pps-client-put' with command 'make'
+stdout: cc -DDEBUG   -c -o network.o network.c
+<builtin>: recipe for target 'network.o' failed
+
+---
+stderr: network.c: In function ‘network_get’:
+network.c:32:41: error: ‘node_list_t {aka struct node_list}’ has no member named ‘list_of_nodes’
+   err = send_request(client.list_servers->list_of_nodes[i], client.socket, &key, value, 1);
+                                         ^
+network.c: In function ‘network_put’:
+network.c:53:52: error: ‘node_list_t {aka struct node_list}’ has no member named ‘list_of_nodes’
+   error_code ans = send_request(client.list_servers->list_of_nodes[i], client.socket, out_msg, &value, 5);
+                                                    ^
+make: *** [network.o] Error 1
+
+Got error code 2 when running trying to build target 'pps-client-put' with command '[staff makefile]'
+Got error code 2 when running trying to build target 'pps-client-put' with command '[staff makefile]'
+Unable to build target 'pps-client-put'
+Unable to run test-hashtable. Executable couldn't build
+
+-------------------------
+Running test scripts
+
+
+Unable to run test '05.basic.sh' because the following executables weren't found: pps-client-get, pps-client-put
+-----------
+Unable to run test '06.basic.sh' because the following executables weren't found: pps-client-get, pps-client-put
