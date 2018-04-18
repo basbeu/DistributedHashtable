@@ -21,8 +21,9 @@ error_code send_request(node_t node, int socket, pps_key_t key, pps_value_t* val
 	char* temp_value = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));	
     ssize_t in_msg_len = recv(socket, temp_value, sizeof(value), 0);
 	debug_print("AVANT : %s", temp_value);
-	//if (out_msg_len == -1 || in_msg_len == -1 || !strncmp(temp_value, "\0", 1)){
-	if (out_msg_len == -1 || in_msg_len == -1){
+	if (out_msg_len == -1 || in_msg_len == -1 || (strncmp(temp_value, "\0", 1) == 0 && in_msg_len != 0)){
+	//if (out_msg_len == -1 || in_msg_len == -1){
+		
 		error = ERR_NETWORK;
 	}
 	

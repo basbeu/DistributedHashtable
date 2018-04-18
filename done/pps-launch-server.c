@@ -24,6 +24,7 @@
 #include <string.h> // for memset()
 
 #define ADD_LENGTH 15
+#define HTABLE_LENGTH 1
 
 void send_answer(int socket, pps_value_t response, size_t out_msg_len, const struct sockaddr_in* const cli_addr, socklen_t addr_len);
 
@@ -46,7 +47,7 @@ kv_pair_t decompose_msg(char* msg, size_t size_msg){
 
 int main(void){
 
-	Htable_t table = construct_Htable(256);
+	Htable_t table = construct_Htable(HTABLE_LENGTH);
 	//(void)memset(&table, 0, sizeof(bucket_t)*HTABLE_SIZE);
 	
 	debug_print("size of : %zu", sizeof(table));
@@ -123,13 +124,19 @@ int main(void){
 		//Reading request
 		//else if(in_msg_len == 1){
 		else{
-			response = get_Htable_value(table, pair.key);
-			debug_print("%s", response);
+			char* temp_response = get_Htable_value(table, pair.key);
+			//response = get_Htable_value(table, pair.key);
+			debug_print("%s", temp_response);
 			//out_msg_len = sizeof(response);	
-			if(response != NULL){
-				out_msg_len = strlen(response);
+			if(temp_response != NULL){
+				out_msg_len = strlen(temp_response);
+			}else{
+				out_msg_len = 1;
+				temp_response = calloc(1, 1);
+				//strncpy(temp_response, '\0', 0);
 			}
-			send_answer(socket, response, out_msg_len, &cli_addr, addr_len);	
+			//response = temp_response;
+			send_answer(socket, temp_response, out_msg_len, &cli_addr, addr_len);	
 		}
 		
 		//Wrong request
