@@ -18,6 +18,8 @@ struct bucket_t{
 		bucket_t* next;
 };
 
+void bucket_free(bucket_t* bucket);
+
 error_code add_Htable_value(Htable_t table, pps_key_t key, pps_value_t value){
 	M_REQUIRE_NON_NULL(table.bucket);
 	M_REQUIRE_NON_NULL(key);
@@ -120,37 +122,14 @@ void delete_Htable_and_content(Htable_t* table){
 	if(table != NULL){
 		if(table->bucket != NULL){
 			for(size_t i = 0; i < table->size; ++i){
-					if(table->bucket[i].pair.key != NULL){
-						free_const_ptr(table->bucket[i].pair.key );
-						table->bucket[i].pair.key = NULL;
-					}
-					if(table->bucket[i].pair.value != NULL){
-						free_const_ptr(table->bucket[i].pair.value); 
-						table->bucket[i].pair.value = NULL;
-					}
-					
-					
-					
-					
-					
-				/*
-				if(table->bucket[i].next != NULL){
-					free(table->bucket[i].next);
-					table->bucket[i].next = NULL;
-				}*/
-				bucket_t* b_curr = NULL;
-				bucket_t* b_next = table->bucket[i].next;
-				while(b_next != NULL){
-					b_curr = b_next;
-					b_next = b_curr->next;
-					free(b_curr);
-					b_curr = NULL;
-				}
+				
+				bucket_free(&table->bucket[i]);
 			}
-		table->size = 0;
+			free(table->bucket);
+			table->bucket = NULL;
 		}
-	free(table->bucket);
-	table->bucket = NULL;
+
+	table->size = 0;
 	}
 }
 
@@ -170,6 +149,31 @@ size_t hash_function(pps_key_t key, size_t table_size){
     hash += (hash << 15);
 
     return hash % table_size;
+}
+
+void kv_pair_free(kv_pair_t *kv){
+	if(kv->key != NULL){
+		free_const_ptr(kv->key );
+		kv->key = NULL;
+	}
+	if(kv->value != NULL){
+		free_const_ptr(kv->value); 
+		kv->value = NULL;
+	}
+}
+
+void bucket_free(bucket_t* bucket){
+	if(bucket != NULL){
+		kv_pair_free(&bucket->pair);
+		bucket_t* b_curr = NULL;
+		bucket_t* b_next = bucket->next;
+		while(b_next != NULL){
+			b_curr = b_next;
+			b_next = b_curr->next;
+			free(b_curr);
+			b_curr = NULL;
+		}
+	}
 }
 
 /*int main(void){
@@ -199,15 +203,11 @@ size_t hash_function(pps_key_t key, size_t table_size){
 	strncpy(k3, "22", 10);
 	pps_key_t key3 = k3;
 	
-	
-
-
-	
 	add_Htable_value(table, key1, value1);
-	add_Htable_value(table, key1, value2);
+	add_Htable_value(table, key2, value2);
 	add_Htable_value(table, key3, value3);
 	
-	pps_value_t fval = get_Htable_value(table, key1);
+	pps_value_t fval = get_Htable_value(table, key2);
 	
 
 	if(fval !=NULL){
