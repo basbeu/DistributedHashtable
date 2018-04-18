@@ -39,11 +39,11 @@
 	int j2 = 0;
  
 	do{
-		char* key_temp[MAX_MSG_ELEM_SIZE];
+		char key_temp[MAX_MSG_ELEM_SIZE];
 		j1 = scanf("%s", key_temp);
 		key = key_temp;	
 		if(j1 != -1){
-			char* value_temp[MAX_MSG_ELEM_SIZE];
+			char value_temp[MAX_MSG_ELEM_SIZE];
 			j2 = scanf("%s", value_temp);
 
 			value = value_temp;

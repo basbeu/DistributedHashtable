@@ -27,41 +27,20 @@
 
 void send_answer(int socket, pps_value_t response, size_t out_msg_len, const struct sockaddr_in* const cli_addr, socklen_t addr_len);
 
-
-void get_key(char* msg, pps_key_t key){
-	size_t size_key = strlen(msg);
+kv_pair_t decompose_msg(char* msg, size_t size_msg){
+	size_t key_size = strlen(msg);
+	char* key = calloc(key_size+1, sizeof(char));
+	strncpy(key, msg, key_size);
 	
-	char key_temp[size_key+1];
-	/*for(size_t i = 0; i < strlen(msg); ++i){
-		key_temp[i] = msg[i];
-	}*/
-	strncpy(key_temp, msg, size_key);
-	key_temp[size_key] = '\0';
+	size_t value_size = size_msg - key_size;
+	char* value = calloc(value_size + 1, sizeof(char));
+	strncpy(value, &msg[key_size + 1], value_size);
 	
-	key = key_temp;
-}
- 
-void get_value(char* msg, pps_value_t value){
-	size_t size_value = strlen(msg);
+	kv_pair_t pair;
+	pair.key = key;
+	pair.value = value;
 	
-	char value_temp[size_value+1];
-	/*for(size_t i = 0; i < strlen(msg);++i){
-		value_temp[i] = msg[i];
-	} */
-	strncpy(value_temp, msg, size_value);
-	value_temp[size_value] = '\0';
-	
-	value = value_temp;
-}
-
-void decompose_msg(char* msg, size_t size_msg, pps_key_t key,pps_value_t value){
-	get_key(msg, key);
-	
-	char* separator = memchr(msg, '\0', size_msg);
-	if(separator != NULL){
-		//TODO margoulinage
-		get_value(&separator[1], value);
-	}
+	return pair;
 }
 
 
@@ -122,9 +101,9 @@ int main(void){
 		 }*/
          pps_key_t key = NULL;
          pps_value_t value = NULL;
-         decompose_msg(in_msg, in_msg_len,key, value); 
+         kv_pair_t pair = decompose_msg(in_msg, in_msg_len); 
          
-         
+         debug_print("%s %s", pair.key, pair.value);
          
         //Declare response 
         //TODO init ???      
@@ -135,18 +114,21 @@ int main(void){
         
 		//Writing request
 		//if(in_msg_len == 5){		
-		if(value != NULL){
+		if(strlen(pair.value) != 0){
 			//pps_value_t value = ntohl(request);
-			add_Htable_value(table, key, value);
+			add_Htable_value(table, pair.key, pair.value);
 			send_answer(socket, response, out_msg_len, &cli_addr, addr_len);
 		}
 		
 		//Reading request
 		//else if(in_msg_len == 1){
 		else{
-			response = get_Htable_value(table, key);
+			response = get_Htable_value(table, pair.key);
+			debug_print("%s", response);
 			//out_msg_len = sizeof(response);	
-			out_msg_len = strlen(response);
+			if(response != NULL){
+				out_msg_len = strlen(response);
+			}
 			send_answer(socket, response, out_msg_len, &cli_addr, addr_len);	
 		}
 		
@@ -154,6 +136,7 @@ int main(void){
 		//else{
 		//	debug_print("Wrong size of request, expected was 1 or 5, actual is %ld.\n", in_msg_len);
 		//}
+		
 	}
 
 	return 0;
@@ -161,5 +144,6 @@ int main(void){
 
 void send_answer(int socket, pps_value_t response, size_t out_msg_len, const struct sockaddr_in* const cli_addr, socklen_t addr_len){
 	//unsigned int out_msg = htonl(response);
-	sendto(socket, &response, out_msg_len, 0, (struct sockaddr *) cli_addr, addr_len);
+	debug_print("%s", response);
+	sendto(socket, response, out_msg_len, 0, (struct sockaddr *) cli_addr, addr_len);
 }

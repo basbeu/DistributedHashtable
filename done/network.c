@@ -10,18 +10,19 @@
 #include "config.h"
 #include <string.h>
 
-error_code send_request(node_t node, int socket, pps_key_t key, pps_value_t value, size_t size_data){
+error_code send_request(node_t node, int socket, pps_key_t key, pps_value_t* value, size_t size_data){
 	M_REQUIRE_NON_NULL(key);
-	M_REQUIRE_NON_NULL(value);
+	//M_REQUIRE_NON_NULL(value);
 	
 	error_code error = ERR_NONE;
                   
 	ssize_t out_msg_len = sendto(socket, key, size_data, 0,(struct sockaddr *)&node.srv_addr, sizeof(node.srv_addr));
 	
-	char* temp_value= NULL;	
+	char* temp_value = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));	
     ssize_t in_msg_len = recv(socket, temp_value, sizeof(value), 0);
 	
-	value = temp_value;
+	*value = temp_value;
+	debug_print("%s", value);
 	
 	if (out_msg_len == -1 || in_msg_len == -1){
 		error = ERR_NETWORK;
@@ -30,12 +31,13 @@ error_code send_request(node_t node, int socket, pps_key_t key, pps_value_t valu
 	return error;
 }
 
-error_code network_get(client_t client, pps_key_t key, pps_value_t *value){
-	M_REQUIRE_NON_NULL(value);
-	
+error_code network_get(client_t client, pps_key_t key, pps_value_t* value){
+	//M_REQUIRE_NON_NULL(value);
+	debug_print("%s", key);
 	error_code err = ERR_NETWORK;
 	for(size_t i = 0; i < client.list_servers->size && err != ERR_NONE; ++i){
-		err = send_request(client.list_servers->list_of_nodes[i], client.socket, key, *value, 1);
+		err = send_request(client.list_servers->list_of_nodes[i], client.socket, key, value, strlen(key));
+		debug_print("%s", value);
 	
 	}
 
