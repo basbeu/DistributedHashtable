@@ -6,35 +6,31 @@
  * @date 20 Mar 2018
  */
 #include <stdlib.h>
+#include <string.h>
 #include "network.h"
 #include "config.h"
-#include <string.h>
 
-error_code send_request(node_t node, int socket, pps_key_t key, pps_value_t* value, size_t size_data){
+error_code send_request(node_t node, const int socket, pps_key_t key, pps_value_t* value, const size_t size_data){
 	M_REQUIRE_NON_NULL(key);
-	//M_REQUIRE_NON_NULL(value);
 	
 	error_code error = ERR_NONE;
                   
 	ssize_t out_msg_len = sendto(socket, key, size_data, 0,(struct sockaddr *)&node.srv_addr, sizeof(node.srv_addr));
 	
 	char* temp_value = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));	
-    ssize_t in_msg_len = recv(socket, temp_value, sizeof(value), 0);
+    ssize_t in_msg_len = recv(socket, temp_value, MAX_MSG_ELEM_SIZE, 0);
 	debug_print("AVANT : %s", temp_value);
 	if (out_msg_len == -1 || in_msg_len == -1 || (strncmp(temp_value, "\0", 1) == 0 && in_msg_len != 0)){
-	//if (out_msg_len == -1 || in_msg_len == -1){
 		
 		error = ERR_NETWORK;
 	}
 	
 	*value = temp_value;
 	
-	
 	return error;
 }
 
 error_code network_get(client_t client, pps_key_t key, pps_value_t* value){
-	//M_REQUIRE_NON_NULL(value);
 	debug_print("%s", key);
 	error_code err = ERR_NETWORK;
 	for(size_t i = 0; i < client.list_servers->size && err != ERR_NONE; ++i){
@@ -62,10 +58,11 @@ char* prepare_msg(pps_key_t key, pps_value_t value, size_t* size_msg){
 
 
 error_code network_put(client_t client, pps_key_t key, pps_value_t value){
-//	M_EXIT_IF_TOO_LONG(key, MAX_MSG_ELEM_SIZE, "");
-//	M_EXIT_IF_TOO_LONG(value, MAX_MSG_ELEM_SIZE, "");
-		
-	char* out_msg=NULL;
+	if(strlen(key) > MAX_MSG_ELEM_SIZE || strlen(value) > MAX_MSG_ELEM_SIZE){
+		return ERR_BAD_PARAMETER;
+	}
+	
+	char* out_msg = NULL;
 	size_t size_msg = 0;
 	out_msg = prepare_msg(key, value, &size_msg);
 	

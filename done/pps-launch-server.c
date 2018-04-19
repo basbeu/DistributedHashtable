@@ -24,7 +24,6 @@
 #include <string.h> // for memset()
 
 #define ADD_LENGTH 15
-#define HTABLE_LENGTH 1
 #define TIMEOUT 0
 
 void send_answer(int socket, pps_value_t response, size_t out_msg_len, const struct sockaddr_in* const cli_addr, socklen_t addr_len);
@@ -34,7 +33,7 @@ kv_pair_t decompose_msg(char* msg, size_t size_msg);
 
 int main(void){
 
-	Htable_t table = construct_Htable(HTABLE_LENGTH);
+	Htable_t table = construct_Htable(HTABLE_SIZE);
 	
 	debug_print("size of : %zu", sizeof(table));
 	
@@ -110,13 +109,13 @@ int main(void){
 	return 0;
 }
 
-void send_answer(int socket, pps_value_t out_msg, size_t out_msg_len, const struct sockaddr_in* const cli_addr, socklen_t addr_len){
+void send_answer(const int socket, pps_value_t out_msg,const size_t out_msg_len, const struct sockaddr_in* const cli_addr, socklen_t addr_len){
 	debug_print("%s", out_msg);
 	sendto(socket, out_msg, out_msg_len, 0, (struct sockaddr *) cli_addr, addr_len);
 }
 
 
-kv_pair_t decompose_msg(char* msg, size_t size_msg){
+kv_pair_t decompose_msg(char* const msg, const size_t size_msg){
 	size_t key_size = strlen(msg);
 	char* key = calloc(key_size+1, sizeof(char));
 	strncpy(key, msg, key_size);
