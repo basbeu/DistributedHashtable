@@ -71,7 +71,7 @@ error_code add_Htable_value(Htable_t table, pps_key_t key, pps_value_t value){
 	return ERR_NONE;
 }
 
-pps_value_t get_Htable_value(Htable_t table, pps_key_t key){
+pps_value_t get_Htable_value(const Htable_t table, pps_key_t key){
 	
 	if(table.bucket == NULL || key == NULL){
 		return NULL;
