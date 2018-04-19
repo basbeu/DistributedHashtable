@@ -25,8 +25,8 @@ typedef const char* pps_value_t;
  * key-value pair
  */
 typedef struct {
-	pps_key_t key;
-	pps_value_t value;
+    pps_key_t key;
+    pps_value_t value;
 } kv_pair_t;
 
 /*
@@ -40,10 +40,10 @@ typedef struct bucket_t bucket_t;
  */
 #define HTABLE_SIZE 256
 
-typedef struct{
-	bucket_t* bucket;
-	size_t size;
-}Htable_t;
+typedef struct {
+    bucket_t* bucket;
+    size_t size;
+} Htable_t;
 
 // Only from week 07
 #define NO_HTABLE ((Htable_t) NULL)

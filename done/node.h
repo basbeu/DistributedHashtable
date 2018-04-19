@@ -16,9 +16,9 @@
 /**
  * @brief node data structure
  */
- typedef struct{
-	 struct sockaddr_in srv_addr;
-}node_t;
+typedef struct {
+    struct sockaddr_in srv_addr;
+} node_t;
 
 /**
  * @brief node initialization function
