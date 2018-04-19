@@ -27,20 +27,18 @@
 		return 0;
 	}
 	 
-	//TODO init ???
 	pps_key_t key = NULL;
 	pps_value_t value = NULL;
 	int j = 0;
  
 	do{
-		char* key_temp[MAX_MSG_ELEM_SIZE];
+		char key_temp[MAX_MSG_ELEM_SIZE];
 		j = scanf("%s", key_temp);
 		key = key_temp;
 		
 		if(j != -1){
-			//char* value_temp = calloc(MAX_MSG_ELEM_SIZE, 1);
 			error_code err = network_get(client, key, &value);
-			//value = value_temp;
+			
 			if(err == ERR_NONE){
 				printf("OK %s\n", value);
 			}

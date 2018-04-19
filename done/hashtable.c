@@ -97,23 +97,24 @@ pps_value_t get_Htable_value(Htable_t table, pps_key_t key){
 
 Htable_t construct_Htable(size_t size){
 	Htable_t table;
-	table.bucket = calloc(size, sizeof(bucket_t));
+	table.size = 0;
+	table.bucket = NULL;
 	
-	if(table.bucket != NULL){
-		table.size = size;
-		for(size_t i = 0; i < size; ++i){
-			kv_pair_t pair;
-			pair.key = NULL;
-			pair.value = NULL;
-			
-			table.bucket[i].pair = pair;
-			table.bucket[i].next = NULL;
-		}
+	if(size > 0){
+		table.bucket = calloc(size, sizeof(bucket_t));
+		
+		if(table.bucket != NULL){
+			table.size = size;
+			for(size_t i = 0; i < size; ++i){
+				kv_pair_t pair;
+				pair.key = NULL;
+				pair.value = NULL;
+				
+				table.bucket[i].pair = pair;
+				table.bucket[i].next = NULL;
+			}
+		}	
 	}
-	
-	else{
-		//TODO ERROR
-	}	
 	
 	return table;
 }
@@ -175,59 +176,3 @@ void bucket_free(bucket_t* bucket){
 		}
 	}
 }
-
-/*int main(void){
-	Htable_t table = construct_Htable(255);
-	
-	char* v1 = calloc(10, 1);
-	strncpy(v1, "OK", 10);
-	pps_value_t value1 = v1;
-	
-	char* v2 = calloc(10, 1);
-	strncpy(v2, "PAS MAL", 10);
-	pps_value_t value2 = v2;
-	
-	char* v3= calloc(10, 1);
-	strncpy(v3, "HAHA", 10);
-	pps_value_t value3 = v3;
-	
-	char* k1 = calloc(10, 1);
-	strncpy(k1, "25", 10);
-	pps_key_t key1 = k1;
-	
-	char* k2 = calloc(10, 1);
-	strncpy(k2, "18", 10);
-	pps_key_t key2 = k2;
-	
-	char* k3 = calloc(10, 1);
-	strncpy(k3, "22", 10);
-	pps_key_t key3 = k3;
-	
-	add_Htable_value(table, key1, value1);
-	add_Htable_value(table, key2, value2);
-	add_Htable_value(table, key3, value3);
-	
-	pps_value_t fval = get_Htable_value(table, key2);
-	
-
-	if(fval !=NULL){
-		printf("%s\n", fval);
-	}
-	else{
-		printf("NULL\n");
-	}
-	
-
-	free(v1);
-	free(v2);
-	free(v3);
-	free(k1);
-	free(k2);
-	free(k3);
-	delete_Htable_and_content(&table);
-	
-	return 1;
-
-}*/
-
-

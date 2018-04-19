@@ -27,13 +27,8 @@
 		return 0;
 	}
 	
-	//??? vraiment utile un peu bcp de définition de variable
 	kv_pair_t pair;
-	memset(&pair, 0, sizeof(pair));
-	 
-	//TODO init ??? 
-	pps_key_t key = NULL;
-	pps_value_t value = NULL;
+	(void)memset(&pair, 0, sizeof(kv_pair_t));
 	
 	int j1 = 0;
 	int j2 = 0;
@@ -41,17 +36,17 @@
 	do{
 		char key_temp[MAX_MSG_ELEM_SIZE];
 		j1 = scanf("%s", key_temp);
-		key = key_temp;	
 		if(j1 != -1){
 			char value_temp[MAX_MSG_ELEM_SIZE];
 			j2 = scanf("%s", value_temp);
 
-			value = value_temp;
 			if(j2 != -1){
-				pair.key = key;
-				pair.value = value;
-				debug_print("Trying to insert : %s, %s...\n", key, value);
+				pair.key = key_temp;
+				pair.value = value_temp;
+				debug_print("Trying to insert : %s, %s...\n", pair.key, pair.value);
+				
 				error_code err = network_put(client, pair.key, pair.value);
+				
 				if(err == ERR_NONE){
 					printf("OK\n");
 				}
