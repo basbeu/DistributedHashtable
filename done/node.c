@@ -17,6 +17,8 @@ error_code node_init(node_t *node, const char *ip, uint16_t port, size_t _unused
     struct sockaddr_in srv_addr;
     error_code err = get_server_addr(ip, port, &srv_addr);
     node->srv_addr = srv_addr;
+    node->ip = ip;
+    node->port = port;
 
     return err;
 }

@@ -18,6 +18,8 @@
  */
 typedef struct {
     struct sockaddr_in srv_addr;
+	const char* ip;
+	uint16_t port;
 } node_t;
 
 /**
