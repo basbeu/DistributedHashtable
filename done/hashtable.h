@@ -48,7 +48,11 @@ typedef struct {
 // Only from week 07
 #define NO_HTABLE ((Htable_t) NULL)
 
-typedef void kv_list_t;
+typedef struct{
+	kv_pair_t* list_pair;
+	size_t allocated;
+    size_t size;
+} kv_list_t;
 
 /**
  * @brief construct a hash-table of the given size.
