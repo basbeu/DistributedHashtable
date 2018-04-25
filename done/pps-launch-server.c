@@ -79,31 +79,38 @@ int main(void)
                                       (struct sockaddr *) &cli_addr, &addr_len);
         debug_print("received",0);
 
-        kv_pair_t pair = decompose_msg(in_msg, in_msg_len);
+		//dump request
+		if(strncmp(in_msg, "/0", 1) == 0){
+			
+			
+		}else{
+			//put or write request
+			kv_pair_t pair = decompose_msg(in_msg, in_msg_len);
 
-        debug_print("%s %s", pair.key, pair.value);
+			debug_print("%s %s", pair.key, pair.value);
 
-        pps_value_t out_msg = NULL;
-        size_t out_msg_len = 0;
+			pps_value_t out_msg = NULL;
+			size_t out_msg_len = 0;
 
-        //Writing request
-        if(strlen(pair.value) != 0) {
-            add_Htable_value(table, pair.key, pair.value);
-            send_answer(socket, out_msg, out_msg_len, &cli_addr, addr_len);
-        }
+			//Writing request
+			if(strlen(pair.value) != 0) {
+				add_Htable_value(table, pair.key, pair.value);
+				send_answer(socket, out_msg, out_msg_len, &cli_addr, addr_len);
+			}
 
-        //Reading request
-        else {
-            out_msg = get_Htable_value(table, pair.key);
-            if(out_msg != NULL) {
-                out_msg_len = strlen(out_msg);
-            } else {
-                out_msg_len = 1;
-                char const temp_out_msg[1] = "\0";
-                out_msg = temp_out_msg;
-            }
-            send_answer(socket, out_msg, out_msg_len, &cli_addr, addr_len);
-        }
+			//Reading request
+			else {
+				out_msg = get_Htable_value(table, pair.key);
+				if(out_msg != NULL) {
+					out_msg_len = strlen(out_msg);
+				} else {
+					out_msg_len = 1;
+					char const temp_out_msg[1] = "\0";
+					out_msg = temp_out_msg;
+				}
+				send_answer(socket, out_msg, out_msg_len, &cli_addr, addr_len);
+			}
+		}
     }
 
     delete_Htable_and_content(&table);
