@@ -13,12 +13,17 @@
 #include <stdio.h>
 #include "util.h"
 
+#define ENLARGE_FACTOR 2
+
 struct bucket_t {
     kv_pair_t pair;
     bucket_t* next;
 };
 
 void bucket_free(bucket_t* bucket);
+kv_list_t* kv_list_new();
+error_code kv_list_add(kv_list_t *list, kv_pair_t pair);
+kv_list_t* kv_list_enlarge(kv_list_t* list);
 
 error_code add_Htable_value(Htable_t table, pps_key_t key, pps_value_t value)
 {
@@ -181,3 +186,77 @@ void bucket_free(bucket_t* bucket)
         }
     }
 }
+
+kv_list_t* kv_list_new(){
+	kv_list_t* list = NULL;
+	list = calloc(1 ,sizeof(kv_list_t));
+    
+    if(list == NULL) {
+        return NULL;
+    } else {
+        list->allocated = 0;
+        list->size = 0;
+		return list;      
+    }
+}
+
+kv_list_t* kv_list_enlarge(kv_list_t* list)
+{
+    kv_list_t* result = list;
+    if(result != NULL) {
+        kv_pair_t* const old_list_pair = result->list_pair;
+        result->allocated*=ENLARGE_FACTOR;
+        if((result->allocated > SIZE_MAX / sizeof(kv_pair_t)) ||
+           ((result->list_pair = realloc(result->list_pair,
+                                             result->allocated * sizeof(kv_pair_t))) == NULL)) {
+            result->list_pair = old_list_pair;
+            result->allocated/=ENLARGE_FACTOR;
+            result = NULL;
+        }
+    }
+    return result;
+}
+
+
+error_code kv_list_add(kv_list_t *list, kv_pair_t pair)
+{
+    M_REQUIRE_NON_NULL(list);
+    M_REQUIRE_NON_NULL(list->list_pair);
+    while(list->size >= list->allocated) {
+        if(kv_list_enlarge(list) == NULL) {
+            return ERR_NOMEM;
+        }
+    }
+    list->list_pair[list->size] = pair;
+    ++list->size;
+    return ERR_NONE;
+}
+
+kv_list_t *get_Htable_content(Htable_t table){
+	kv_list_t* list = kv_list_new();
+	
+	bucket_t* temp_bucket = NULL;
+	for(size_t i = 0; i < table.size; ++i){
+		temp_bucket = &table.bucket[i];
+		
+		while(temp_bucket != NULL && temp_bucket->pair.key != NULL){
+			if(kv_list_add(list,temp_bucket->pair) != ERR_NONE){
+				return NULL;
+			}
+			temp_bucket = temp_bucket->next;
+		}
+		
+	}
+	
+	return list;
+}
+
+void kv_list_free(kv_list_t *list){
+	if(list != NULL && list->list_pair != NULL){
+		free(list->list_pair);
+		list->list_pair = NULL;
+		free(list);
+		list =NULL;
+	}
+}
+
