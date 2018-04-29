@@ -194,8 +194,9 @@ kv_list_t* kv_list_new(){
     if(list == NULL) {
         return NULL;
     } else {
-        list->allocated = 0;
+        list->allocated = 1;
         list->size = 0;
+        list->list_pair = calloc(1, sizeof(kv_pair_t));
 		return list;      
     }
 }
@@ -234,7 +235,7 @@ error_code kv_list_add(kv_list_t *list, kv_pair_t pair)
 
 kv_list_t *get_Htable_content(Htable_t table){
 	kv_list_t* list = kv_list_new();
-	
+	debug_print("Get H_table content\n", 0);
 	bucket_t* temp_bucket = NULL;
 	for(size_t i = 0; i < table.size; ++i){
 		temp_bucket = &table.bucket[i];

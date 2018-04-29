@@ -82,11 +82,12 @@ int main(void)
 
 		//dump request
 		if(strncmp(in_msg, "/0", 1) == 0){
-			
+			debug_print("DUMP REQUEST\n", 0);
 			//MAX_MSG_SIZE
 			kv_list_t* list_of_pairs = get_Htable_content(table);
 			if(list_of_pairs != NULL){
 				
+				debug_print("list_of_pairs != NULL\n", 0);
 				kv_pair_t elem_insert;
 				size_t elem_size = 0;
 				size_t elem_key_size = 0;
