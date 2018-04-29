@@ -58,8 +58,11 @@ node_list_t *get_nodes()
                     fclose(server_list_file);
                     return NULL;
                 } else {
+					
                     complete_list->list_of_nodes = realloc(complete_list->list_of_nodes, (complete_list->allocated+1)*sizeof(node_t));
+                
                     complete_list->list_of_nodes[complete_list->size] = temp_node;
+                 
                     ++complete_list->allocated;
                     ++complete_list->size;
                 }
@@ -91,6 +94,9 @@ error_code node_list_add(node_list_t *list, node_t node)
 void node_list_free(node_list_t *list)
 {
     if((list != NULL) && (list->list_of_nodes != NULL)) {
+		for(size_t i = 0; i < list->size; ++ i){
+			node_end(&list->list_of_nodes[i]);
+		}
         free(list->list_of_nodes);
         list->list_of_nodes = NULL;
         list->size = 0;

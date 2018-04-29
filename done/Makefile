@@ -2,7 +2,7 @@ LDLIBS = -lcheck -lm -lrt -pthread -lsubunit
 CFLAGS = -DDEBUG
 
 #all: week04 pps-client-put pps-client-get pps-launch-server clean
-all: pps-client-put pps-client-get pps-launch-server pps-dump-node clean
+all: pps-client-put pps-client-get pps-launch-server pps-dump-node pps-list-nodes clean
 
 #week04: week04.o hashtable.o error.o 
 #	gcc -o week04 week04.o hashtable.o $(LDLIBS)
@@ -19,10 +19,14 @@ pps-launch-server: pps-launch-server.o system.o hashtable.o
 pps-dump-node: pps-dump-node.o system.o
 	gcc -o pps-dump-node pps-dump-node.o system.o
 
+pps-list-nodes: pps-list-nodes.o system.o client.o network.o node_list.o node.o
+	gcc -o pps-list-nodes pps-list-nodes.o system.o client.o network.o node_list.o node.o
+
 pps-client-put.o: pps-client-put.c system.h client.h network.h node.h
 pps-client-get.o: pps-client-get.c system.h client.h network.h node.h
 pps-launch-server.o: pps-launch-server.c system.h config.h hashtable.h
 pps-dump-node.o: pps-dump-node.c system.h
+pps-list-nodes.o: pps-list-nodes.c system.h client.h network.h config.h node_list.h node.h
 system.o: system.c system.h error.h
 client.o: client.c client.h system.h config.h node_list.h 
 network.o: network.c network.h error.h config.h

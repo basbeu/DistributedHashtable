@@ -78,19 +78,38 @@ int main(void)
         ssize_t in_msg_len = recvfrom(socket, &in_msg, sizeof(in_msg), 0,
                                       (struct sockaddr *) &cli_addr, &addr_len);
         debug_print("received",0);
+		size_t out_msg_len = 0;
 
 		//dump request
 		if(strncmp(in_msg, "/0", 1) == 0){
 			
+			//MAX_MSG_SIZE
+			kv_list_t* list_of_pairs = get_Htable_content(table);
+			if(list_of_pairs != NULL){
+				size_t actual_msg_size = 0;
+				
+				while(
+
+				out_msg_len = 
+				//send_answer(socket, list_of_pairs->size, out_msg_len, &cli_addr, addr_len);
+				
+				kv_list_free(list_of_pairs);
+			}
+		}else if(in_msg_len == 0){
+			//ping
 			
-		}else{
+			send_answer(socket, NULL, out_msg_len, &cli_addr, addr_len);
+		
+		}
+		
+		else{
 			//put or write request
 			kv_pair_t pair = decompose_msg(in_msg, in_msg_len);
 
 			debug_print("%s %s", pair.key, pair.value);
 
 			pps_value_t out_msg = NULL;
-			size_t out_msg_len = 0;
+		
 
 			//Writing request
 			if(strlen(pair.value) != 0) {

@@ -12,7 +12,6 @@
  
  #include "node_list.h"
  #include "client.h"
- #include "hashtable.h"
  #include "network.h"
  #include <inttypes.h> // for uint16_t
  #include "config.h"
@@ -26,20 +25,8 @@
 	
 	for(size_t i = 0; i < list->size; ++ i){
 		
+
 		node_t node = list->list_of_nodes[i];
-		/*node_list_t* serv = node_list_new();
-		node_list_add(serv, list->list_of_nodes[i]);
-		
-		client_t client;
-		client.name = "Client";
-		client.socket = get_socket(1);
-		if(client.socket == -1){
-			return 1;
-		}
-		client.list_servers = serv;	
-		struct sockaddr_in cli_addr;
-        socklen_t addr_len = sizeof(cli_addr);
-        memset(&cli_addr, 0, addr_len);	*/
 		
 		out_msg_len = sendto(socket, NULL, 0, 0, (struct sockaddr *) &node.srv_addr, sizeof(node.srv_addr));
 		
