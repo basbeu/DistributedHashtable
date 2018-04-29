@@ -51,7 +51,7 @@ int main(void)
     printf("IP port? ");
     int i = 0;
     int j = 0;
-    do {
+    do{
         i = scanf("%s", address);
         j = scanf("%" SCNu16, &port);
         while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
@@ -86,13 +86,43 @@ int main(void)
 			//MAX_MSG_SIZE
 			kv_list_t* list_of_pairs = get_Htable_content(table);
 			if(list_of_pairs != NULL){
-				size_t actual_msg_size = 0;
 				
-				while(
-
-				out_msg_len = 
-				//send_answer(socket, list_of_pairs->size, out_msg_len, &cli_addr, addr_len);
+				kv_pair_t elem_insert;
+				size_t elem_size = 0;
+				size_t elem_key_size = 0;
+				size_t elem_value_size = 0;
+				char out_msg[MAX_MSG_SIZE];
+				(void)memset(&out_msg, '\0', MAX_MSG_SIZE);
+				sprintf(out_msg, "%zu", list_of_pairs->size);
+				out_msg_len += 4;
 				
+				
+				for(size_t i = 0; i < list_of_pairs->size; ++ i){
+					elem_insert = list_of_pairs->list_pair[i];
+					elem_key_size = strlen(elem_insert.key);
+					elem_value_size = strlen(elem_insert.value);
+					
+					elem_size = elem_key_size + elem_value_size + 1;
+					if(out_msg_len + elem_size < MAX_MSG_SIZE){
+						//INSERT
+						strncpy(&(out_msg[out_msg_len]), elem_insert.key, elem_key_size);
+						//strncpy(&(out_msg[out_msg_len+elem_key_size]), '\0', 1);
+						strncpy(&(out_msg[out_msg_len+elem_key_size+1]), elem_insert.value, elem_value_size);
+						out_msg_len += elem_size;
+					}
+					else{
+						send_answer(socket, out_msg, out_msg_len, &cli_addr, addr_len);
+						out_msg_len = 0;
+						(void)memset(&out_msg, '\0', MAX_MSG_SIZE);
+						strncpy(&(out_msg[out_msg_len]), elem_insert.key, elem_key_size);
+						//strncpy(&(out_msg[out_msg_len+elem_key_size]), '\0', 1);
+						strncpy(&(out_msg[out_msg_len+elem_key_size+1]), elem_insert.value, elem_value_size);
+						out_msg_len += elem_size;
+						
+					}
+				}
+				
+				send_answer(socket, out_msg, out_msg_len, &cli_addr, addr_len);
 				kv_list_free(list_of_pairs);
 			}
 		}else if(in_msg_len == 0){
@@ -136,7 +166,7 @@ int main(void)
     return 0;
 }
 
-void send_answer(const int socket, pps_value_t out_msg,const size_t out_msg_len, const struct sockaddr_in* const cli_addr, socklen_t addr_len)
+void send_answer(const int socket, pps_value_t out_msg, const size_t out_msg_len, const struct sockaddr_in* const cli_addr, socklen_t addr_len)
 {
     debug_print("%s", out_msg);
     sendto(socket, out_msg, out_msg_len, 0, (struct sockaddr *) cli_addr, addr_len);
