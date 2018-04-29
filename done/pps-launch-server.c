@@ -108,21 +108,21 @@ int main(void)
 						strncpy(&(out_msg[out_msg_len]), elem_insert.key, elem_key_size);
 						//strncpy(&(out_msg[out_msg_len+elem_key_size]), '\0', 1);
 						strncpy(&(out_msg[out_msg_len+elem_key_size+1]), elem_insert.value, elem_value_size);
-						out_msg_len += elem_size;
+						out_msg_len += elem_size+1;
 					}
 					else{
-						send_answer(socket, out_msg, out_msg_len, &cli_addr, addr_len);
+						send_answer(socket, out_msg, out_msg_len-1, &cli_addr, addr_len);
 						out_msg_len = 0;
 						(void)memset(&out_msg, '\0', MAX_MSG_SIZE);
 						strncpy(&(out_msg[out_msg_len]), elem_insert.key, elem_key_size);
 						//strncpy(&(out_msg[out_msg_len+elem_key_size]), '\0', 1);
 						strncpy(&(out_msg[out_msg_len+elem_key_size+1]), elem_insert.value, elem_value_size);
-						out_msg_len += elem_size;
+						out_msg_len += elem_size+1;
 						
 					}
 				}
 				
-				send_answer(socket, out_msg, out_msg_len, &cli_addr, addr_len);
+				send_answer(socket, out_msg, out_msg_len-1, &cli_addr, addr_len);
 				kv_list_free(list_of_pairs);
 			}
 		}else if(in_msg_len == 0){

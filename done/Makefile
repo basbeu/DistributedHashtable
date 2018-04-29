@@ -16,8 +16,8 @@ pps-client-get: pps-client-get.o system.o client.o network.o node.o node_list.o
 pps-launch-server: pps-launch-server.o system.o hashtable.o
 	gcc -o pps-launch-server pps-launch-server.o system.o hashtable.o
 	
-pps-dump-node: pps-dump-node.o system.o
-	gcc -o pps-dump-node pps-dump-node.o system.o
+pps-dump-node: pps-dump-node.o system.o hashtable.o node.o
+	gcc -o pps-dump-node pps-dump-node.o system.o hashtable.o node.o
 
 pps-list-nodes: pps-list-nodes.o system.o client.o network.o node_list.o node.o
 	gcc -o pps-list-nodes pps-list-nodes.o system.o client.o network.o node_list.o node.o
@@ -25,7 +25,7 @@ pps-list-nodes: pps-list-nodes.o system.o client.o network.o node_list.o node.o
 pps-client-put.o: pps-client-put.c system.h client.h network.h node.h
 pps-client-get.o: pps-client-get.c system.h client.h network.h node.h
 pps-launch-server.o: pps-launch-server.c system.h config.h hashtable.h
-pps-dump-node.o: pps-dump-node.c system.h
+pps-dump-node.o: pps-dump-node.c system.h node.h hashtable.h
 pps-list-nodes.o: pps-list-nodes.c system.h client.h network.h config.h node_list.h node.h
 system.o: system.c system.h error.h
 client.o: client.c client.h system.h config.h node_list.h 
