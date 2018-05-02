@@ -22,7 +22,7 @@ int main(void)
     client_t client;
     client_init_args_t args;
     args.client = &client;
-    args.name = "Client";
+    args.name = "Client_Put";
     if(client_init(args) != ERR_NONE) {
         printf("FAIL\n");
         return 0;
@@ -58,7 +58,7 @@ int main(void)
         while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
 
     } while(!feof(stdin) && !ferror(stdin));
-
+    
     client_end(&client);
 
     return 0;
