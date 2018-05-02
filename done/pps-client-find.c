@@ -37,47 +37,36 @@ int main(void)
     int j2 = 0;
 
     do {
-        //key = NULL;
         j1 = scanf("%s", key);
         if(j1 != -1) {
-            err1 = network_get(client, key, &value1);
-            
-            //key = NULL;
-            
+            err1 = network_get(client, key, &value1);            
             if(err1 == ERR_NONE){
-				 while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
+				while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
 				j2 = scanf("%s", key);
-				if(j2 != -1) {
-				err2 = network_get(client, key, &value2);              
-
-                if(err2 == ERR_NONE) {
-					int index = -1;
-					int iterate = (strlen(value1) - strlen(value2));
-					if(iterate > 0){
-						for(size_t i = 0; i <= (strlen(value1) - strlen(value2)); ++i){
-						
-							if(strncmp(&value1[i], value2, strlen(value2)) == 0 && index == -1){
-								
-								index = i;
-							}
-						}					
-					}
-                    
-                    printf("OK %d\n", index);
-                    
-                    
-                } else {
-                    printf("FAIL\n");
-                }
-            }
 				
+				if(j2 != -1) {
+					err2 = network_get(client, key, &value2);              
+					if(err2 == ERR_NONE) {
+						int index = -1;
+						int iterate = (strlen(value1) - strlen(value2));
+						if(iterate > 0){
+							for(size_t i = 0; i <= (strlen(value1) - strlen(value2)); ++i){
+								if(strncmp(&value1[i], value2, strlen(value2)) == 0 && index == -1){	
+									index = i;
+								}
+							}					
+						}
+						printf("OK %d\n", index);	
+					} else {
+						printf("FAIL\n");
+					}
+				}	
 			}
 			else {
                     printf("FAIL\n");
-                }
+            }
         }
-        while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
-
+      while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
     } while(!feof(stdin) && !ferror(stdin) && err1 == ERR_NONE && err2 == ERR_NONE);
     free(key);
     client_end(&client);

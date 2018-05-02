@@ -26,7 +26,6 @@ int main(void){
         printf("FAIL\n");
         return 0;
     }
-
     pps_key_t key = NULL;
     char* value = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));
     pps_value_t value_temp = NULL;
@@ -40,17 +39,13 @@ int main(void){
 		value_temp = NULL;
         if(j != -1) {
             error_code err = network_get(client, key, &value_temp);
-
             if(err == ERR_NONE && last_was_ok != 0) {
-				
-				strncpy(&value[strlen(value)], value_temp, strlen(value_temp));
-                
+				strncpy(&value[strlen(value)], value_temp, strlen(value_temp)); 
             } else {
-				 while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
-				 j = scanf("%s", key_temp);
+				while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
+				j = scanf("%s", key_temp);
 				key = key_temp;
-				value_temp = NULL;
-				
+				value_temp = NULL;	
 				if(j != -1){
 					last_was_ok = 0;
 				}
@@ -62,7 +57,6 @@ int main(void){
 					else{
 						printf("FAIL\n");
 					}
-					
 				}  
             }
         }
@@ -70,7 +64,7 @@ int main(void){
 			printf("FAIL\n");
 		}
         while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
-    } while(!feof(stdin) && !ferror(stdin));
+    }while(!feof(stdin) && !ferror(stdin));
 	
 	free(value);
     client_end(&client);
