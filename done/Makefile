@@ -2,7 +2,7 @@ LDLIBS = -lcheck -lm -lrt -pthread -lsubunit
 CFLAGS = -DDEBUG
 
 #all: week04 pps-client-put pps-client-get pps-launch-server clean
-all: pps-client-put pps-client-get pps-client-cat pps-client-substr pps-launch-server pps-dump-node pps-list-nodes clean
+all: pps-client-put pps-client-get pps-client-cat pps-client-find pps-client-substr pps-launch-server pps-dump-node pps-list-nodes clean
 
 #week04: week04.o hashtable.o error.o 
 #	gcc -o week04 week04.o hashtable.o $(LDLIBS)
@@ -15,6 +15,9 @@ pps-client-get: pps-client-get.o system.o client.o network.o node.o node_list.o
 
 pps-client-cat: pps-client-cat.o system.o client.o network.o node.o node_list.o
 	gcc -o pps-client-cat pps-client-cat.o system.o client.o network.o node.o node_list.o
+
+pps-client-find: pps-client-find.o system.o client.o network.o node.o node_list.o
+	gcc -o pps-client-find pps-client-find.o system.o client.o network.o node.o node_list.o
 
 pps-client-substr: pps-client-substr.o system.o client.o network.o node.o node_list.o
 	gcc -o pps-client-substr pps-client-substr.o system.o client.o network.o node.o node_list.o
@@ -31,6 +34,7 @@ pps-list-nodes: pps-list-nodes.o system.o client.o network.o node_list.o node.o
 pps-client-put.o: pps-client-put.c system.h client.h network.h node.h
 pps-client-get.o: pps-client-get.c system.h client.h network.h node.h
 pps-client-cat.o: pps-client-cat.c system.h client.h network.h node.h
+pps-client-find.o: pps-client-find.c system.h client.h network.h node.h
 pps-client-substr.o: pps-client-substr.c system.h client.h network.h node.h
 pps-launch-server.o: pps-launch-server.c system.h config.h hashtable.h
 pps-dump-node.o: pps-dump-node.c system.h node.h hashtable.h

@@ -56,7 +56,7 @@ int main(void){
 				}
 				else{
 					error_code err = network_put(client, key, value);
-					if(err != ERR_NONE){
+					if(err == ERR_NONE){
 						printf("OK\n");
 					}
 					else{
@@ -72,6 +72,7 @@ int main(void){
         while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
     } while(!feof(stdin) && !ferror(stdin));
 	
+	free(value);
     client_end(&client);
 
 	return 0;
