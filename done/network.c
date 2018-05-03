@@ -12,7 +12,7 @@
 
 #define R 2
 #define N 3
-#define W 1
+#define W 2
 
 error_code send_request(node_t node, const int socket, pps_key_t key, pps_value_t* value, const size_t size_data)
 {
@@ -102,13 +102,10 @@ error_code network_put(client_t client, pps_key_t key, pps_value_t value)
     size_t size_msg = 0;
     out_msg = prepare_msg(key, value, &size_msg);
 
-    error_code err = ERR_NONE;
     int write_counter = 0;
     for(size_t i = 0; i < N; ++i) {
         error_code ans = send_request(client.list_servers->list_of_nodes[i], client.socket, out_msg, &value, size_msg);
-        if(ans != ERR_NONE) {
-            err = ans;
-        }else{
+        if(ans == ERR_NONE){
 			++write_counter;
 		}
     }
