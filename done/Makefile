@@ -7,20 +7,20 @@ all: pps-client-put pps-client-get pps-client-cat pps-client-find pps-client-sub
 #week04: week04.o hashtable.o error.o 
 #	gcc -o week04 week04.o hashtable.o $(LDLIBS)
 
-pps-client-put: pps-client-put.o system.o client.o network.o node.o node_list.o error.o
-	gcc -o pps-client-put pps-client-put.o system.o client.o network.o node.o node_list.o error.o
+pps-client-put: pps-client-put.o system.o client.o network.o node.o node_list.o error.o hashtable.o
+	gcc -o pps-client-put pps-client-put.o system.o client.o network.o node.o node_list.o error.o hashtable.o
 
-pps-client-get: pps-client-get.o system.o client.o network.o node.o node_list.o
-	gcc -o pps-client-get pps-client-get.o system.o client.o network.o node.o node_list.o
+pps-client-get: pps-client-get.o system.o client.o network.o node.o node_list.o hashtable.o
+	gcc -o pps-client-get pps-client-get.o system.o client.o network.o node.o node_list.o hashtable.o
 
-pps-client-cat: pps-client-cat.o system.o client.o network.o node.o node_list.o
-	gcc -o pps-client-cat pps-client-cat.o system.o client.o network.o node.o node_list.o
+pps-client-cat: pps-client-cat.o system.o client.o network.o node.o node_list.o hashtable.o
+	gcc -o pps-client-cat pps-client-cat.o system.o client.o network.o node.o node_list.o hashtable.o
 
-pps-client-find: pps-client-find.o system.o client.o network.o node.o node_list.o
-	gcc -o pps-client-find pps-client-find.o system.o client.o network.o node.o node_list.o
+pps-client-find: pps-client-find.o system.o client.o network.o node.o node_list.o hashtable.o
+	gcc -o pps-client-find pps-client-find.o system.o client.o network.o node.o node_list.o hashtable.o
 
-pps-client-substr: pps-client-substr.o system.o client.o network.o node.o node_list.o
-	gcc -o pps-client-substr pps-client-substr.o system.o client.o network.o node.o node_list.o
+pps-client-substr: pps-client-substr.o system.o client.o network.o node.o node_list.o hashtable.o
+	gcc -o pps-client-substr pps-client-substr.o system.o client.o network.o node.o node_list.o hashtable.o
 
 pps-launch-server: pps-launch-server.o system.o hashtable.o
 	gcc -o pps-launch-server pps-launch-server.o system.o hashtable.o
@@ -28,8 +28,8 @@ pps-launch-server: pps-launch-server.o system.o hashtable.o
 pps-dump-node: pps-dump-node.o system.o hashtable.o node.o
 	gcc -o pps-dump-node pps-dump-node.o system.o hashtable.o node.o
 
-pps-list-nodes: pps-list-nodes.o system.o client.o network.o node_list.o node.o
-	gcc -o pps-list-nodes pps-list-nodes.o system.o client.o network.o node_list.o node.o
+pps-list-nodes: pps-list-nodes.o system.o client.o network.o node_list.o node.o hashtable.o
+	gcc -o pps-list-nodes pps-list-nodes.o system.o client.o network.o node_list.o node.o hashtable.o
 
 pps-client-put.o: pps-client-put.c system.h client.h network.h node.h
 pps-client-get.o: pps-client-get.c system.h client.h network.h node.h
@@ -41,7 +41,7 @@ pps-dump-node.o: pps-dump-node.c system.h node.h hashtable.h
 pps-list-nodes.o: pps-list-nodes.c system.h client.h network.h config.h node_list.h node.h
 system.o: system.c system.h error.h
 client.o: client.c client.h system.h config.h node_list.h 
-network.o: network.c network.h error.h config.h
+network.o: network.c network.h error.h config.h hashtable.h
 node.o: node.c node.h system.h
 node_list.o:node_list.c node_list.h
 

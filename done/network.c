@@ -10,6 +10,10 @@
 #include "network.h"
 #include "config.h"
 
+#define R 2
+#define N 3
+#define W 1
+
 error_code send_request(node_t node, const int socket, pps_key_t key, pps_value_t* value, const size_t size_data)
 {
     M_REQUIRE_NON_NULL(key);
@@ -31,13 +35,44 @@ error_code send_request(node_t node, const int socket, pps_key_t key, pps_value_
     return error;
 }
 
+pps_value_t increment_counter(pps_value_t counter, int* R_reached){
+	char* c = calloc(1, sizeof(char));
+	strncpy(c,counter, 1);
+	++c[0];
+	
+	*R_reached = c[0] == R;
+	
+	return c;
+}
+
 error_code network_get(client_t client, pps_key_t key, pps_value_t* value)
 {
-    error_code err = ERR_NETWORK;
-    for(size_t i = 0; i < client.list_servers->size && err != ERR_NONE; ++i) {
+	Htable_t quorum = construct_Htable(HTABLE_SIZE);
+	
+	error_code err = ERR_NONE;
+	int R_reached = 0;
+    for(size_t i = 0; i < N && R_reached == 0; ++i) {
         err = send_request(client.list_servers->list_of_nodes[i], client.socket, key, value, strlen(key));
+		
+		if(err == ERR_NONE){
+			pps_value_t counter_value = get_Htable_value(quorum, *value);
+			
+			if(counter_value!= NULL){
+				add_Htable_value(quorum, *value, increment_counter(counter_value,&R_reached )); 
+			}else{
+				add_Htable_value(quorum, *value, increment_counter("\x00",&R_reached ));
+			}
+		}
+		
     }
 
+	delete_Htable_and_content(&quorum);
+    
+    if(R_reached == 0){
+		value = NULL;
+		return ERR_NOT_FOUND;
+	}
+    
     return err;
 }
 
@@ -68,12 +103,15 @@ error_code network_put(client_t client, pps_key_t key, pps_value_t value)
     out_msg = prepare_msg(key, value, &size_msg);
 
     error_code err = ERR_NONE;
-    for(size_t i = 0; i < client.list_servers->size; ++i) {
+    int write_counter = 0;
+    for(size_t i = 0; i < N; ++i) {
         error_code ans = send_request(client.list_servers->list_of_nodes[i], client.socket, out_msg, &value, size_msg);
         if(ans != ERR_NONE) {
             err = ans;
-        }
+        }else{
+			++write_counter;
+		}
     }
 
-    return err;
+    return write_counter >= W ? ERR_NONE : ERR_NETWORK;
 }
