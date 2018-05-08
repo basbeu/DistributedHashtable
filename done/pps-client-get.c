@@ -16,39 +16,25 @@
 #include "node.h"
 #include "config.h"
 
-int main(void)
+int main(int argc, char* argv[])
 {
 
     client_t client;
-    client_init_args_t args;
-    args.client = &client;
-    args.name = "Client_Get";
-    if(client_init(args) != ERR_NONE) {
+    
+    if(client_init((client_init_args_t) { &client, 3, TOTAL_SERVERS | GET_NEEDED, 
+                                           (size_t) argc, &argv }) != ERR_NONE) {
         printf("FAIL\n");
         return 0;
     }
-
-    pps_key_t key = NULL;
     pps_value_t value = NULL;
-    int j = 0;
 
-    do {
-        char key_temp[MAX_MSG_ELEM_SIZE];
-        j = scanf("%s", key_temp);
-        key = key_temp;
+    error_code err = network_get(client, argv[0], &value);
 
-        if(j != -1) {
-            error_code err = network_get(client, key, &value);
-
-            if(err == ERR_NONE) {
-                printf("OK %s\n", value);
-            } else {
-                printf("FAIL\n");
-            }
-        }
-        while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
-    } while(!feof(stdin) && !ferror(stdin));
-	
+    if(err == ERR_NONE) {
+		printf("OK %s\n", value);
+    } else {
+         printf("FAIL\n");
+    }
     client_end(&client);
 
     return 0;
