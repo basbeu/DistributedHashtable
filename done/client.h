@@ -31,10 +31,10 @@ typedef struct {
  */
 typedef struct {
  client_t* client;
- char*** argv;
- size_t argc;
  size_t required_args;
  size_t max_opt_args;
+ size_t argc;
+ char*** argv; 
 } client_init_args_t;
 
 /**
