@@ -15,10 +15,10 @@
 #define DEFAULT_R 2
 
 int parse_arg(char **argv, const char * arg_tag, size_t* arg_value){
-	if(!strcmp(argv[0], "--")){
+	if(!strncmp(argv[0], "--", 2)){
 		++argv;
 		return 1;
-	}else if(!strcmp(argv[0], arg_tag)){
+	}else if(!strncmp(argv[0], arg_tag, strlen(arg_tag))){
 		int j = sscanf(argv[1],"%zu", arg_value);
 		argv+=2;
 		
