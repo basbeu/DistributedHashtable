@@ -19,9 +19,10 @@
  * @brief client state
  */
 typedef struct {
-    const char* name;
-    node_list_t* list_servers;
-    int socket;
+ const char* name;
+ node_list_t* list_servers;
+ int socket;
+ args_t* args;
 } client_t;
 
 /**
@@ -29,8 +30,11 @@ typedef struct {
  *        To be defined in week 05 and THEN UPDATED in week 10.
  */
 typedef struct {
-    client_t* client;
-    const char* name;
+ client_t* client;
+ char*** argv;
+ size_t argc;
+ size_t required_args;
+ size_t max_opt_args;
 } client_init_args_t;
 
 /**

@@ -14,6 +14,8 @@
 
 void client_end(client_t *client)
 {
+	free(client->args);
+	client->args = NULL;
     node_list_free(client->list_servers);
 }
 

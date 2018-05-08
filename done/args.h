@@ -12,11 +12,11 @@
 /**
  * @brief containt parsed arguments
  */
-/* TODO WEEK 10:
- * Définir ici le type args_t
- * (remplacer void et ces 4 lignes de commentaire).
- */
-typedef void args_t;
+typedef struct {
+	size_t R;
+	size_t W;
+	size_t N;
+}args_t;
 
 /**
  * @brief enum for the supported_args flag of parse_opt_args
