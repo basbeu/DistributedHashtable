@@ -14,13 +14,13 @@
 #define DEFAULT_W 2
 #define DEFAULT_R 2
 
-int parse_arg(char **argv, const char * arg_tag, size_t* arg_value){
-	if(!strncmp(argv[0], "--", 2)){
-		++argv;
+int parse_arg(char ***argv, const char * arg_tag, size_t* arg_value){
+	if(!strncmp((*argv)[0], "--", 2)){
+		++(*argv);
 		return 1;
-	}else if(!strncmp(argv[0], arg_tag, strlen(arg_tag))){
-		int j = sscanf(argv[1],"%zu", arg_value);
-		argv+=2;
+	}else if(!strncmp((*argv)[0], arg_tag, strlen(arg_tag))){
+		int j = sscanf((*argv)[1],"%zu", arg_value);
+		(*argv)+=2;
 		
 		if(j == -1){
 			return j;
@@ -37,14 +37,14 @@ args_t *parse_opt_args(size_t supported_args, char ***rem_argv){
 		
 		int parsing_state = 0;
 		if (supported_args & TOTAL_SERVERS){
-			parsing_state = parse_arg(*rem_argv,"-n",&args->N);
+			parsing_state = parse_arg(rem_argv,"-n",&args->N);
 		}
 		
 		if (supported_args & PUT_NEEDED && parsing_state == 0){
-			parsing_state = parse_arg(*rem_argv,"-w",&args->W);
+			parsing_state = parse_arg(rem_argv,"-w",&args->W);
 		}
 		if (supported_args & GET_NEEDED && parsing_state == 0){
-			parsing_state = parse_arg(*rem_argv,"-r",&args->R);			
+			parsing_state = parse_arg(rem_argv,"-r",&args->R);			
 		}
 		
 		if(parsing_state == -1){
