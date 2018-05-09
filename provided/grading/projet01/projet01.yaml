@@ -1,0 +1,44 @@
+- id: 100
+- nb tests passes: TESTCOUNT
+- Makefile: 3                            # max 3
+- hashtable.h:
+    pps_key_t: 1      # max 1
+    pps_value_t: 1    # max 1
+    kv_pair_t: 3      # max 3 (OPT)
+    bucket_t: 3       # max 3
+    Htable_t: 3       # max 3
+- hashtable.c:
+    construct_Htable: 5             # max 5
+    kv_pair_free: 2                 # max 2 (OPT)
+    bucket_free: 2                  # max 2.5
+    delete_Htable_and_content: 2.5    # max 2.5
+    add_Htable_value: 5             # max 7.5
+    get_Htable_value: 4.5             # max 5
+- node.h: 3        # max 3
+- node.c:
+    node_init: 2   # max 2
+- client.h: 6    # max 6
+- client.c:
+    client_end: 1    # max 1
+    client_init: 2.5   # max 2.5
+- network.c:
+    equiv. server_get_send: 2    # max 2.5
+    equiv. server_get_recv: 2    # max 5
+    network_get: 4               # max 5
+    equiv. server_put_send: 4    # max 5
+    equiv. server_put_recv: 2    # max 2.5
+    network_put: 5                # max 5
+- pps-launch-server.c:
+    init: 8       # max 10
+    reception: 4  # max 5
+    reponse: 9    # max 10
+- pps-clent-put.c: 8.5  # max 10
+- pps-client-get.c: 9 # max 10
+- node_list.h: 3   # max 3
+- node_list.c:
+    node_list_new: 0   # max 1
+    node_list_add: 3.5   # max 5
+    node_list_free: 2  # max 2.5
+    get_nodes: 7       # max 10
+- style: 0        # max 2, min -2
+- bonus/malus: 0  # max 5, min -5

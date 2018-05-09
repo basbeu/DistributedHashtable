@@ -1,0 +1,15 @@
+LDLIBS = -lcheck -lm -lrt -pthread -lsubunit
+CFLAGS += -o -std=c99
+
+all: week05 
+
+week05: week05.o node.o error.o system.o client.o network.o
+	gcc -o week05 week05.o node.o system.o client.o network.o $(LDLIBS)
+
+node.o: node.c error.h node.h system.h
+client.o: client.c client.h error.h system.h config.h
+network.o: network.c network.h client.h hashtable.h
+week05.o: week05.c tests.h node.h system.h config.h
+
+error.o: error.c error.h
+system.o: system.c system.h  
