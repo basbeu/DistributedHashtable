@@ -2,7 +2,6 @@
  * @file pps-client-cat.c
  * @brief
  *
- * @author Bastien Beuchat and Andrea Scalisi
  * @date 02 Mai 2018
  */
 
@@ -19,18 +18,27 @@
 int main(int argc, char* argv[]){
 	
 	client_t client;
-    
-    if(client_init((client_init_args_t) { &client, 2, TOTAL_SERVERS | PUT_NEEDED | GET_NEEDED, 
+
+     if(client_init((client_init_args_t) { &client, SIZE_MAX, TOTAL_SERVERS | PUT_NEEDED | GET_NEEDED, 
                                            (size_t) argc, &argv }) != ERR_NONE) {
         printf("FAIL\n");
         return 0;
     }   
     
     size_t index = 0;
+    char* value = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));
     pps_value_t value_temp = NULL;
     error_code err = ERR_NONE;
-    while((argv[index+2] != NULL) && (err == ERR_NONE)){
+    while((argv[index+1] != NULL) && (err == ERR_NONE)){
 		err = network_get(client, argv[index], &value_temp);
+		if(err == ERR_NONE){
+		
+		strncpy(&value[strlen(value)], value_temp, strlen(value_temp));
+		}
+		if(err != ERR_NONE){
+			debug_print("Y A UNE ERREUR", 0);
+		}
+		debug_print("index : %zu\n", index); 
 		index++;	 
 	}
 	
@@ -38,7 +46,7 @@ int main(int argc, char* argv[]){
 		printf("FAIL\n");
 	}
 	else{
-		err = network_put(client, argv[index+1], value_temp);
+		err = network_put(client, argv[index], value);
 		if(err != ERR_NONE){
 			printf("FAIL\n");
 		}

@@ -2,7 +2,6 @@
  * @file client.c
  * @brief
  *
- * @author Bastien Beuchat and Andrea Scalisi
  * @date 20 Mar 2018
  */
 
@@ -39,12 +38,12 @@ error_code client_init(client_init_args_t client_to_init)
 	client_to_init.client->name = *init_ptr[0];
 	++(*client_to_init.argv);
 
-	if(client_to_init.required_args > client_to_init.argc){
+	if(client_to_init.required_args > client_to_init.argc && client_to_init.required_args != SIZE_MAX){
 		debug_print("Too few args : required : %zu, actual :  %zu", client_to_init.required_args, client_to_init.argc);
 		return ERR_BAD_PARAMETER;
 	}
 		
-	if(client_to_init.required_args < client_to_init.argc-1){
+	if(client_to_init.required_args < client_to_init.argc-1 || client_to_init.required_args == SIZE_MAX){
 		debug_print("Ok init parse", 0);
 		client_to_init.client->args = parse_opt_args(client_to_init.max_opt_args, client_to_init.argv);
 		debug_print("N : %zu", client_to_init.client->args->N);
@@ -59,7 +58,7 @@ error_code client_init(client_init_args_t client_to_init)
 	
 	ptrdiff_t dp = (*client_to_init.argv - init_ptr);
 	debug_print("ptrdiff : %d", dp);
-	if(client_to_init.argc - dp < client_to_init.required_args){
+	if(client_to_init.argc - dp != client_to_init.required_args && client_to_init.required_args != SIZE_MAX){
 		debug_print("Not enough args left", 0);
 		return ERR_BAD_PARAMETER;
 	}
