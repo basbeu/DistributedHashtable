@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 			char value_dest_temp[length];
 			strncpy(value_dest_temp, &(original_value[beginning_index]), length);                
 								
-			err = network_put(client, argv[2], value_dest_temp);
+			err = network_put(client, argv[3], value_dest_temp);
 								
 			if(err == ERR_NONE){
 				printf("OK\n");
