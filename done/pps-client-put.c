@@ -1,5 +1,5 @@
 /**
- * @file pps-launch-server.c
+ * @file pps-client-put.c
  * @brief
  *
  * @author Bastien Beuchat and Andrea Scalisi
@@ -17,48 +17,22 @@
 #include "config.h"
 
 
-int main(void)
+int main(int argc, char* argv[])
 {
     client_t client;
-    client_init_args_t args;
-    args.client = &client;
-    args.name = "Client_Put";
-    if(client_init(args) != ERR_NONE) {
+    
+     if(client_init((client_init_args_t) { &client, 2, TOTAL_SERVERS | PUT_NEEDED, 
+                                           (size_t) argc, &argv }) != ERR_NONE) {
         printf("FAIL\n");
         return 0;
-    }
+    }    
+    error_code err = network_put(client, argv[0], argv[1]);
 
-    kv_pair_t pair;
-    (void)memset(&pair, 0, sizeof(kv_pair_t));
-
-    int j1 = 0;
-    int j2 = 0;
-
-    do {
-        char key_temp[MAX_MSG_ELEM_SIZE];
-        j1 = scanf("%s", key_temp);
-        if(j1 != -1) {
-            char value_temp[MAX_MSG_ELEM_SIZE];
-            j2 = scanf("%s", value_temp);
-
-            if(j2 != -1) {
-                pair.key = key_temp;
-                pair.value = value_temp;
-                debug_print("Trying to insert : %s, %s...\n", pair.key, pair.value);
-
-                error_code err = network_put(client, pair.key, pair.value);
-
-                if(err == ERR_NONE) {
-                    printf("OK\n");
-                } else {
-                    printf("FAIL\n");
-                }
-            }
-        }
-        while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
-
-    } while(!feof(stdin) && !ferror(stdin));
-    
+    if(err == ERR_NONE) {
+      printf("OK\n");
+    }else {
+      printf("FAIL\n");
+	}
     client_end(&client);
 
     return 0;

@@ -10,9 +10,10 @@
 #include "network.h"
 #include "config.h"
 
-#define R 2
+
+/*#define R 2
 #define N 3
-#define W 2
+#define W 2*/
 
 error_code send_request(node_t node, const int socket, pps_key_t key, pps_value_t* value, const size_t size_data)
 {
@@ -35,7 +36,7 @@ error_code send_request(node_t node, const int socket, pps_key_t key, pps_value_
     return error;
 }
 
-pps_value_t increment_counter(pps_value_t counter, int* R_reached){
+pps_value_t increment_counter(pps_value_t counter, size_t* R_reached, size_t R){
 	char* c = calloc(1, sizeof(char));
 	strncpy(c,counter, 1);
 	++c[0];
@@ -50,17 +51,16 @@ error_code network_get(client_t client, pps_key_t key, pps_value_t* value)
 	Htable_t quorum = construct_Htable(HTABLE_SIZE);
 	
 	error_code err = ERR_NONE;
-	int R_reached = 0;
-    for(size_t i = 0; i < N && R_reached == 0; ++i) {
+	size_t R_reached = 0;
+    for(size_t i = 0; i < client.args->N && R_reached == 0; ++i) {
         err = send_request(client.list_servers->list_of_nodes[i], client.socket, key, value, strlen(key));
-		
 		if(err == ERR_NONE){
 			pps_value_t counter_value = get_Htable_value(quorum, *value);
 			
 			if(counter_value!= NULL){
-				add_Htable_value(quorum, *value, increment_counter(counter_value,&R_reached )); 
+				add_Htable_value(quorum, *value, increment_counter(counter_value,&R_reached, client.args->R )); 
 			}else{
-				add_Htable_value(quorum, *value, increment_counter("\x00",&R_reached ));
+				add_Htable_value(quorum, *value, increment_counter("\x00",&R_reached, client.args->R ));
 			}
 		}
 		
@@ -103,12 +103,12 @@ error_code network_put(client_t client, pps_key_t key, pps_value_t value)
     out_msg = prepare_msg(key, value, &size_msg);
 
     int write_counter = 0;
-    for(size_t i = 0; i < N; ++i) {
+    for(size_t i = 0; i < client.args->N; ++i) {
         error_code ans = send_request(client.list_servers->list_of_nodes[i], client.socket, out_msg, &value, size_msg);
         if(ans == ERR_NONE){
 			++write_counter;
 		}
     }
 
-    return write_counter >= W ? ERR_NONE : ERR_NETWORK;
+    return write_counter >= client.args->W ? ERR_NONE : ERR_NETWORK;
 }

@@ -21,8 +21,9 @@ int main(int argc, char* argv[])
 
     client_t client;
     
-    if(client_init((client_init_args_t) { &client, 3, TOTAL_SERVERS | GET_NEEDED, 
+    if(client_init((client_init_args_t) { &client, 1, TOTAL_SERVERS | GET_NEEDED, 
                                            (size_t) argc, &argv }) != ERR_NONE) {
+        debug_print("NO INIT", 0);
         printf("FAIL\n");
         return 0;
     }
@@ -33,6 +34,7 @@ int main(int argc, char* argv[])
     if(err == ERR_NONE) {
 		printf("OK %s\n", value);
     } else {
+		//debug_print("Error network", 0);
          printf("FAIL\n");
     }
     client_end(&client);
