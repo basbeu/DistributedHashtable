@@ -2,7 +2,6 @@
  * @file hashtable.c
  * @brief
  *
- * @author Bastien Beuchat and Andrea Scalisi
  */
 
 #include "error.h"
@@ -25,22 +24,21 @@ kv_list_t* kv_list_new();
 error_code kv_list_add(kv_list_t *list, kv_pair_t pair);
 kv_list_t* kv_list_enlarge(kv_list_t* list);
 
+
 error_code add_Htable_value(Htable_t table, pps_key_t key, pps_value_t value)
 {
     M_REQUIRE_NON_NULL(table.bucket);
     M_REQUIRE_NON_NULL(key);
     M_REQUIRE_NON_NULL(value);
 
-    size_t value_len = strnlen(value, MAX_MSG_ELEM_SIZE)+1;
-    size_t key_len = strnlen(key, MAX_MSG_ELEM_SIZE)+1;
-
-    char* val = calloc(value_len, sizeof(char));
-    strncpy(val, value, value_len);
-    pps_value_t copied_value = val;
-    char* k = calloc(key_len, sizeof(char));
-    strncpy(k, key, key_len);
-    pps_key_t copied_key = k;
-
+ 
+    
+	pps_value_t copied_value = strdup(value);
+	pps_key_t copied_key = strdup(key);
+	
+	if(copied_value == NULL || copied_key == NULL){
+		return ERR_NOMEM;
+	}
 
     size_t index = hash_function(key, table.size);
     bucket_t* b_temp;
@@ -49,6 +47,7 @@ error_code add_Htable_value(Htable_t table, pps_key_t key, pps_value_t value)
     b_temp = &table.bucket[index];
     while(b_temp != NULL && b_temp->pair.key != NULL) {
         if(strncmp(b_temp->pair.key, key, MAX_MSG_ELEM_SIZE) == 0) {
+			kv_pair_free(&b_temp->pair); //MOD
             b_temp->pair.key = copied_key;
             b_temp->pair.value = copied_value;
 
@@ -58,11 +57,11 @@ error_code add_Htable_value(Htable_t table, pps_key_t key, pps_value_t value)
             b_temp = b_temp->next;
         } else {
             bucket_t* insert = calloc(1, sizeof(bucket_t));
+            if(insert == NULL){
+				return ERR_NOMEM;
+			}
             insert->next = NULL;
-            kv_pair_t pair;
-            pair.key = copied_key;
-            pair.value = copied_value;
-            insert->pair = pair;
+            insert->pair = (kv_pair_t){copied_key, copied_value};
             b_temp->next = insert;
             return ERR_NONE;
         }
@@ -87,13 +86,17 @@ pps_value_t get_Htable_value(const Htable_t table, pps_key_t key)
 
     while(b->next != NULL) {
         if(strncmp(b->pair.key, key, MAX_MSG_ELEM_SIZE) == 0) {
-            return b->pair.value;
+			pps_value_t copied_value = strdup(b->pair.value);
+            return copied_value;
+            //return b->pair.value;
         }
         b = b->next;
     }
 
     if(b->pair.key != NULL && strncmp(b->pair.key, key, MAX_MSG_ELEM_SIZE) == 0) {
-        return b->pair.value;
+		pps_value_t copied_value = strdup(b->pair.value);
+        return copied_value;
+        //return b->pair.value;
     } else {
         return NULL;
     }
@@ -110,15 +113,7 @@ Htable_t construct_Htable(size_t size)
         table.bucket = calloc(size, sizeof(bucket_t));
 
         if(table.bucket != NULL) {
-            table.size = size;
-            for(size_t i = 0; i < size; ++i) {
-                kv_pair_t pair;
-                pair.key = NULL;
-                pair.value = NULL;
-
-                table.bucket[i].pair = pair;
-                table.bucket[i].next = NULL;
-            }
+            table.size = size;            
         }
     }
 
@@ -161,15 +156,16 @@ size_t hash_function(pps_key_t key, size_t table_size)
 }
 
 void kv_pair_free(kv_pair_t *kv)
-{
-    if(kv->key != NULL) {
-        free_const_ptr(kv->key );
-        kv->key = NULL;
-    }
-    if(kv->value != NULL) {
-        free_const_ptr(kv->value);
-        kv->value = NULL;
-    }
+{	if(kv != NULL){
+		if(kv->key != NULL) {
+			free_const_ptr(kv->key );
+			kv->key = NULL;
+		}
+		if(kv->value != NULL) {
+			free_const_ptr(kv->value);
+			kv->value = NULL;
+		}
+	}
 }
 
 void bucket_free(bucket_t* bucket)
@@ -181,6 +177,7 @@ void bucket_free(bucket_t* bucket)
         while(b_next != NULL) {
             b_curr = b_next;
             b_next = b_curr->next;
+            kv_pair_free(&b_curr->pair); //MODIFIED
             free(b_curr);
             b_curr = NULL;
         }

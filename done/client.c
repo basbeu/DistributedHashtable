@@ -43,17 +43,17 @@ error_code client_init(client_init_args_t client_to_init)
 	++(*client_to_init.argv);
 
 	if(client_to_init.required_args > client_to_init.argc && client_to_init.required_args != SIZE_MAX){
-		debug_print("Too few args : required : %zu, actual :  %zu", client_to_init.required_args, client_to_init.argc);
 		return ERR_BAD_PARAMETER;
 	}
 		
 	if(client_to_init.required_args < client_to_init.argc-1 || client_to_init.required_args == SIZE_MAX){
-		debug_print("Ok init parse", 0);
 		client_to_init.client->args = parse_opt_args(client_to_init.max_opt_args, client_to_init.argv);
-		debug_print("N : %zu", client_to_init.client->args->N);
 	}
 	else{
 		client_to_init.client->args = calloc(1, sizeof(args_t));
+		if(client_to_init.client->args == NULL){
+			return ERR_NOMEM;
+		}
 	}
 	
 	if(client_to_init.client->args->N == 0){
@@ -83,20 +83,14 @@ error_code client_init(client_init_args_t client_to_init)
 		 
 			
 		ptrdiff_t dp = (*client_to_init.argv - init_ptr);
-		debug_print("ptrdiff : %d", dp);
 		if(client_to_init.argc - dp != client_to_init.required_args && client_to_init.required_args != SIZE_MAX){
-			debug_print("Not enough args left", 0);
 			return ERR_BAD_PARAMETER;
 		}
 	
-	
-    
-		
         if((client_to_init.client->socket = get_socket(TIMEOUT_CLIENT)) == -1) {
             return ERR_NETWORK;
         }
-        
-        debug_print("client init\n",0);
+
         return ERR_NONE;
     } else {
         return ERR_NOT_FOUND;
