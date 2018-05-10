@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
     if(client_init((client_init_args_t) { &client, 2, TOTAL_SERVERS | GET_NEEDED | PUT_NEEDED, 
                                            (size_t) argc, &argv }) != ERR_NONE) {
         printf("FAIL\n");
-        return 0;
+        return 1;
     }
 
     char* key = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));

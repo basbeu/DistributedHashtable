@@ -25,8 +25,8 @@ pps-client-substr: pps-client-substr.o system.o client.o network.o node.o node_l
 pps-launch-server: pps-launch-server.o system.o hashtable.o
 	gcc -o pps-launch-server pps-launch-server.o system.o hashtable.o
 	
-pps-dump-node: pps-dump-node.o system.o hashtable.o node.o args.o
-	gcc -o pps-dump-node pps-dump-node.o system.o hashtable.o node.o args.o
+pps-dump-node: pps-dump-node.o system.o hashtable.o node.o client.o args.o node_list.o
+	gcc -o pps-dump-node pps-dump-node.o system.o hashtable.o node.o client.o args.o node_list.o
 
 pps-list-nodes: pps-list-nodes.o system.o client.o network.o node_list.o node.o hashtable.o args.o
 	gcc -o pps-list-nodes pps-list-nodes.o system.o client.o network.o node_list.o node.o hashtable.o args.o

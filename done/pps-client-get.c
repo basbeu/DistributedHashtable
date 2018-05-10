@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
                                            (size_t) argc, &argv }) != ERR_NONE) {
         debug_print("NO INIT", 0);
         printf("FAIL\n");
-        return 0;
+        return 1;
     }
     pps_value_t value = NULL;
 

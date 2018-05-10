@@ -22,7 +22,7 @@ int main(int argc, char* argv[]){
      if(client_init((client_init_args_t) { &client, SIZE_MAX, TOTAL_SERVERS | PUT_NEEDED | GET_NEEDED, 
                                            (size_t) argc, &argv }) != ERR_NONE) {
         printf("FAIL\n");
-        return 0;
+        return 1;
     }   
     
     size_t index = 0;

@@ -15,41 +15,49 @@
 #include "hashtable.h"
 #include "node.h"
 #include "config.h"
+#include "client.h"
  
 #define ADD_LENGTH 15
 #define TIMEOUT 1
  
- int main(void)
+ int main(int argc, char* argv[])
 {
-	int socket = get_socket(TIMEOUT);
-    if(socket == -1) {
+	//int socket = get_socket(TIMEOUT);
+    /*if(socket == -1) {
         debug_print("Unable to get a socket", 0);
         return 1;
-    }
+    }*/
 
-    char address[ADD_LENGTH];
-    (void)memset(&address, 0, ADD_LENGTH);
+    /*char address[ADD_LENGTH];
+    (void)memset(&address, 0, ADD_LENGTH);*/
     uint16_t port = 0;
 	
-	int i = 0;
-    int j = 0;
-    do {
-        i = scanf("%s", address);
-        j = scanf("%" SCNu16, &port);
-        while(!feof(stdin) && !ferror(stdin) && getc(stdin) != '\n');
-    } while(i != 1 && j != 1);
+    
+    client_t client;
+    
+     if(client_init((client_init_args_t) { &client, 2, TOTAL_SERVERS | PUT_NEEDED, 
+                                           (size_t) argc, &argv }) != ERR_NONE) {
+        printf("FAIL\n");
+        return 1;
+    }    
+    
+    int j = sscanf(argv[1],"%" SCNu16, &port);
+    if(j == -1){
+		 printf("FAIL\n");
+        return 1;
+	}
     
     node_t node;
-    node_init(&node, address, port, 0);
+    node_init(&node, argv[0], port, 0);
     
     //send the dump request
-    sendto(socket, "/0", 1, 0, (struct sockaddr *) &node.srv_addr, sizeof(node.srv_addr));    
+    sendto(client.socket, "/0", 1, 0, (struct sockaddr *) &node.srv_addr, sizeof(node.srv_addr));    
     
 	char in_msg[MAX_MSG_SIZE];
     (void)memset(&in_msg, '\0', MAX_MSG_SIZE);
     socklen_t addr_len = sizeof(node.srv_addr);
     
-    ssize_t in_msg_len = recvfrom(socket, &in_msg, sizeof(in_msg), 0,
+    ssize_t in_msg_len = recvfrom(client.socket, &in_msg, sizeof(in_msg), 0,
                                       (struct sockaddr *)&node.srv_addr, &addr_len);
                                       
     char nb_pair_s[4];
@@ -77,7 +85,7 @@
 			--nb_pair;
 			++index_pair;
 		}
-		in_msg_len = recvfrom(socket, &in_msg, sizeof(in_msg), 0,
+		in_msg_len = recvfrom(client.socket, &in_msg, sizeof(in_msg), 0,
                                       (struct sockaddr *)&node.srv_addr, &addr_len);
 		index_msg = 0;
 	}
@@ -90,6 +98,9 @@
 		printf("%s = %s\n",all_pair[i].key, all_pair[i].value);
 	}                                                                        
     
+    for(size_t i = 0; i < all_pair_size; ++i){
+		kv_pair_free(&all_pair[i]);
+	}                                                                            
     node_end(&node);
 	return 0;
 }

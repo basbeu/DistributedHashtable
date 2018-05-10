@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
      if(client_init((client_init_args_t) { &client, 2, TOTAL_SERVERS | PUT_NEEDED, 
                                            (size_t) argc, &argv }) != ERR_NONE) {
         printf("FAIL\n");
-        return 0;
+        return 1;
     }    
     error_code err = network_put(client, argv[0], argv[1]);
 
