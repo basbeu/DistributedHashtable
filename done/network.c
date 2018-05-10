@@ -18,15 +18,27 @@ error_code send_request(node_t node, const int socket, pps_key_t key, pps_value_
 
     ssize_t out_msg_len = sendto(socket, key, size_data, 0,(struct sockaddr *)&node.srv_addr, sizeof(node.srv_addr));
 
-    char* temp_value = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));
-    ssize_t in_msg_len = recv(socket, temp_value, MAX_MSG_ELEM_SIZE, 0);
+	if(out_msg_len != -1){	
+		char* temp_value = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));
+		
+		if(temp_value == NULL){
+			return ERR_NOMEM;
+		}
+		
+		socklen_t addr_len;
+		ssize_t in_msg_len = recvfrom(socket, temp_value, MAX_MSG_ELEM_SIZE, 0, (struct sockaddr *)&node.srv_addr, &addr_len);
 
-    if (out_msg_len == -1 || in_msg_len == -1 || (strncmp(temp_value, "\0", 1) == 0 && in_msg_len != 0)) {
+		if (out_msg_len == -1 || in_msg_len == -1) {
+			error = ERR_NETWORK;
+		}else if(strncmp(temp_value, "\0", 1) == 0 && in_msg_len != 0){
+			error = ERR_NOT_FOUND;
+		}
+		
 
-        error = ERR_NETWORK;
-    }
-
-    *value = temp_value;
+		*value = temp_value;
+	}else{
+		error = ERR_NETWORK;
+	}    
 
     return error;
 }
@@ -43,12 +55,17 @@ pps_value_t increment_counter(pps_value_t counter, size_t* R_reached, size_t R){
 
 error_code network_get(client_t client, pps_key_t key, pps_value_t* value)
 {
+	M_REQUIRE_NON_NULL(key);
+	if(strlen(key) > MAX_MSG_ELEM_SIZE){
+		return ERR_BAD_PARAMETER;
+	}
 	Htable_t quorum = construct_Htable(HTABLE_SIZE);
 	
 	error_code err = ERR_NONE;
 	size_t R_reached = 0;
     for(size_t i = 0; i < client.args->N && R_reached == 0; ++i) {
         err = send_request(client.list_servers->list_of_nodes[i], client.socket, key, value, strlen(key));
+		
 		if(err == ERR_NONE){
 			pps_value_t counter_value = get_Htable_value(quorum, *value);
 			
@@ -80,9 +97,12 @@ char* prepare_msg(pps_key_t key, pps_value_t value, size_t* size_msg)
 
 
     char* out_msg = calloc(*size_msg, sizeof(char));
-    strncpy(out_msg, key, size_key);
-    out_msg[size_key + 1] = '\0';
-    strncpy(&out_msg[size_key+1], value, size_value);
+    if(out_msg != NULL){
+		strncpy(out_msg, key, size_key);
+		out_msg[size_key + 1] = '\0';
+		strncpy(&out_msg[size_key+1], value, size_value);
+	}	
+		
     return out_msg;
 }
 
@@ -104,6 +124,6 @@ error_code network_put(client_t client, pps_key_t key, pps_value_t value)
 			++write_counter;
 		}
     }
-
+	free(out_msg);
     return write_counter >= client.args->W ? ERR_NONE : ERR_NETWORK;
 }

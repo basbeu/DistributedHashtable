@@ -14,6 +14,7 @@
 #include "network.h"
 #include "node.h"
 #include "config.h"
+#include "util.h"
 
 int main(int argc, char* argv[])
 {
@@ -33,9 +34,10 @@ int main(int argc, char* argv[])
     if(err == ERR_NONE) {
 		printf("OK %s\n", value);
     } else {
-		//debug_print("Error network", 0);
          printf("FAIL\n");
     }
+    
+    free_const_ptr(value);
     client_end(&client);
 
     return 0;

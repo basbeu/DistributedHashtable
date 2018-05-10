@@ -191,28 +191,36 @@ kv_list_t* kv_list_new(){
     if(list == NULL) {
         return NULL;
     } else {
+        list->list_pair = calloc(1, sizeof(kv_pair_t));
+        
+        if(list->list_pair == NULL){
+			free(list);
+			return NULL;
+		}
+		
         list->allocated = 1;
         list->size = 0;
-        list->list_pair = calloc(1, sizeof(kv_pair_t));
 		return list;      
     }
 }
 
 kv_list_t* kv_list_enlarge(kv_list_t* list)
 {
-    kv_list_t* result = list;
-    if(result != NULL) {
-        kv_pair_t* const old_list_pair = result->list_pair;
-        result->allocated*=ENLARGE_FACTOR;
-        if((result->allocated > SIZE_MAX / sizeof(kv_pair_t)) ||
-           ((result->list_pair = realloc(result->list_pair,
-                                             result->allocated * sizeof(kv_pair_t))) == NULL)) {
-            result->list_pair = old_list_pair;
-            result->allocated/=ENLARGE_FACTOR;
-            result = NULL;
-        }
+    if(list != NULL) {
+        kv_pair_t* const old_list_pair = list->list_pair;
+        
+        if(list->allocated < SIZE_MAX / ENLARGE_FACTOR){
+			list->allocated*=ENLARGE_FACTOR;
+			if((list->allocated > SIZE_MAX / sizeof(kv_pair_t)) ||
+			   ((list->list_pair = realloc(list->list_pair,
+												 list->allocated * sizeof(kv_pair_t))) == NULL)) {
+				list->list_pair = old_list_pair;
+				list->allocated/=ENLARGE_FACTOR;
+				list = NULL;
+			}
+		}
     }
-    return result;
+    return list;
 }
 
 
@@ -239,6 +247,7 @@ kv_list_t *get_Htable_content(Htable_t table){
 		
 		while(temp_bucket != NULL && temp_bucket->pair.key != NULL){
 			if(kv_list_add(list,temp_bucket->pair) != ERR_NONE){
+				kv_list_free(list);
 				return NULL;
 			}
 			temp_bucket = temp_bucket->next;

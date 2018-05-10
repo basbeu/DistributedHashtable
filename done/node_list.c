@@ -2,7 +2,6 @@
  * @file node_list.c
  * @brief
  *
- * @author Bastien Beuchat and Andrea Scalisi
  * @date 28 Mar 2018
  */
 #include "node_list.h"
@@ -24,6 +23,7 @@ node_list_t *node_list_new()
     if(node_list_r != NULL) {
         node_list_r->list_of_nodes = calloc(1, sizeof(node_t));
         if(node_list_r->list_of_nodes == NULL) {
+			free(node_list_r);
             return NULL;
         } else {
             node_list_r->allocated = 1;
@@ -97,7 +97,7 @@ node_list_t *get_nodes()
 error_code node_list_add(node_list_t *list, node_t node)
 {
     M_REQUIRE_NON_NULL(list);
-    //M_REQUIRE_NON_NULL(list->list_of_nodes);
+    M_REQUIRE_NON_NULL(list->list_of_nodes);
     while(list->size >= list->allocated) {
         if(enlarge_list_of_nodes(list) == NULL) {
             return ERR_NOMEM;
@@ -127,14 +127,17 @@ node_list_t* enlarge_list_of_nodes(node_list_t* list)
 {
 	if(list != NULL) {
         node_t* const old_list_of_nodes = list->list_of_nodes;
-        list->allocated*=DOUBLE_SIZE_OF_LIST;
-        if((list->allocated > SIZE_MAX / sizeof(node_t)) ||
-           ((list->list_of_nodes = realloc(list->list_of_nodes,
-                                             list->allocated * sizeof(node_t))) == NULL)) {
-            list->list_of_nodes = old_list_of_nodes;
-            list->allocated/=DOUBLE_SIZE_OF_LIST;
-            list = NULL;
-        }
+        
+        if(list->allocated < SIZE_MAX / DOUBLE_SIZE_OF_LIST){	
+			list->allocated*=DOUBLE_SIZE_OF_LIST;
+			if((list->allocated > SIZE_MAX / sizeof(node_t)) ||
+			   ((list->list_of_nodes = realloc(list->list_of_nodes,
+												 list->allocated * sizeof(node_t))) == NULL)) {
+				list->list_of_nodes = old_list_of_nodes;
+				list->allocated/=DOUBLE_SIZE_OF_LIST;
+				list = NULL;
+			}
+		}
     }
     return list;
     /*node_list_t* result = list;
