@@ -15,6 +15,10 @@
 
 #define TIMEOUT_CLIENT 1
 
+#define DEFAULT_N 3
+#define DEFAULT_W 2
+#define DEFAULT_R 2
+
 void client_end(client_t *client)
 {	
 	if(client != NULL){
@@ -50,22 +54,43 @@ error_code client_init(client_init_args_t client_to_init)
 	}
 	else{
 		client_to_init.client->args = calloc(1, sizeof(args_t));
-		client_to_init.client->args->N = 3;
-		client_to_init.client->args->W = 2;
-		client_to_init.client->args->R = 2;
+	}
+	
+	if(client_to_init.client->args->N == 0){
+		client_to_init.client->args->N = DEFAULT_N;
+	}
+	if(client_to_init.client->args->W == 0){
+		client_to_init.client->args->W = DEFAULT_W;
+	}
+	if(client_to_init.client->args->R == 0){
+		client_to_init.client->args->R = DEFAULT_R;
+	}
 		
-	}
+	client_to_init.client->list_servers = get_nodes();
+    if(client_to_init.client->list_servers != NULL && client_to_init.client->list_servers->size != 0) {
+		
+		if(client_to_init.client->list_servers->size < client_to_init.client->args->N){
+			client_to_init.client->args->N = client_to_init.client->list_servers->size ;
+		}
+		
+		if(client_to_init.client->args->R > client_to_init.client->args->N){
+			client_to_init.client->args->R = client_to_init.client->args->N;
+		}
+		
+		if(client_to_init.client->args->W > client_to_init.client->args->N){
+			client_to_init.client->args->W = client_to_init.client->args->N;
+		}
+		 
+			
+		ptrdiff_t dp = (*client_to_init.argv - init_ptr);
+		debug_print("ptrdiff : %d", dp);
+		if(client_to_init.argc - dp != client_to_init.required_args && client_to_init.required_args != SIZE_MAX){
+			debug_print("Not enough args left", 0);
+			return ERR_BAD_PARAMETER;
+		}
 	
-	ptrdiff_t dp = (*client_to_init.argv - init_ptr);
-	debug_print("ptrdiff : %d", dp);
-	if(client_to_init.argc - dp != client_to_init.required_args && client_to_init.required_args != SIZE_MAX){
-		debug_print("Not enough args left", 0);
-		return ERR_BAD_PARAMETER;
-	}
 	
-	
-    client_to_init.client->list_servers = get_nodes();
-    if(client_to_init.client->list_servers != NULL) {
+    
 		
         if((client_to_init.client->socket = get_socket(TIMEOUT_CLIENT)) == -1) {
             return ERR_NETWORK;

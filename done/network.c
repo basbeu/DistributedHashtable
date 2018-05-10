@@ -10,10 +10,6 @@
 #include "config.h"
 
 
-/*#define R 2
-#define N 3
-#define W 2*/
-
 error_code send_request(node_t node, const int socket, pps_key_t key, pps_value_t* value, const size_t size_data)
 {
     M_REQUIRE_NON_NULL(key);

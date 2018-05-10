@@ -25,6 +25,7 @@ int main(int argc, char* argv[])
         printf("FAIL\n");
         return 1;
     }    
+    debug_print("n : %zu w : %zu r : %zu ",client.args->N, client.args->W, client.args->R);
     error_code err = network_put(client, argv[0], argv[1]);
 
     if(err == ERR_NONE) {

@@ -9,9 +9,6 @@
 #include <string.h>
 #include "args.h"
  
-#define DEFAULT_N 3
-#define DEFAULT_W 2
-#define DEFAULT_R 2
 
 int parse_arg(char ***argv, const char * arg_tag, size_t* arg_value){
 	if(!strncmp((*argv)[0], "--", 2)){
@@ -53,7 +50,7 @@ args_t *parse_opt_args(size_t supported_args, char ***rem_argv){
 		if(parsing_state == -1){
 			return NULL;
 		}
-		
+		/*
 		if(args->N == 0){
 			args->N = DEFAULT_N;
 		}
@@ -62,7 +59,7 @@ args_t *parse_opt_args(size_t supported_args, char ***rem_argv){
 		}
 		if(args->R == 0){
 			args->R = DEFAULT_R;
-		}
+		}*/
 	}
 	
 	return args;
