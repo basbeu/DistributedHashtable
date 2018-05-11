@@ -26,18 +26,16 @@ int main(int argc, char* argv[]){
     }   
     
     size_t index = 0;
-    char* value = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));
+    //char* value = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));
+    char value[MAX_MSG_ELEM_SIZE];
     pps_value_t value_temp = NULL;
     error_code err = ERR_NONE;
     while((argv[index+1] != NULL) && (err == ERR_NONE)){
 		err = network_get(client, argv[index], &value_temp);
 		if(err == ERR_NONE){
+			strncpy(&value[strlen(value)], value_temp, strlen(value_temp));
+		}
 		
-		strncpy(&value[strlen(value)], value_temp, strlen(value_temp));
-		}
-		if(err != ERR_NONE){
-			debug_print("Y A UNE ERREUR", 0);
-		}
 		debug_print("index : %zu\n", index); 
 		index++;	 
 	}

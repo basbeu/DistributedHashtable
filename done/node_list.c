@@ -33,21 +33,6 @@ node_list_t *node_list_new()
     }
     
     return node_list_r;
-    
-    
-    
-    /*if(node_list_r == NULL) {
-        return NULL;
-    } else {
-        node_list_r->list_of_nodes = calloc(0, sizeof(node_t));
-        if(node_list_r->list_of_nodes == NULL) {
-            return NULL;
-        } else {
-            node_list_r->allocated = 0;
-            node_list_r->size = 0;
-            return node_list_r;
-        }
-    }*/
 }
 node_list_t *get_nodes()
 {
@@ -74,13 +59,6 @@ node_list_t *get_nodes()
                 } else {
 					
 					node_list_add(complete_list, temp_node);
-					
-                    /*complete_list->list_of_nodes = realloc(complete_list->list_of_nodes, (complete_list->allocated+1)*sizeof(node_t));
-                
-                    complete_list->list_of_nodes[complete_list->size] = temp_node;
-                 
-                    ++complete_list->allocated;
-                    ++complete_list->size;*/
                 }
             
         }
@@ -140,17 +118,4 @@ node_list_t* enlarge_list_of_nodes(node_list_t* list)
 		}
     }
     return list;
-    /*node_list_t* result = list;
-    if(result != NULL) {
-        node_t* const old_list_of_nodes = result->list_of_nodes;
-        result->allocated*=DOUBLE_SIZE_OF_LIST;
-        if((result->allocated > SIZE_MAX / sizeof(node_t)) ||
-           ((result->list_of_nodes = realloc(result->list_of_nodes,
-                                             result->allocated * sizeof(node_t))) == NULL)) {
-            result->list_of_nodes = old_list_of_nodes;
-            result->allocated/=DOUBLE_SIZE_OF_LIST;
-            result = NULL;
-        }
-    }
-    return result;*/
 }

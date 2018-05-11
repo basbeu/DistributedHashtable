@@ -2,7 +2,6 @@
  * @file pps-dump-node.c
  * @brief
  *
- * @author Bastien Beuchat and Andrea Scalisi
  * @date 25 Avr 2018
  */
  
@@ -22,14 +21,6 @@
  
  int main(int argc, char* argv[])
 {
-	//int socket = get_socket(TIMEOUT);
-    /*if(socket == -1) {
-        debug_print("Unable to get a socket", 0);
-        return 1;
-    }*/
-
-    /*char address[ADD_LENGTH];
-    (void)memset(&address, 0, ADD_LENGTH);*/
     uint16_t port = 0;
 	
     
@@ -54,7 +45,7 @@
     sendto(client.socket, "/0", 1, 0, (struct sockaddr *) &node.srv_addr, sizeof(node.srv_addr));    
     
 	char in_msg[MAX_MSG_SIZE];
-    (void)memset(&in_msg, '\0', MAX_MSG_SIZE);
+    (void)memset(in_msg, '\0', MAX_MSG_SIZE);
     socklen_t addr_len = sizeof(node.srv_addr);
     
     ssize_t in_msg_len = recvfrom(client.socket, &in_msg, sizeof(in_msg), 0,
@@ -74,16 +65,19 @@
 		while(index_msg < in_msg_len){
 			char* key = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));
 			char* value = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));
-			strncpy(key, &(in_msg[index_msg]),MAX_MSG_ELEM_SIZE);
-			index_msg += strlen(key)+1;
-			strncpy(value, &(in_msg[index_msg]),MAX_MSG_ELEM_SIZE);
-			index_msg+= strlen(value)+1;
 			
-			all_pair[index_pair].key = key;
-			all_pair[index_pair].value = value;
-			
-			--nb_pair;
-			++index_pair;
+			if(key != NULL && value != NULL){ 
+				strncpy(key, &(in_msg[index_msg]),MAX_MSG_ELEM_SIZE);
+				index_msg += strlen(key)+1;
+				strncpy(value, &(in_msg[index_msg]),MAX_MSG_ELEM_SIZE);
+				index_msg+= strlen(value)+1;
+				
+				all_pair[index_pair].key = key;
+				all_pair[index_pair].value = value;
+							
+				--nb_pair;
+				++index_pair;
+			}
 		}
 		in_msg_len = recvfrom(client.socket, &in_msg, sizeof(in_msg), 0,
                                       (struct sockaddr *)&node.srv_addr, &addr_len);
@@ -100,7 +94,7 @@
     
     for(size_t i = 0; i < all_pair_size; ++i){
 		kv_pair_free(&all_pair[i]);
-	}                                                                            
+	}                                                                       
     node_end(&node);
 	return 0;
 }

@@ -45,10 +45,13 @@ error_code send_request(node_t node, const int socket, pps_key_t key, pps_value_
 
 pps_value_t increment_counter(pps_value_t counter, size_t* R_reached, size_t R){
 	char* c = calloc(1, sizeof(char));
-	strncpy(c,counter, 1);
-	++c[0];
 	
-	*R_reached = c[0] == R;
+	if(c != NULL){
+		strncpy(c,counter, 1);
+		++c[0];
+		
+		*R_reached = c[0] == R;
+	}
 	
 	return c;
 }
@@ -56,10 +59,15 @@ pps_value_t increment_counter(pps_value_t counter, size_t* R_reached, size_t R){
 error_code network_get(client_t client, pps_key_t key, pps_value_t* value)
 {
 	M_REQUIRE_NON_NULL(key);
+	
 	if(strlen(key) > MAX_MSG_ELEM_SIZE){
 		return ERR_BAD_PARAMETER;
 	}
+	
 	Htable_t quorum = construct_Htable(HTABLE_SIZE);
+	if(quorum.size == 0 || quorum.bucket == NULL){
+		return ERR_NOMEM;
+	}
 	
 	error_code err = ERR_NONE;
 	size_t R_reached = 0;

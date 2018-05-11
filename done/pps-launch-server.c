@@ -36,7 +36,7 @@ int main(void)
     Htable_t table = construct_Htable(HTABLE_SIZE);
 
 	if(table.size == 0 || table.bucket == NULL){
-		debug_print("Unable to create a Hashtabel",0);
+		debug_print("Unable to create a Hashtable",0);
 		return 1;
 	}
 
@@ -47,7 +47,7 @@ int main(void)
     }
 
     char address[ADD_LENGTH + 1];
-    (void)memset(&address, 0, ADD_LENGTH);
+    (void)memset(address, 0, ADD_LENGTH);
     uint16_t port = 0;
 
     int i = 0;

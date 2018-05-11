@@ -5,13 +5,14 @@
  * @date 20 Mar 2018
  */
 
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "client.h"
 #include "system.h"
 #include "config.h"
 #include "args.h"
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define TIMEOUT_CLIENT 1
 

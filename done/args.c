@@ -9,7 +9,12 @@
 #include <string.h>
 #include "args.h"
  
-
+/**
+ * @brief parse optional arguments
+ * @param argv ref to array of string to check for argument, with last elem == NULL
+ * @param arg_tag string of char repsenting the argument to parse
+ * @return 1 if -- is detected, -1 if an error occured, else 0
+ */
 int parse_arg(char ***argv, const char * arg_tag, size_t* arg_value){
 	if(!strncmp((*argv)[0], "--", 2)){
 		++(*argv);
@@ -39,6 +44,7 @@ args_t *parse_opt_args(size_t supported_args, char ***rem_argv){
 		if (supported_args & PUT_NEEDED && parsing_state == 0){
 			parsing_state = parse_arg(rem_argv,"-w",&args->W);
 		}
+		
 		if (supported_args & GET_NEEDED && parsing_state == 0){
 			parsing_state = parse_arg(rem_argv,"-r",&args->R);			
 		}
@@ -48,18 +54,9 @@ args_t *parse_opt_args(size_t supported_args, char ***rem_argv){
 		}
 		
 		if(parsing_state == -1){
+			free(args);
 			return NULL;
 		}
-		/*
-		if(args->N == 0){
-			args->N = DEFAULT_N;
-		}
-		if(args->W == 0){
-			args->W = DEFAULT_W;
-		}
-		if(args->R == 0){
-			args->R = DEFAULT_R;
-		}*/
 	}
 	
 	return args;

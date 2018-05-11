@@ -88,7 +88,6 @@ pps_value_t get_Htable_value(const Htable_t table, pps_key_t key)
         if(strncmp(b->pair.key, key, MAX_MSG_ELEM_SIZE) == 0) {
 			pps_value_t copied_value = strdup(b->pair.value);
             return copied_value;
-            //return b->pair.value;
         }
         b = b->next;
     }
@@ -96,7 +95,6 @@ pps_value_t get_Htable_value(const Htable_t table, pps_key_t key)
     if(b->pair.key != NULL && strncmp(b->pair.key, key, MAX_MSG_ELEM_SIZE) == 0) {
 		pps_value_t copied_value = strdup(b->pair.value);
         return copied_value;
-        //return b->pair.value;
     } else {
         return NULL;
     }
@@ -240,7 +238,7 @@ error_code kv_list_add(kv_list_t *list, kv_pair_t pair)
 
 kv_list_t *get_Htable_content(Htable_t table){
 	kv_list_t* list = kv_list_new();
-	debug_print("Get H_table content\n", 0);
+	
 	bucket_t* temp_bucket = NULL;
 	for(size_t i = 0; i < table.size; ++i){
 		temp_bucket = &table.bucket[i];

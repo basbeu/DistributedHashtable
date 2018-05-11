@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    char* key = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));
+    char key[MAX_MSG_ELEM_SIZE];
     pps_value_t value1 = NULL;
     pps_value_t value2 = NULL;
     error_code err1 = ERR_NONE;
@@ -53,10 +53,7 @@ int main(int argc, char* argv[])
 	}else {
 		printf("FAIL\n");
     }
-    
-    
-    
-    free(key);
+        
     client_end(&client);
     return 0;
 }

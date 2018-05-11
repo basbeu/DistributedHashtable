@@ -17,6 +17,10 @@ error_code node_init(node_t *node, const char *ip, uint16_t port, size_t _unused
     
     error_code err = get_server_addr(ip, port, &node->srv_addr);
     node->ip = strdup(ip);
+    if(node->ip == NULL){
+		return ERR_NOMEM;
+	}
+    
     node->port = port;
 
     return err;
