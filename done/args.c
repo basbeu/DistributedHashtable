@@ -48,7 +48,7 @@ args_t *parse_opt_args(size_t supported_args, char ***rem_argv)
         if (supported_args & GET_NEEDED && parsing_state == 0) {
             parsing_state = parse_arg(rem_argv,"-r",&args->R);
         }
-
+        
         if(!strncmp((*rem_argv)[0], "--", 2)) {
             ++(*rem_argv);
         }
