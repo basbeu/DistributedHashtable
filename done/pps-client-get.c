@@ -1,7 +1,5 @@
 /**
  * @file pps-client-get.c
- * @brief
- *
  * @date 20 Mar 2018
  */
 
@@ -16,13 +14,17 @@
 #include "config.h"
 #include "util.h"
 
+#define REQUIRED_ARGS 1
+
 int main(int argc, char* argv[])
 {
 
     client_t client;
-    
-    if(client_init((client_init_args_t) { &client, 1, TOTAL_SERVERS | GET_NEEDED, 
-                                           (size_t) argc, &argv }) != ERR_NONE) {
+
+    if(client_init((client_init_args_t) {
+    &client, REQUIRED_ARGS, TOTAL_SERVERS | GET_NEEDED,
+    (size_t) argc, &argv
+    }) != ERR_NONE) {
         debug_print("NO INIT", 0);
         printf("FAIL\n");
         return 1;
@@ -32,11 +34,11 @@ int main(int argc, char* argv[])
     error_code err = network_get(client, argv[0], &value);
 
     if(err == ERR_NONE) {
-		printf("OK %s\n", value);
+        printf("OK %s\n", value);
     } else {
-         printf("FAIL\n");
+        printf("FAIL\n");
     }
-    
+
     free_const_ptr(value);
     client_end(&client);
 

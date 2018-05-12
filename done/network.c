@@ -1,7 +1,5 @@
 /**
  * @file network.c
- * @brief
- *
  * @date 20 Mar 2018
  */
 #include <stdlib.h>
@@ -18,81 +16,81 @@ error_code send_request(node_t node, const int socket, pps_key_t key, pps_value_
 
     ssize_t out_msg_len = sendto(socket, key, size_data, 0,(struct sockaddr *)&node.srv_addr, sizeof(node.srv_addr));
 
-	if(out_msg_len != -1){	
-		char* temp_value = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));
-		
-		if(temp_value == NULL){
-			return ERR_NOMEM;
-		}
-		
-		socklen_t addr_len;
-		ssize_t in_msg_len = recvfrom(socket, temp_value, MAX_MSG_ELEM_SIZE, 0, (struct sockaddr *)&node.srv_addr, &addr_len);
+    if(out_msg_len != -1) {
+        char* temp_value = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));
 
-		if (out_msg_len == -1 || in_msg_len == -1) {
-			error = ERR_NETWORK;
-		}else if(strncmp(temp_value, "\0", 1) == 0 && in_msg_len != 0){
-			error = ERR_NOT_FOUND;
-		}
-		
+        if(temp_value == NULL) {
+            return ERR_NOMEM;
+        }
 
-		*value = temp_value;
-	}else{
-		error = ERR_NETWORK;
-	}    
+        socklen_t addr_len;
+        ssize_t in_msg_len = recvfrom(socket, temp_value, MAX_MSG_ELEM_SIZE, 0, (struct sockaddr *)&node.srv_addr, &addr_len);
+
+        if (out_msg_len == -1 || in_msg_len == -1) {
+            error = ERR_NETWORK;
+        } else if(strncmp(temp_value, "\0", 1) == 0 && in_msg_len != 0) {
+            error = ERR_NOT_FOUND;
+        }
+
+        *value = temp_value;
+    } else {
+        error = ERR_NETWORK;
+    }
 
     return error;
 }
 
-pps_value_t increment_counter(pps_value_t counter, size_t* R_reached, size_t R){
-	char* c = calloc(1, sizeof(char));
-	
-	if(c != NULL){
-		strncpy(c,counter, 1);
-		++c[0];
-		
-		*R_reached = c[0] == R;
-	}
-	
-	return c;
+pps_value_t increment_counter(pps_value_t counter, size_t* R_reached, size_t R)
+{
+    char* c = calloc(1, sizeof(char));
+
+    if(c != NULL) {
+        strncpy(c,counter, 1);
+        ++c[0];
+
+        *R_reached = c[0] == R;
+    }
+
+    return c;
 }
 
 error_code network_get(client_t client, pps_key_t key, pps_value_t* value)
 {
-	M_REQUIRE_NON_NULL(key);
-	
-	if(strlen(key) > MAX_MSG_ELEM_SIZE){
-		return ERR_BAD_PARAMETER;
-	}
-	
-	Htable_t quorum = construct_Htable(HTABLE_SIZE);
-	if(quorum.size == 0 || quorum.bucket == NULL){
-		return ERR_NOMEM;
-	}
-	
-	error_code err = ERR_NONE;
-	size_t R_reached = 0;
-    for(size_t i = 0; i < client.args->N && R_reached == 0; ++i) {
-        err = send_request(client.list_servers->list_of_nodes[i], client.socket, key, value, strlen(key));
-		
-		if(err == ERR_NONE){
-			pps_value_t counter_value = get_Htable_value(quorum, *value);
-			
-			if(counter_value!= NULL){
-				add_Htable_value(quorum, *value, increment_counter(counter_value,&R_reached, client.args->R )); 
-			}else{
-				add_Htable_value(quorum, *value, increment_counter("\x00",&R_reached, client.args->R ));
-			}
-		}
-		
+    M_REQUIRE_NON_NULL(key);
+
+    if(strlen(key) > MAX_MSG_ELEM_SIZE) {
+        return ERR_BAD_PARAMETER;
     }
 
-	delete_Htable_and_content(&quorum);
-    
-    if(R_reached == 0){
-		value = NULL;
-		return ERR_NOT_FOUND;
-	}
-    
+    Htable_t quorum = construct_Htable(HTABLE_SIZE);
+    if(quorum.size == 0 || quorum.bucket == NULL) {
+        return ERR_NOMEM;
+    }
+
+    error_code err = ERR_NONE;
+    size_t R_reached = 0;
+    for(size_t i = 0; i < client.args->N && R_reached == 0; ++i) {
+        err = send_request(client.list_servers->list_of_nodes[i], client.socket, key, value, strlen(key));
+
+        if(err == ERR_NONE) {
+            pps_value_t counter_value = get_Htable_value(quorum, *value);
+
+            if(counter_value!= NULL) {
+                add_Htable_value(quorum, *value, increment_counter(counter_value,&R_reached, client.args->R ));
+            } else {
+                add_Htable_value(quorum, *value, increment_counter("\x00",&R_reached, client.args->R ));
+            }
+        }
+
+    }
+
+    delete_Htable_and_content(&quorum);
+
+    if(R_reached == 0) {
+        value = NULL;
+        return ERR_NOT_FOUND;
+    }
+
     return err;
 }
 
@@ -105,12 +103,12 @@ char* prepare_msg(pps_key_t key, pps_value_t value, size_t* size_msg)
 
 
     char* out_msg = calloc(*size_msg, sizeof(char));
-    if(out_msg != NULL){
-		strncpy(out_msg, key, size_key);
-		out_msg[size_key + 1] = '\0';
-		strncpy(&out_msg[size_key+1], value, size_value);
-	}	
-		
+    if(out_msg != NULL) {
+        strncpy(out_msg, key, size_key);
+        out_msg[size_key + 1] = '\0';
+        strncpy(&out_msg[size_key+1], value, size_value);
+    }
+
     return out_msg;
 }
 
@@ -128,10 +126,10 @@ error_code network_put(client_t client, pps_key_t key, pps_value_t value)
     int write_counter = 0;
     for(size_t i = 0; i < client.args->N; ++i) {
         error_code ans = send_request(client.list_servers->list_of_nodes[i], client.socket, out_msg, &value, size_msg);
-        if(ans == ERR_NONE){
-			++write_counter;
-		}
+        if(ans == ERR_NONE) {
+            ++write_counter;
+        }
     }
-	free(out_msg);
+    free(out_msg);
     return write_counter >= client.args->W ? ERR_NONE : ERR_NETWORK;
 }

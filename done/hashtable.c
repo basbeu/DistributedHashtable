@@ -31,14 +31,14 @@ error_code add_Htable_value(Htable_t table, pps_key_t key, pps_value_t value)
     M_REQUIRE_NON_NULL(key);
     M_REQUIRE_NON_NULL(value);
 
- 
+
+
+    pps_value_t copied_value = strdup(value);
+    pps_key_t copied_key = strdup(key);
     
-	pps_value_t copied_value = strdup(value);
-	pps_key_t copied_key = strdup(key);
-	
-	if(copied_value == NULL || copied_key == NULL){
-		return ERR_NOMEM;
-	}
+    if(copied_value == NULL || copied_key == NULL) {
+        return ERR_NOMEM;
+    }
 
     size_t index = hash_function(key, table.size);
     bucket_t* b_temp;
@@ -47,7 +47,7 @@ error_code add_Htable_value(Htable_t table, pps_key_t key, pps_value_t value)
     b_temp = &table.bucket[index];
     while(b_temp != NULL && b_temp->pair.key != NULL) {
         if(strncmp(b_temp->pair.key, key, MAX_MSG_ELEM_SIZE) == 0) {
-			kv_pair_free(&b_temp->pair); //MOD
+            kv_pair_free(&b_temp->pair);
             b_temp->pair.key = copied_key;
             b_temp->pair.value = copied_value;
 
@@ -57,16 +57,19 @@ error_code add_Htable_value(Htable_t table, pps_key_t key, pps_value_t value)
             b_temp = b_temp->next;
         } else {
             bucket_t* insert = calloc(1, sizeof(bucket_t));
-            if(insert == NULL){
-				return ERR_NOMEM;
-			}
+            if(insert == NULL) {
+                return ERR_NOMEM;
+            }
             insert->next = NULL;
-            insert->pair = (kv_pair_t){copied_key, copied_value};
+            insert->pair = (kv_pair_t) {
+                copied_key, copied_value
+            };
             b_temp->next = insert;
             return ERR_NONE;
         }
     }
     if(b_temp != NULL) {
+        kv_pair_free(&b_temp->pair);
         b_temp->pair.key = copied_key;
         b_temp->pair.value = copied_value;
     }
@@ -86,14 +89,14 @@ pps_value_t get_Htable_value(const Htable_t table, pps_key_t key)
 
     while(b->next != NULL) {
         if(strncmp(b->pair.key, key, MAX_MSG_ELEM_SIZE) == 0) {
-			pps_value_t copied_value = strdup(b->pair.value);
+            pps_value_t copied_value = strdup(b->pair.value);
             return copied_value;
         }
         b = b->next;
     }
 
     if(b->pair.key != NULL && strncmp(b->pair.key, key, MAX_MSG_ELEM_SIZE) == 0) {
-		pps_value_t copied_value = strdup(b->pair.value);
+        pps_value_t copied_value = strdup(b->pair.value);
         return copied_value;
     } else {
         return NULL;
@@ -111,7 +114,7 @@ Htable_t construct_Htable(size_t size)
         table.bucket = calloc(size, sizeof(bucket_t));
 
         if(table.bucket != NULL) {
-            table.size = size;            
+            table.size = size;
         }
     }
 
@@ -154,16 +157,17 @@ size_t hash_function(pps_key_t key, size_t table_size)
 }
 
 void kv_pair_free(kv_pair_t *kv)
-{	if(kv != NULL){
-		if(kv->key != NULL) {
-			free_const_ptr(kv->key );
-			kv->key = NULL;
-		}
-		if(kv->value != NULL) {
-			free_const_ptr(kv->value);
-			kv->value = NULL;
-		}
-	}
+{
+    if(kv != NULL) {
+        if(kv->key != NULL) {
+            free_const_ptr(kv->key );
+            kv->key = NULL;
+        }
+        if(kv->value != NULL) {
+            free_const_ptr(kv->value);
+            kv->value = NULL;
+        }
+    }
 }
 
 void bucket_free(bucket_t* bucket)
@@ -175,30 +179,31 @@ void bucket_free(bucket_t* bucket)
         while(b_next != NULL) {
             b_curr = b_next;
             b_next = b_curr->next;
-            kv_pair_free(&b_curr->pair); //MODIFIED
+            kv_pair_free(&b_curr->pair);
             free(b_curr);
             b_curr = NULL;
         }
     }
 }
 
-kv_list_t* kv_list_new(){
-	kv_list_t* list = NULL;
-	list = calloc(1 ,sizeof(kv_list_t));
-    
+kv_list_t* kv_list_new()
+{
+    kv_list_t* list = NULL;
+    list = calloc(1 ,sizeof(kv_list_t));
+
     if(list == NULL) {
         return NULL;
     } else {
         list->list_pair = calloc(1, sizeof(kv_pair_t));
-        
-        if(list->list_pair == NULL){
-			free(list);
-			return NULL;
-		}
-		
+
+        if(list->list_pair == NULL) {
+            free(list);
+            return NULL;
+        }
+
         list->allocated = 1;
         list->size = 0;
-		return list;      
+        return list;
     }
 }
 
@@ -206,17 +211,17 @@ kv_list_t* kv_list_enlarge(kv_list_t* list)
 {
     if(list != NULL) {
         kv_pair_t* const old_list_pair = list->list_pair;
-        
-        if(list->allocated < SIZE_MAX / ENLARGE_FACTOR){
-			list->allocated*=ENLARGE_FACTOR;
-			if((list->allocated > SIZE_MAX / sizeof(kv_pair_t)) ||
-			   ((list->list_pair = realloc(list->list_pair,
-												 list->allocated * sizeof(kv_pair_t))) == NULL)) {
-				list->list_pair = old_list_pair;
-				list->allocated/=ENLARGE_FACTOR;
-				list = NULL;
-			}
-		}
+
+        if(list->allocated < SIZE_MAX / ENLARGE_FACTOR) {
+            list->allocated*=ENLARGE_FACTOR;
+            if((list->allocated > SIZE_MAX / sizeof(kv_pair_t)) ||
+               ((list->list_pair = realloc(list->list_pair,
+                                           list->allocated * sizeof(kv_pair_t))) == NULL)) {
+                list->list_pair = old_list_pair;
+                list->allocated/=ENLARGE_FACTOR;
+                list = NULL;
+            }
+        }
     }
     return list;
 }
@@ -236,32 +241,37 @@ error_code kv_list_add(kv_list_t *list, kv_pair_t pair)
     return ERR_NONE;
 }
 
-kv_list_t *get_Htable_content(Htable_t table){
-	kv_list_t* list = kv_list_new();
-	
-	bucket_t* temp_bucket = NULL;
-	for(size_t i = 0; i < table.size; ++i){
-		temp_bucket = &table.bucket[i];
-		
-		while(temp_bucket != NULL && temp_bucket->pair.key != NULL){
-			if(kv_list_add(list,temp_bucket->pair) != ERR_NONE){
-				kv_list_free(list);
-				return NULL;
-			}
-			temp_bucket = temp_bucket->next;
-		}
-		
-	}
-	
-	return list;
+kv_list_t *get_Htable_content(Htable_t table)
+{
+    kv_list_t* list = kv_list_new();
+
+    if(list != NULL) {
+        bucket_t* temp_bucket = NULL;
+        for(size_t i = 0; i < table.size; ++i) {
+            temp_bucket = &table.bucket[i];
+
+            while(temp_bucket != NULL && temp_bucket->pair.key != NULL) {
+                if(kv_list_add(list,temp_bucket->pair) != ERR_NONE) {
+                    kv_list_free(list);
+                    return NULL;
+                }
+                temp_bucket = temp_bucket->next;
+            }
+
+        }
+    }
+
+
+    return list;
 }
 
-void kv_list_free(kv_list_t *list){
-	if(list != NULL && list->list_pair != NULL){
-		free(list->list_pair);
-		list->list_pair = NULL;
-		free(list);
-		list =NULL;
-	}
+void kv_list_free(kv_list_t *list)
+{
+    if(list != NULL && list->list_pair != NULL) {
+        free(list->list_pair);
+        list->list_pair = NULL;
+        free(list);
+        list =NULL;
+    }
 }
 

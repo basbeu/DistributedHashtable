@@ -1,7 +1,5 @@
 /**
  * @file pps-client-find.c
- * @brief
- *
  * @date 02 Mai 2018
  */
 
@@ -15,13 +13,17 @@
 #include "node.h"
 #include "config.h"
 
+#define REQUIRED_ARGS 2
+
 int main(int argc, char* argv[])
 {
 
     client_t client;
-    
-    if(client_init((client_init_args_t) { &client, 2, TOTAL_SERVERS | GET_NEEDED | PUT_NEEDED, 
-                                           (size_t) argc, &argv }) != ERR_NONE) {
+
+    if(client_init((client_init_args_t) {
+    &client, REQUIRED_ARGS, TOTAL_SERVERS | GET_NEEDED | PUT_NEEDED,
+    (size_t) argc, &argv
+    }) != ERR_NONE) {
         printf("FAIL\n");
         return 1;
     }
@@ -32,31 +34,31 @@ int main(int argc, char* argv[])
     error_code err1 = ERR_NONE;
     error_code err2 = ERR_NONE;
 
-    err1 = network_get(client, argv[0], &value1);            
-    if(err1 == ERR_NONE){
-				
-		err2 = network_get(client, argv[1], &value2);              
-		if(err2 == ERR_NONE) {
-			int index = -1;
-			int iterate = (strlen(value1) - strlen(value2));
-			if(iterate > 0){
-				for(size_t i = 0; i <= (strlen(value1) - strlen(value2)); ++i){
-					if(strncmp(&value1[i], value2, strlen(value2)) == 0 && index == -1){	
-						index = i;
-					}
-				}					
-			}
-			printf("OK %d\n", index);	
-		} else {
-			printf("FAIL\n");
-		}
-	}else {
-		printf("FAIL\n");
+    err1 = network_get(client, argv[0], &value1);
+    if(err1 == ERR_NONE) {
+
+        err2 = network_get(client, argv[1], &value2);
+        if(err2 == ERR_NONE) {
+            int index = -1;
+            int iterate = (strlen(value1) - strlen(value2));
+            if(iterate > 0) {
+                for(size_t i = 0; i <= (strlen(value1) - strlen(value2)); ++i) {
+                    if(strncmp(&value1[i], value2, strlen(value2)) == 0 && index == -1) {
+                        index = i;
+                    }
+                }
+            }
+            printf("OK %d\n", index);
+        } else {
+            printf("FAIL\n");
+        }
+    } else {
+        printf("FAIL\n");
     }
-        
+
     client_end(&client);
     return 0;
 }
 
-	
+
 

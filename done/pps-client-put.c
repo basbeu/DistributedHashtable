@@ -1,7 +1,5 @@
 /**
  * @file pps-client-put.c
- * @brief
- *
  * @date 20 Mar 2018
  */
 
@@ -15,24 +13,26 @@
 #include "node.h"
 #include "config.h"
 
+#define REQUIRED_ARGS 2
 
 int main(int argc, char* argv[])
 {
     client_t client;
-    
-     if(client_init((client_init_args_t) { &client, 2, TOTAL_SERVERS | PUT_NEEDED, 
-                                           (size_t) argc, &argv }) != ERR_NONE) {
+
+    if(client_init((client_init_args_t) {
+    &client, REQUIRED_ARGS, TOTAL_SERVERS | PUT_NEEDED,
+    (size_t) argc, &argv
+    }) != ERR_NONE) {
         printf("FAIL\n");
         return 1;
-    }    
-    debug_print("n : %zu w : %zu r : %zu ",client.args->N, client.args->W, client.args->R);
+    }
     error_code err = network_put(client, argv[0], argv[1]);
 
     if(err == ERR_NONE) {
-      printf("OK\n");
-    }else {
-      printf("FAIL\n");
-	}
+        printf("OK\n");
+    } else {
+        printf("FAIL\n");
+    }
     client_end(&client);
 
     return 0;
