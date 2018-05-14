@@ -20,6 +20,7 @@ typedef struct {
     struct sockaddr_in srv_addr;
 	const char* ip;
 	uint16_t port;
+	const unsigned char sha[SHA_DIGEST_LENGTH];
 } node_t;
 
 /**
