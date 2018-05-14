@@ -33,3 +33,8 @@ void node_end(node_t *node)
         }
     }
 }
+
+//Cast pour supprimer les warnings
+int node_cmp_sha(const node_t *first, const node_t *second){
+	return strncmp((const char*)first->sha, (const char*)second->sha, SHA_DIGEST_LENGTH);
+}

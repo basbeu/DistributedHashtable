@@ -68,6 +68,13 @@ node_list_t *get_nodes()
 
 }
 
+//Cast de comparator pour supprimer le warning
+
+void node_list_sort(node_list_t *list, int (*comparator)(const node_t *, const node_t *)){
+	qsort(list->list_of_nodes, list->size, sizeof(node_t), (int (*)(const void *, const void *))comparator);
+}
+
+
 error_code node_list_add(node_list_t *list, node_t node)
 {
     M_REQUIRE_NON_NULL(list);
