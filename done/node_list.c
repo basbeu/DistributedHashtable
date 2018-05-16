@@ -44,19 +44,22 @@ node_list_t *get_nodes()
         char address[ADD_LENGTH+1];
         (void)memset(address, 0, ADD_LENGTH);
         uint16_t port = 0;
+        size_t num_of_nodes = 0;
         if(server_list_file == NULL) {
             return NULL;
         } else {
-            while(fscanf(server_list_file, "%15s", address) == 1 && fscanf(server_list_file, "%" SCNu16, &port) == 1 && !feof(server_list_file) && !ferror(server_list_file)) {
+            while(fscanf(server_list_file, "%15s", address) == 1 && fscanf(server_list_file, "%" SCNu16, &port) == 1 && fscanf(server_list_file, "%zu", &num_of_nodes) == 1 && !feof(server_list_file) && !ferror(server_list_file)) {
                 debug_print("Adress is : %s, port : %" PRIu16 "\n", address, port);
-                error_code err = node_init(&temp_node, address, port, 0);
-                if(err != ERR_NONE) {
-                    fclose(server_list_file);
-                    return NULL;
-                } else {
-                    node_list_add(complete_list, temp_node);
-                }
-
+                //BEGIN AT 0 OR 1 ??
+                for(size_t i = 0; i < num_of_nodes; ++ i){
+					error_code err = node_init(&temp_node, address, port, i);
+					if(err != ERR_NONE) {
+						fclose(server_list_file);
+						return NULL;
+					} else {
+						node_list_add(complete_list, temp_node);
+					}
+				}
             }
             fclose(server_list_file);
 
@@ -68,7 +71,7 @@ node_list_t *get_nodes()
 
 }
 
-//Cast de comparator pour supprimer le warning
+//Cast of comparator to delete warnings
 
 void node_list_sort(node_list_t *list, int (*comparator)(const node_t *, const node_t *)){
 	qsort(list->list_of_nodes, list->size, sizeof(node_t), (int (*)(const void *, const void *))comparator);
