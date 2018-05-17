@@ -15,6 +15,16 @@
 
 #define REQUIRED_ARGS 0
 
+void print_sha(unsigned char code[]){
+	if(code != NULL){
+		printf("(");
+		for(int i = 0; i < SHA_DIGEST_LENGTH; ++i){
+			printf("%02x", code[i]);
+		}
+		printf(")");
+	}
+}
+
 int main(int argc, char* argv[])
 {
 
@@ -39,10 +49,12 @@ int main(int argc, char* argv[])
             char temp_value;
             in_msg_len = recv(client.socket, &temp_value, 1, 0);
 
+			printf("%s %" PRIu16" ", node.ip, node.port);
+            print_sha(node.sha);
             if(in_msg_len == 0) {
-                printf("%s %" PRIu16 " %s OK\n", node.ip, node.port, node.sha);
+                printf(" OK\n");
             } else {
-                printf("%s %" PRIu16 " %s FAIL\n", node.ip, node.port, node.sha);
+                printf(" FAIL\n");
             }
         }
     }

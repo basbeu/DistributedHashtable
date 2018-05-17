@@ -15,7 +15,7 @@ error_code send_request(node_t node, const int socket, pps_key_t key, pps_value_
     error_code error = ERR_NONE;
 
     ssize_t out_msg_len = sendto(socket, key, size_data, 0,(struct sockaddr *)&node.srv_addr, sizeof(node.srv_addr));
-
+	debug_print("IP : %s, port : %d", node.ip, node.port);
     if(out_msg_len != -1) {
         char* temp_value = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));
 
@@ -27,13 +27,16 @@ error_code send_request(node_t node, const int socket, pps_key_t key, pps_value_
         ssize_t in_msg_len = recvfrom(socket, temp_value, MAX_MSG_ELEM_SIZE, 0, (struct sockaddr *)&node.srv_addr, &addr_len);
 
         if (out_msg_len == -1 || in_msg_len == -1) {
+			debug_print("ERR_NETWORK", 0);
             error = ERR_NETWORK;
         } else if(strncmp(temp_value, "\0", 1) == 0 && in_msg_len != 0) {
+			debug_print("ERR_NOT_FOUND", 0);
             error = ERR_NOT_FOUND;
         }
 
         *value = temp_value;
     } else {
+		debug_print("ERR_NETWORK", 0);
         error = ERR_NETWORK;
     }
 
@@ -71,7 +74,7 @@ error_code network_get(client_t client, pps_key_t key, pps_value_t* value)
     size_t R_reached = 0;
     
     node_list_t* nodes_for_key = ring_get_nodes_for_key(client.list_servers, client.list_servers->size, key);
-    for(size_t i = 0; i < client.args->N && R_reached == 0; ++i) {
+    for(size_t i = 0; i < client.args->N && R_reached == 0 && i < nodes_for_key->size; ++i) {
         err = send_request(nodes_for_key->list_of_nodes[i], client.socket, key, value, strlen(key));
 
         if(err == ERR_NONE) {
@@ -142,10 +145,11 @@ error_code network_put(client_t client, pps_key_t key, pps_value_t value)
 
     int write_counter = 0;
     node_list_t* nodes_for_key = ring_get_nodes_for_key(client.list_servers, client.list_servers->size, key);
-    for(size_t i = 0; i < client.args->N; ++i) {
+    for(size_t i = 0; i < nodes_for_key->size && i < client.args->N; ++i) {
         error_code ans = send_request(nodes_for_key->list_of_nodes[i], client.socket, out_msg, &value, size_msg);
         if(ans == ERR_NONE) {
             ++write_counter;
+            debug_print("write_counter : %d", write_counter);
         }
     }
     /*for(size_t i = 0; i < client.args->N; ++i) {

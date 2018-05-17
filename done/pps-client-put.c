@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
     if(err == ERR_NONE) {
         printf("OK\n");
     } else {
-		debug_print("ICI", 0);
+		debug_print("ERR_NETWORK", 0);
         printf("FAIL\n");
     }
     client_end(&client);
