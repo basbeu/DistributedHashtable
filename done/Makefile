@@ -1,4 +1,4 @@
-LDLIBS = -lcheck -lm -lrt -pthread -lsubunit
+LDLIBS = -lcheck -lm -lrt -pthread -lsubunit -lcrypto
 CFLAGS = -DDEBUG
 
 #all: week04 pps-client-put pps-client-get pps-launch-server clean
@@ -7,29 +7,29 @@ all: pps-client-put pps-client-get pps-client-cat pps-client-find pps-client-sub
 #week04: week04.o hashtable.o error.o 
 #	gcc -o week04 week04.o hashtable.o $(LDLIBS)
 
-pps-client-put: pps-client-put.o system.o client.o network.o node.o node_list.o error.o hashtable.o args.o
-	gcc -o pps-client-put pps-client-put.o system.o client.o network.o node.o node_list.o error.o hashtable.o args.o
+pps-client-put: pps-client-put.o system.o client.o network.o node.o node_list.o error.o hashtable.o args.o ring.o
+	gcc -o pps-client-put pps-client-put.o system.o client.o network.o node.o node_list.o error.o hashtable.o args.o ring.o $(LDLIBS)
 
-pps-client-get: pps-client-get.o system.o client.o network.o node.o node_list.o hashtable.o args.o
-	gcc -o pps-client-get pps-client-get.o system.o client.o network.o node.o node_list.o hashtable.o args.o
+pps-client-get: pps-client-get.o system.o client.o network.o node.o node_list.o hashtable.o args.o ring.o
+	gcc -o pps-client-get pps-client-get.o system.o client.o network.o node.o node_list.o hashtable.o args.o ring.o $(LDLIBS)
 
-pps-client-cat: pps-client-cat.o system.o client.o network.o node.o node_list.o hashtable.o args.o
-	gcc -o pps-client-cat pps-client-cat.o system.o client.o network.o node.o node_list.o hashtable.o args.o
+pps-client-cat: pps-client-cat.o system.o client.o network.o node.o node_list.o hashtable.o args.o ring.o
+	gcc -o pps-client-cat pps-client-cat.o system.o client.o network.o node.o node_list.o hashtable.o args.o ring.o $(LDLIBS)
 
-pps-client-find: pps-client-find.o system.o client.o network.o node.o node_list.o hashtable.o args.o
-	gcc -o pps-client-find pps-client-find.o system.o client.o network.o node.o node_list.o hashtable.o args.o
+pps-client-find: pps-client-find.o system.o client.o network.o node.o node_list.o hashtable.o args.o ring.o
+	gcc -o pps-client-find pps-client-find.o system.o client.o network.o node.o node_list.o hashtable.o args.o ring.o $(LDLIBS)
 
-pps-client-substr: pps-client-substr.o system.o client.o network.o node.o node_list.o hashtable.o args.o
-	gcc -o pps-client-substr pps-client-substr.o system.o client.o network.o node.o node_list.o hashtable.o args.o
+pps-client-substr: pps-client-substr.o system.o client.o network.o node.o node_list.o hashtable.o args.o ring.o
+	gcc -o pps-client-substr pps-client-substr.o system.o client.o network.o node.o node_list.o hashtable.o args.o ring.o $(LDLIBS)
 
 pps-launch-server: pps-launch-server.o system.o hashtable.o
 	gcc -o pps-launch-server pps-launch-server.o system.o hashtable.o
 	
-pps-dump-node: pps-dump-node.o system.o hashtable.o node.o client.o args.o node_list.o
-	gcc -o pps-dump-node pps-dump-node.o system.o hashtable.o node.o client.o args.o node_list.o
+pps-dump-node: pps-dump-node.o system.o hashtable.o node.o client.o args.o node_list.o ring.o
+	gcc -o pps-dump-node pps-dump-node.o system.o hashtable.o node.o client.o args.o node_list.o ring.o $(LDLIBS)
 
-pps-list-nodes: pps-list-nodes.o system.o client.o network.o node_list.o node.o hashtable.o args.o
-	gcc -o pps-list-nodes pps-list-nodes.o system.o client.o network.o node_list.o node.o hashtable.o args.o
+pps-list-nodes: pps-list-nodes.o system.o client.o network.o node_list.o node.o hashtable.o args.o ring.o
+	gcc -o pps-list-nodes pps-list-nodes.o system.o client.o network.o node_list.o node.o hashtable.o args.o ring.o $(LDLIBS)
 
 
 clean :

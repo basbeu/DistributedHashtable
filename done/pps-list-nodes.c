@@ -40,9 +40,9 @@ int main(int argc, char* argv[])
             in_msg_len = recv(client.socket, &temp_value, 1, 0);
 
             if(in_msg_len == 0) {
-                printf("%s %" PRIu16 " OK\n", node.ip, node.port);
+                printf("%s %" PRIu16 " %s OK\n", node.ip, node.port, node.sha);
             } else {
-                printf("%s %" PRIu16 " FAIL\n", node.ip, node.port);
+                printf("%s %" PRIu16 " %s FAIL\n", node.ip, node.port, node.sha);
             }
         }
     }

@@ -23,6 +23,7 @@ int main(int argc, char* argv[])
     &client, REQUIRED_ARGS, TOTAL_SERVERS | PUT_NEEDED,
     (size_t) argc, &argv
     }) != ERR_NONE) {
+		debug_print("GROS FAIL", 0);
         printf("FAIL\n");
         return 1;
     }
@@ -31,6 +32,7 @@ int main(int argc, char* argv[])
     if(err == ERR_NONE) {
         printf("OK\n");
     } else {
+		debug_print("ICI", 0);
         printf("FAIL\n");
     }
     client_end(&client);

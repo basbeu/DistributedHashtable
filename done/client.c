@@ -64,8 +64,14 @@ error_code client_init(client_init_args_t client_to_init)
         client_to_init.client->args->R = DEFAULT_R;
     }
 
-    client_to_init.client->list_servers = get_nodes();
+    //client_to_init.client->list_servers = get_nodes();
+    client_to_init.client->list_servers = ring_alloc();
+    error_code err = ring_init(client_to_init.client->list_servers);
+	if(err != ERR_NONE){
+		return err;
+	}
     if(client_to_init.client->list_servers != NULL && client_to_init.client->list_servers->size != 0) {
+		
 
         if(client_to_init.client->list_servers->size < client_to_init.client->args->N) {
             client_to_init.client->args->N = client_to_init.client->list_servers->size ;
@@ -91,6 +97,8 @@ error_code client_init(client_init_args_t client_to_init)
 
         return ERR_NONE;
     } else {
+		debug_print("Problème ring_init (VOIR CLIENT.C)", 0);
+		debug_print("Parce que : list server size = %d",client_to_init.client->list_servers->size);
         return ERR_NOT_FOUND;
     }
 }

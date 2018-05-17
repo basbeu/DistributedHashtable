@@ -16,6 +16,7 @@ error_code ring_init(ring_t *ring){
 	ring = get_nodes();
 	if(ring != NULL){
 		node_list_sort((node_list_t*)ring, node_cmp_sha); 
+		debug_print("Size of the ring in ring_init : %zu", ring->size);
 		return ERR_NONE;
 	}else{
 		return ERR_NOMEM;

@@ -3,6 +3,7 @@
  * @date 28 Mar 2018
  */
 #include "node_list.h"
+#include "node.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <inttypes.h> // for uint16_t
@@ -19,6 +20,7 @@ node_list_t *node_list_new()
     node_list_r = calloc(1 ,sizeof(node_list_t));
 
     if(node_list_r != NULL) {
+		
         node_list_r->list_of_nodes = calloc(1, sizeof(node_t));
         if(node_list_r->list_of_nodes == NULL) {
             free(node_list_r);
@@ -29,11 +31,12 @@ node_list_t *node_list_new()
             return node_list_r;
         }
     }
-
+	
     return node_list_r;
 }
 node_list_t *get_nodes()
 {
+	debug_print("Get_nodes is called", 0);
     node_list_t* complete_list = node_list_new();
 
     if(complete_list != NULL) {
@@ -49,7 +52,7 @@ node_list_t *get_nodes()
             return NULL;
         } else {
             while(fscanf(server_list_file, "%15s", address) == 1 && fscanf(server_list_file, "%" SCNu16, &port) == 1 && fscanf(server_list_file, "%zu", &num_of_nodes) == 1 && !feof(server_list_file) && !ferror(server_list_file)) {
-                debug_print("Adress is : %s, port : %" PRIu16 "\n", address, port);
+                debug_print("Adress is : %s, port : %" PRIu16 ", #of nodes : %d\n", address, port, num_of_nodes);
                 //BEGIN AT 0 OR 1 ??
                 for(size_t i = 0; i < num_of_nodes; ++ i){
 					error_code err = node_init(&temp_node, address, port, i);
@@ -80,6 +83,7 @@ void node_list_sort(node_list_t *list, int (*comparator)(const node_t *, const n
 
 error_code node_list_add(node_list_t *list, node_t node)
 {
+	debug_print("node_list_add appelé", 0);
     M_REQUIRE_NON_NULL(list);
     M_REQUIRE_NON_NULL(list->list_of_nodes);
     while(list->size >= list->allocated) {
