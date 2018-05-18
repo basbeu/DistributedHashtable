@@ -23,10 +23,10 @@ error_code send_request(node_t node, const int socket, pps_key_t key, pps_value_
             return ERR_NOMEM;
         }
 
-        socklen_t addr_len;
+        socklen_t addr_len = sizeof(node.srv_addr);
         ssize_t in_msg_len = recvfrom(socket, temp_value, MAX_MSG_ELEM_SIZE, 0, (struct sockaddr *)&node.srv_addr, &addr_len);
 
-        if (out_msg_len == -1 || in_msg_len == -1) {
+        if (in_msg_len == -1) {
 			debug_print("ERR_NETWORK", 0);
             error = ERR_NETWORK;
         } else if(strncmp(temp_value, "\0", 1) == 0 && in_msg_len != 0) {
@@ -146,6 +146,7 @@ error_code network_put(client_t client, pps_key_t key, pps_value_t value)
     int write_counter = 0;
     node_list_t* nodes_for_key = ring_get_nodes_for_key(client.list_servers, client.list_servers->size, key);
     for(size_t i = 0; i < nodes_for_key->size && i < client.args->N; ++i) {
+		debug_print("Port : %d", nodes_for_key->list_of_nodes->port);
         error_code ans = send_request(nodes_for_key->list_of_nodes[i], client.socket, out_msg, &value, size_msg);
         if(ans == ERR_NONE) {
             ++write_counter;

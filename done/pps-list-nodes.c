@@ -40,6 +40,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+	node_list_sort(client.list_servers, node_cmp_server_addr);
     for(size_t i = 0; i < client.list_servers->size; ++ i) {
         node_t node = client.list_servers->list_of_nodes[i];
 

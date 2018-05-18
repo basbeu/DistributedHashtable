@@ -39,7 +39,7 @@ node_list_t *get_nodes()
 	debug_print("Get_nodes is called", 0);
     node_list_t* complete_list = node_list_new();
 
-    if(complete_list != NULL) {
+     if(complete_list != NULL) {
         node_t temp_node;
 
         FILE* server_list_file = NULL;
@@ -54,7 +54,7 @@ node_list_t *get_nodes()
             while(fscanf(server_list_file, "%15s", address) == 1 && fscanf(server_list_file, "%" SCNu16, &port) == 1 && fscanf(server_list_file, "%zu", &num_of_nodes) == 1 && !feof(server_list_file) && !ferror(server_list_file)) {
                 debug_print("Adress is : %s, port : %" PRIu16 ", #of nodes : %d\n", address, port, num_of_nodes);
                 //BEGIN AT 0 OR 1 ??
-                for(size_t i = 0; i < num_of_nodes; ++ i){
+                for(size_t i = 1; i <= num_of_nodes; ++ i){
 					error_code err = node_init(&temp_node, address, port, i);
 					if(err != ERR_NONE) {
 						fclose(server_list_file);
