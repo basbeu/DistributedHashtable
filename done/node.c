@@ -30,20 +30,15 @@ error_code node_init(node_t *node, const char *ip, uint16_t port, size_t _unused
     (void)memset(sha, 0, MAX_LEN_TO_HASH);
     
     if(strncpy(sha, ip, strlen(ip)) != NULL){
-		//debug_print("SHA1 after IP : %s", sha);
 		sprintf(&sha[strlen(sha)], " %d ", port);
-		//debug_print("SHA1 after PORT : %s", sha);
 		sprintf(&sha[strlen(sha)], "%zu", node_id);
-		debug_print("SHA1 TOBE : %s", sha);
 		(void)memset(node->sha, 0, SHA_DIGEST_LENGTH);
 		SHA1((const unsigned char*)sha, strlen(sha), node->sha);	
-		//debug_print("SHA1 %s", node->sha);
 	}
  
 	else{
 		err = ERR_NOMEM;
 	}
-	//debug_print("SHA1 %s", node->sha);
     return err;
 }
 

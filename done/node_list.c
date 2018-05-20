@@ -36,7 +36,6 @@ node_list_t *node_list_new()
 }
 node_list_t *get_nodes()
 {
-	debug_print("Get_nodes is called", 0);
     node_list_t* complete_list = node_list_new();
 
      if(complete_list != NULL) {
@@ -83,7 +82,6 @@ void node_list_sort(node_list_t *list, int (*comparator)(const node_t *, const n
 
 error_code node_list_add(node_list_t *list, node_t node)
 {
-	debug_print("node_list_add appelé", 0);
     M_REQUIRE_NON_NULL(list);
     M_REQUIRE_NON_NULL(list->list_of_nodes);
     while(list->size >= list->allocated) {

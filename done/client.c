@@ -97,8 +97,6 @@ error_code client_init(client_init_args_t client_to_init)
 
         return ERR_NONE;
     } else {
-		debug_print("Problème ring_init (VOIR CLIENT.C)", 0);
-		debug_print("Parce que : list server size = %d",client_to_init.client->list_servers->size);
         return ERR_NOT_FOUND;
     }
 }

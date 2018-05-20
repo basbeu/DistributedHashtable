@@ -73,7 +73,7 @@ error_code network_get(client_t client, pps_key_t key, pps_value_t* value)
     error_code err = ERR_NONE;
     size_t R_reached = 0;
     
-    node_list_t* nodes_for_key = ring_get_nodes_for_key(client.list_servers, client.list_servers->size, key);
+    node_list_t* nodes_for_key = ring_get_nodes_for_key(client.list_servers, client.args->N, key);
     for(size_t i = 0; i < client.args->N && R_reached == 0 && i < nodes_for_key->size; ++i) {
         err = send_request(nodes_for_key->list_of_nodes[i], client.socket, key, value, strlen(key));
 
@@ -89,20 +89,6 @@ error_code network_get(client_t client, pps_key_t key, pps_value_t* value)
 
     }
     
-    /*for(size_t i = 0; i < client.args->N && R_reached == 0; ++i) {
-        err = send_request(client.list_servers->list_of_nodes[i], client.socket, key, value, strlen(key));
-
-        if(err == ERR_NONE) {
-            pps_value_t counter_value = get_Htable_value(quorum, *value);
-
-            if(counter_value!= NULL) {
-                add_Htable_value(quorum, *value, increment_counter(counter_value,&R_reached, client.args->R ));
-            } else {
-                add_Htable_value(quorum, *value, increment_counter("\x00",&R_reached, client.args->R ));
-            }
-        }
-
-    }*/
 
     delete_Htable_and_content(&quorum);
 
@@ -144,21 +130,16 @@ error_code network_put(client_t client, pps_key_t key, pps_value_t value)
     out_msg = prepare_msg(key, value, &size_msg);
 
     int write_counter = 0;
-    node_list_t* nodes_for_key = ring_get_nodes_for_key(client.list_servers, client.list_servers->size, key);
+    
+    
+    
+    node_list_t* nodes_for_key = ring_get_nodes_for_key(client.list_servers, client.args->N, key);
     for(size_t i = 0; i < nodes_for_key->size && i < client.args->N; ++i) {
-		debug_print("Port : %d", nodes_for_key->list_of_nodes->port);
         error_code ans = send_request(nodes_for_key->list_of_nodes[i], client.socket, out_msg, &value, size_msg);
         if(ans == ERR_NONE) {
             ++write_counter;
-            debug_print("write_counter : %d", write_counter);
         }
     }
-    /*for(size_t i = 0; i < client.args->N; ++i) {
-        error_code ans = send_request(client.list_servers->list_of_nodes[i], client.socket, out_msg, &value, size_msg);
-        if(ans == ERR_NONE) {
-            ++write_counter;
-        }
-    }*/
     free(out_msg);
     return write_counter >= client.args->W ? ERR_NONE : ERR_NETWORK;
 }

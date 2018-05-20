@@ -24,7 +24,6 @@ error_code ring_init(ring_t *ring){
 		ring->size = temp->size;
 		ring->allocated = temp->allocated;
 		node_list_sort((node_list_t*)ring, node_cmp_sha); 
-		debug_print("Size of the ring in ring_init : %zu", ring->size);
 		return ERR_NONE;
 	}else{
 		return ERR_NOMEM;
@@ -50,16 +49,21 @@ int list_contains_server(node_list_t* list, node_t node){
 node_list_t *ring_get_nodes_for_key(const ring_t *ring, size_t wanted_list_size, pps_key_t key){
 	node_list_t* list = node_list_new();
 	unsigned char sha[SHA_DIGEST_LENGTH];
-	
+	int first_found = 0;
+	size_t i = 0;
 	if(list != NULL){
-		for(size_t i = 0; i < ring->size;++i){
+		while(list->size < wanted_list_size){
 			//cast to remove warning
-			if(strncmp((char*)ring->list_of_nodes[i].sha, (char*)SHA1((const unsigned char *)key,strlen(key), sha), SHA_DIGEST_LENGTH) > 0
+			if((first_found || strncmp((char*)ring->list_of_nodes[i].sha, (char*)SHA1((const unsigned char *)key,strlen(key), sha), SHA_DIGEST_LENGTH) > 0)
 				&& !list_contains_server(list, ring->list_of_nodes[i])){
 				node_list_add(list, ring->list_of_nodes[i]);
+				first_found = 1;
+			}
+			i = ((i+1)%ring->size);
+			if(i == 0){
+				first_found = 1;
 			}
 		}
 	}
-	
 	return list;
 }
