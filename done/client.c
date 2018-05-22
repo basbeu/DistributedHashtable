@@ -91,9 +91,9 @@ error_code client_init(client_init_args_t client_to_init)
             return ERR_BAD_PARAMETER;
         }
 
-        if((client_to_init.client->socket = get_socket(TIMEOUT_CLIENT)) == -1) {
+        /*if((client_to_init.client->socket = get_socket(TIMEOUT_CLIENT)) == -1) {
             return ERR_NETWORK;
-        }
+        }*/
 
         return ERR_NONE;
     } else {
