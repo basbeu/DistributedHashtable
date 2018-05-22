@@ -12,8 +12,6 @@
 #include "config.h"
 #include "args.h"
 
-#define TIMEOUT_CLIENT 1
-
 #define DEFAULT_N 3
 #define DEFAULT_W 2
 #define DEFAULT_R 2
