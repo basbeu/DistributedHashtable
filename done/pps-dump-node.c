@@ -21,7 +21,10 @@
 int main(int argc, char* argv[])
 {
     uint16_t port = 0;
-
+	int socket = get_socket(TIMEOUT);
+	if(socket == -1){
+		return 1;
+	}
 
     client_t client;
 
@@ -43,13 +46,13 @@ int main(int argc, char* argv[])
     node_init(&node, argv[0], port, 0);
 
     //send the dump request
-    sendto(client.socket, "/0", 1, 0, (struct sockaddr *) &node.srv_addr, sizeof(node.srv_addr));
+    sendto(socket, "/0", 1, 0, (struct sockaddr *) &node.srv_addr, sizeof(node.srv_addr));
 
     char in_msg[MAX_MSG_SIZE];
     (void)memset(in_msg, '\0', MAX_MSG_SIZE);
     socklen_t addr_len = sizeof(node.srv_addr);
 
-    ssize_t in_msg_len = recvfrom(client.socket, &in_msg, sizeof(in_msg), 0,
+    ssize_t in_msg_len = recvfrom(socket, &in_msg, sizeof(in_msg), 0,
                                   (struct sockaddr *)&node.srv_addr, &addr_len);
 
     char nb_pair_s[4];
@@ -79,7 +82,7 @@ int main(int argc, char* argv[])
                 ++index_pair;
             }
         }
-        in_msg_len = recvfrom(client.socket, &in_msg, sizeof(in_msg), 0,
+        in_msg_len = recvfrom(socket, &in_msg, sizeof(in_msg), 0,
                               (struct sockaddr *)&node.srv_addr, &addr_len);
         index_msg = 0;
     }
