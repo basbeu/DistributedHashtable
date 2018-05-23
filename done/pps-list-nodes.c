@@ -26,10 +26,19 @@ void print_sha(unsigned char code[]){
 	}
 }
 
+int contains(struct sockaddr_in nodes[], struct sockaddr_in node, size_t size){
+	for(size_t i = 0; i < size; ++i){
+		if(memcmp(&nodes[i], &node, sizeof(struct sockaddr)) == 0){
+			return 1;
+		}
+	}
+	return 0;
+}
+
 int main(int argc, char* argv[])
 {
 
-    ssize_t out_msg_len = 0;
+    //ssize_t out_msg_len = 0;
     ssize_t in_msg_len = 0;
     int socket = get_socket(TIMEOUT);
     client_t client;
@@ -46,36 +55,39 @@ int main(int argc, char* argv[])
     for(size_t i = 0; i < client.list_servers->size; ++ i) {
         node_t node = client.list_servers->list_of_nodes[i];
 
-        out_msg_len = sendto(socket, NULL, 0, 0, (struct sockaddr *) &node.srv_addr, sizeof(node.srv_addr));
-
-       /* if(out_msg_len != -1) {
-            char temp_value;
-            in_msg_len = recv(client.socket, &temp_value, 1, 0);
-
-			printf("%s %" PRIu16" ", node.ip, node.port);
-            print_sha(node.sha);
-            if(in_msg_len == 0) {
-                printf(" OK\n");
-            } else {
-                printf(" FAIL\n");
-            }
-        }*/
+        sendto(socket, NULL, 0, 0, (struct sockaddr *) &node.srv_addr, sizeof(node.srv_addr));
     }
     
+    size_t nodes_found_len = client.list_servers->size;
+    struct sockaddr_in nodes_found[nodes_found_len];
+   (void)memset(nodes_found, 0, sizeof(struct sockaddr_in));
+    int index = 0;
+    
     for(size_t i = 0; i < client.list_servers->size; ++ i) {
-		node_t node = client.list_servers->list_of_nodes[i];
+		//node_t node = client.list_servers->list_of_nodes[i];
+		struct sockaddr_in temp_srv_addr;
 		char temp_value;
-        in_msg_len = recv(socket, &temp_value, 1, 0);
+		socklen_t addr_len; // = sizeof(node.srv_addr);
 
+		in_msg_len = recvfrom(socket, &temp_value, 1, 0, (struct sockaddr *)&temp_srv_addr, &addr_len);
+		if(in_msg_len == 0){
+			nodes_found[index] = temp_srv_addr;
+			index++;
+		}
+		
+	}
+	
+	 for(size_t i = 0; i < client.list_servers->size; ++ i) {
+		 node_t node = client.list_servers->list_of_nodes[i];
 		printf("%s %" PRIu16" ", node.ip, node.port);
         print_sha(node.sha);
-        if(in_msg_len == 0) {
-            printf(" OK\n");
-        } else {
-            printf(" FAIL\n");
-        }
-	}
-
-
+		if(contains(nodes_found, node.srv_addr, nodes_found_len)){
+			printf(" OK\n");
+		}
+		else{
+			printf(" FAIL\n");
+		}
+		
+	 }
     return 0;
 }

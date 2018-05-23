@@ -20,26 +20,7 @@ error_code send_request(node_t node, const int socket, pps_key_t key, pps_value_
 
     ssize_t out_msg_len = sendto(socket, key, size_data, 0,(struct sockaddr *)&node.srv_addr, sizeof(node.srv_addr));
 	debug_print("IP : %s, port : %d", node.ip, node.port);
-    if(out_msg_len != -1) {
-        /*char* temp_value = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));
-
-        if(temp_value == NULL) {
-            return ERR_NOMEM;
-        }
-
-        socklen_t addr_len = sizeof(node.srv_addr);
-        ssize_t in_msg_len = recvfrom(socket, temp_value, MAX_MSG_ELEM_SIZE, 0, (struct sockaddr *)&node.srv_addr, &addr_len);
-
-        if (in_msg_len == -1) {
-			debug_print("ERR_NETWORK", 0);
-            error = ERR_NETWORK;
-        } else if(strncmp(temp_value, "\0", 1) == 0 && in_msg_len != 0) {
-			debug_print("ERR_NOT_FOUND", 0);
-            error = ERR_NOT_FOUND;
-        }
-
-        *value = temp_value;*/
-    } else {
+    if(out_msg_len == -1) {
 		debug_print("ERR_NETWORK", 0);
         error = ERR_NETWORK;
     }
@@ -110,16 +91,6 @@ error_code network_get(client_t client, pps_key_t key, pps_value_t* value)
     node_list_t* nodes_for_key = ring_get_nodes_for_key(client.list_servers, client.args->N, key);
     for(size_t i = 0; i < client.args->N && R_reached == 0 && i < nodes_for_key->size; ++i) {
         err = send_request(nodes_for_key->list_of_nodes[i], socket, key, value, strlen(key));
-/*
-        if(err == ERR_NONE) {
-            pps_value_t counter_value = get_Htable_value(quorum, *value);
-
-            if(counter_value!= NULL) {
-                add_Htable_value(quorum, *value, increment_counter(counter_value,&R_reached, client.args->R ));
-            } else {
-                add_Htable_value(quorum, *value, increment_counter("\x00",&R_reached, client.args->R ));
-            }
-        }*/
 
     }
     for(size_t i = 0; i < client.args->N && R_reached == 0 && i < nodes_for_key->size; ++i) {
@@ -188,9 +159,6 @@ error_code network_put(client_t client, pps_key_t key, pps_value_t value)
     error_code ans = ERR_NONE;
     for(size_t i = 0; i < nodes_for_key->size && i < client.args->N; ++i) {
         ans = send_request(nodes_for_key->list_of_nodes[i], socket, out_msg, &value, size_msg);
-        /*if(ans == ERR_NONE) {
-            ++write_counter;
-        }*/
     }
     
     for(size_t i = 0; i < nodes_for_key->size && i < client.args->N && write_counter<client.args->W ; ++i) {
