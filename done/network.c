@@ -28,7 +28,7 @@ error_code send_request(node_t node, const int socket, pps_key_t key, pps_value_
     return error;
 }
 
-error_code get_answer(node_t node, const int socket, pps_value_t* value){
+error_code get_answer(const int socket, pps_value_t* value){
 	char* temp_value = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));
 	
 	error_code error = ERR_NONE;
@@ -36,9 +36,9 @@ error_code get_answer(node_t node, const int socket, pps_value_t* value){
     if(temp_value == NULL) {
        return ERR_NOMEM;
     }
-
-    socklen_t addr_len = sizeof(node.srv_addr);
-    ssize_t in_msg_len = recvfrom(socket, temp_value, MAX_MSG_ELEM_SIZE, 0, (struct sockaddr *)&node.srv_addr, &addr_len);
+	struct sockaddr_in temp_srv_addr;
+    socklen_t addr_len ;
+    ssize_t in_msg_len = recvfrom(socket, temp_value, MAX_MSG_ELEM_SIZE, 0, (struct sockaddr *)&temp_srv_addr, &addr_len);
 
     if (in_msg_len == -1) {
 		debug_print("ERR_NETWORK", 0);
@@ -94,7 +94,7 @@ error_code network_get(client_t client, pps_key_t key, pps_value_t* value)
 
     }
     for(size_t i = 0; i < client.args->N && R_reached == 0 && i < nodes_for_key->size; ++i) {
-		err = get_answer(nodes_for_key->list_of_nodes[i], socket, value);
+		err = get_answer(socket, value);
 		
 		if(err == ERR_NONE) {
             pps_value_t counter_value = get_Htable_value(quorum, *value);
@@ -162,7 +162,7 @@ error_code network_put(client_t client, pps_key_t key, pps_value_t value)
     }
     
     for(size_t i = 0; i < nodes_for_key->size && i < client.args->N && write_counter<client.args->W ; ++i) {
-		ans = get_answer(nodes_for_key->list_of_nodes[i], socket,&value);
+		ans = get_answer(socket,&value);
 		if(ans == ERR_NONE) {
             ++write_counter;
         }
