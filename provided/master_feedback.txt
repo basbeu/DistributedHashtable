@@ -1,0 +1,276 @@
+Using master branch for submission. (sha: aaffef7f69362b06dbeadddbe552e506ee255bc8)
+--------
+Checking for expected files
+Found expected file done/hashtable.c on master
+Found expected file done/pps-client-find.c on master
+Found expected file done/system.c on master
+Found expected file done/ring.h on master
+Found expected file done/config.h on master
+Found expected file done/node_list.h on master
+Found expected file done/tests.h on master
+Found expected file done/system.h on master
+Found expected file done/node_list.c on master
+Found expected file done/network.c on master
+Found expected file done/pps-client-substr.c on master
+Found expected file done/log-packets.c on master
+Found expected file done/pps-list-nodes.c on master
+Found expected file done/ring.c on master
+Found expected file done/args.c on master
+Found expected file done/pps-client-get.c on master
+Found expected file done/node.h on master
+Found expected file done/pps-client-cat.c on master
+Found expected file done/pps-dump-node.c on master
+Found expected file done/node.c on master
+Found expected file done/error.c on master
+Found expected file done/pps-launch-server.c on master
+Found expected file done/pps-client-put.c on master
+Found expected file done/Makefile on master
+Found expected file done/hashtable.h on master
+Found expected file done/util.c on master
+Found expected file done/error.h on master
+Found expected file done/util.h on master
+Found expected file done/client.c on master
+Found expected file done/args.h on master
+Found expected file done/network.h on master
+Found expected file done/client.h on master
+Found expected file done/test-hashtable.c on master
+--------
+Force copying (overwriting) provided file: system.c
+Force copying (overwriting) provided file: ring.h
+Force copying (overwriting) provided file: config.h
+Force copying (overwriting) provided file: tests.h
+Force copying (overwriting) provided file: system.h
+Force copying (overwriting) provided file: log-packets.c
+Force copying (overwriting) provided file: error.c
+Force copying (overwriting) provided file: util.c
+Force copying (overwriting) provided file: error.h
+Force copying (overwriting) provided file: util.h
+Force copying (overwriting) provided file: Makefile.log-packets
+Force copying (overwriting) provided file: network.h
+Got error code 2 when running trying to build target 'test-hashtable' with command 'make test-hashtable'
+stdout: cc -DDEBUG    test-hashtable.c  -lcheck -lm -lrt -pthread -lsubunit -lcrypto -o test-hashtable
+<builtin>: recipe for target 'test-hashtable' failed
+
+---
+stderr: test-hashtable.c: In function 'construct_and_delete':
+test-hashtable.c:131:9: error: incompatible types when initializing type 'const void *' using type 'Htable_t {aka struct <anonymous>}'
+         ck_assert_ptr_nonnull(table);
+         ^
+test-hashtable.c: In function 'bad_construct':
+test-hashtable.c:142:5: error: conversion to non-scalar type requested
+     Htable_t ret = NO_HTABLE;
+     ^
+test-hashtable.c:143:5: error: incompatible types when initializing type 'const void *' using type 'Htable_t {aka struct <anonymous>}'
+     ck_assert_ptr_null(ret = construct_Htable(0));
+     ^
+test-hashtable.c:144:13: error: invalid operands to binary != (have 'Htable_t {aka struct <anonymous>}' and 'void *')
+     if (ret != NULL) free(ret);
+             ^
+test-hashtable.c:144:27: error: incompatible type for argument 1 of 'free'
+     if (ret != NULL) free(ret);
+                           ^
+In file included from test-hashtable.c:17:0:
+/usr/include/stdlib.h:483:13: note: expected 'void *' but argument is of type 'Htable_t {aka struct <anonymous>}'
+ extern void free (void *__ptr) __THROW;
+             ^
+In file included from test-hashtable.c:20:0:
+test-hashtable.c:148:58: error: invalid type argument of unary '*' (have 'Htable_t {aka struct <anonymous>}')
+                                  1 + ((SIZE_MAX - sizeof(*ret)) / sizeof(*ret->map))
+                                                          ^
+test-hashtable.c:147:5: note: in expansion of macro 'ck_assert_ptr_null'
+     ck_assert_ptr_null(ret = construct_Htable(
+     ^
+test-hashtable.c:148:78: error: invalid type argument of '->' (have 'Htable_t {aka struct <anonymous>}')
+                                  1 + ((SIZE_MAX - sizeof(*ret)) / sizeof(*ret->map))
+                                                                              ^
+test-hashtable.c:147:5: note: in expansion of macro 'ck_assert_ptr_null'
+     ck_assert_ptr_null(ret = construct_Htable(
+     ^
+test-hashtable.c:150:13: error: invalid operands to binary != (have 'Htable_t {aka struct <anonymous>}' and 'void *')
+     if (ret != NULL) free(ret);
+             ^
+test-hashtable.c:150:27: error: incompatible type for argument 1 of 'free'
+     if (ret != NULL) free(ret);
+                           ^
+In file included from test-hashtable.c:17:0:
+/usr/include/stdlib.h:483:13: note: expected 'void *' but argument is of type 'Htable_t {aka struct <anonymous>}'
+ extern void free (void *__ptr) __THROW;
+             ^
+test-hashtable.c: In function 'add_with_NULL_table_return_ERR_BAD_PARAMETER':
+test-hashtable.c:177:1: error: incompatible type for argument 1 of 'add_Htable_value'
+ hashtable_with_NULL_return(add, int, ERR_BAD_PARAMETER, table, NULL, key, value)
+ ^
+In file included from test-hashtable.c:23:0:
+hashtable.h:79:12: note: expected 'Htable_t {aka struct <anonymous>}' but argument is of type 'void *'
+ error_code add_Htable_value(Htable_t table, pps_key_t key, pps_value_t value);
+            ^
+test-hashtable.c: In function 'get_with_NULL_table_return_NULL':
+test-hashtable.c:180:1: error: incompatible type for argument 1 of 'get_Htable_value'
+ hashtable_with_NULL_return(get, pps_value_t, NULL, table, NULL, key)
+ ^
+In file included from test-hashtable.c:23:0:
+hashtable.h:87:13: note: expected 'Htable_t {aka struct <anonymous>}' but argument is of type 'void *'
+ pps_value_t get_Htable_value(Htable_t table, pps_key_t key);
+             ^
+make: *** [test-hashtable] Error 1
+
+Got error code 2 when running trying to build target 'test-hashtable' with command '[staff makefile]'
+Got error code 2 when running trying to build target 'test-hashtable' with command '[staff makefile]'
+Unable to build target 'test-hashtable'
+Unable to run test-hashtable. Executable couldn't build
+
+-------------------------
+Running test scripts
+
+
+Test 12.basic-network-parallel.sh returned code 0
+stdout:
+>> running 12.basic-network-parallel.sh
+Test 1 (launch server): PASS
+PASS
+PASS
+Test 2 (put): PASS
+Test 3 (get): PASS
+Test 4 (message format): PASS
+SUCCESS
+
+------
+stderr:
+
+-----------
+Test 10.basic-quorum.sh returned code 0
+stdout:
+>> running 10.basic-quorum.sh
+Test 1 (launch server): PASS
+PASS
+PASS
+Test 2 (put s servers 1,2): PASS
+Test 3 (put s server 3): PASS
+Test 4 (get result aab 2/3): PASS
+Test 5 (get result aab 2/2): PASS
+Test 6 (get result aab 3/3): PASS
+Test 7 (put s servers 1,3): PASS
+Test 8 (put s server 2): PASS
+Test 9 (get result aba 2/3): PASS
+Test 10 (get result aba 2/2): PASS
+Test 11 (get result aba 3/3): PASS
+Test 12 (put s servers 1,3): PASS
+Test 13 (put s server 2): PASS
+Test 14 (get result baa 2/3): PASS
+Test 15 (get result baa 2/2): PASS
+Test 16 (get result baa 3/3): PASS
+SUCCESS
+
+------
+stderr:
+
+-----------
+Test 09.basic-cat.sh returned code 0
+stdout:
+>> running 09.basic-cat.sh
+Test 1 (launch server): PASS
+PASS
+PASS
+Test 2 (put a): PASS
+Test 3 (put b): PASS
+Test 4 (cat a+b): PASS
+Test 5 (get result): PASS
+SUCCESS
+
+------
+stderr:
+
+-----------
+Test 09.basic-substr.sh has non-UTF-8 output. Return code: 1
+-----------
+Test 07.basic.sh returned code 0
+stdout:
+>> running 07.basic.sh
+Test 1 (launch 1st server): PASS
+Test 2 (launch 2nd server): PASS
+Test 3 (put, 2 servers): PASS
+Test 4 (get, 2 servers): PASS
+SUCCESS
+
+------
+stderr:
+
+-----------
+Test 06.basic.sh returned code 0
+stdout:
+>> running 06.basic.sh
+Test 1 (launch 1st server): PASS
+Test 2 (launch 2nd server): PASS
+Test 3 (put, 2 servers): PASS
+Test 4 (get, 2 servers): PASS
+SUCCESS
+
+------
+stderr:
+
+-----------
+Test 11.basic-network-ring.sh returned code 0
+stdout:
+>> running 11.basic-network-ring.sh
+Test 1 (launch server): PASS
+PASS
+PASS
+Test 2 (put with skip): PASS
+Test 3 (get with skip): PASS
+Test 4 (message format): PASS
+SUCCESS
+
+------
+stderr:
+
+-----------
+Test 08.basic.sh returned code 1
+stdout:
+>> running 08.basic.sh
+Test 1 (launch server): PASS
+Test 2 (list server): PASS
+Test 3 (list failed servers): FAIL
+Expected:
+$ ./pps-list-nodes
+127.0.0.1 1233 (e7739af87ebd02c500cafa99a63416635d811d63) FAIL
+127.0.0.1 1234 (aa66f3e5a8d9cdc5c0bd49708bc59847e6915634) OK
+127.0.0.1 1235 (c484ea9b3b14d139b1456032a49990367b857fe6) FAIL
+Actual:
+$ ./pps-list-nodes
+127.0.0.1 1233 (e7739af87ebd02c500cafa99a63416635d811d63) FAIL
+127.0.0.1 1234 (aa66f3e5a8d9cdc5c0bd49708bc59847e6915634) FAIL
+127.0.0.1 1235 (c484ea9b3b14d139b1456032a49990367b857fe6) OK
+
+------
+stderr:
+
+-----------
+Test 05.basic.sh returned code 0
+stdout:
+>> running 05.basic.sh
+Test 1 (server launch): PASS
+Test 2 (client put): PASS
+Test 3 (client get): PASS
+SUCCESS
+
+------
+stderr:
+
+-----------
+Test 09.basic-find.sh returned code 0
+stdout:
+>> running 09.basic-find.sh
+Test 1 (launch server): PASS
+PASS
+PASS
+Test 2 (put a): PASS
+Test 3 (put b): PASS
+Test 4 (find existing): PASS
+Test 5 (put c): PASS
+Test 6 (find non-existing): PASS
+SUCCESS
+
+------
+stderr:
+
+
