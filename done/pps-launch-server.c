@@ -82,7 +82,8 @@ int main(void)
             size_t out_msg_len = 0;
 
             //dump request
-            if(strncmp(in_msg, "/0", 1) == 0) {
+            //if(strncmp(in_msg, "/0", 1) == 0) {
+            if(in_msg[0]== '\0' && in_msg_len == 1) {
                 debug_print("DUMP REQUEST\n", 0);
                 //MAX_MSG_SIZE
                 kv_list_t* list_of_pairs = get_Htable_content(table);
@@ -95,12 +96,12 @@ int main(void)
                     size_t elem_value_size = 0;
                     char out_msg[MAX_MSG_SIZE];
                     (void)memset(&out_msg, '\0', MAX_MSG_SIZE);
-                    sprintf(out_msg, "%zu", list_of_pairs->size);
+                    sprintf(out_msg, "%d", (int)list_of_pairs->size);
                     out_msg_len += 4;
 
 
-                    for(size_t i = 0; i < list_of_pairs->size; ++ i) {
-                        elem_insert = list_of_pairs->list_pair[i];
+                    for(size_t k = 0; k < list_of_pairs->size; ++ k) {
+                        elem_insert = list_of_pairs->list_pair[k];
                         elem_key_size = strlen(elem_insert.key);
                         elem_value_size = strlen(elem_insert.value);
 

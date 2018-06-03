@@ -33,7 +33,15 @@ int main(int argc, char* argv[])
     int beginning = 0;
     size_t length = 0;
     sscanf(argv[1], "%d", &beginning);
-    sscanf(argv[2], "%zu", &length);
+    
+    int temp_length = 0;
+    sscanf(argv[2], "%d", &temp_length);
+    if(temp_length < 0){
+		printf("FAIL\n");
+        return 1;
+	}
+	length = (size_t) temp_length;
+	debug_print("%zu", length);
 
     error_code err = network_get(client, original_key, &original_value);
 
@@ -46,8 +54,10 @@ int main(int argc, char* argv[])
         if(err == ERR_NONE) {
             size_t beginning_index = (size_t)beginning;
 
-            char value_dest_temp[length];
+            char value_dest_temp[length+1];
+            (void)memset(value_dest_temp, '\0', length+1);
             strncpy(value_dest_temp, &(original_value[beginning_index]), length);
+            debug_print("%s", value_dest_temp);
 
             err = network_put(client, argv[3], value_dest_temp);
 

@@ -25,31 +25,24 @@ int main(int argc, char* argv[])
 	if(socket == -1){
 		return 1;
 	}
-
-    client_t client;
-
-    if(client_init((client_init_args_t) {
-    &client, REQUIRED_ARGS, 0,
-    (size_t) argc, &argv
-    }) != ERR_NONE) {
+	
+    int temp_port = 0;
+    int j = sscanf(argv[2],"%d", &temp_port);
+    if(j == -1 || temp_port < 0) {
         printf("FAIL\n");
         return 1;
     }
-
-    int j = sscanf(argv[1],"%" SCNu16, &port);
-    if(j == -1) {
-        printf("FAIL\n");
-        return 1;
-    }
+    
+    port = (uint16_t) temp_port;
 
     node_t node;
-    node_init(&node, argv[0], port, 0);
+    node_init(&node, argv[1], port, 0);
 
     //send the dump request
-    sendto(socket, "/0", 1, 0, (struct sockaddr *) &node.srv_addr, sizeof(node.srv_addr));
+    sendto(socket, "", 1, 0, (struct sockaddr *) &node.srv_addr, sizeof(node.srv_addr));
 
-    char in_msg[MAX_MSG_SIZE];
-    (void)memset(in_msg, '\0', MAX_MSG_SIZE);
+    char in_msg[MAX_MSG_SIZE+1];
+    (void)memset(in_msg, '\0', MAX_MSG_SIZE+1);
     socklen_t addr_len = sizeof(node.srv_addr);
 
     ssize_t in_msg_len = recvfrom(socket, &in_msg, sizeof(in_msg), 0,
@@ -58,6 +51,7 @@ int main(int argc, char* argv[])
     char nb_pair_s[4];
     strncpy(nb_pair_s, in_msg, 4);
     size_t nb_pair= atoi(nb_pair_s);
+    
     size_t all_pair_size = nb_pair;
     kv_pair_t all_pair[all_pair_size];
 
