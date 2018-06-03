@@ -19,12 +19,20 @@ int parse_arg(char ***argv, const char * arg_tag, size_t* arg_value)
         ++(*argv);
         return 1;
     } else if(!strncmp((*argv)[0], arg_tag, strlen(arg_tag))) {
-        int j = sscanf((*argv)[1],"%zu", arg_value);
+        //int j = sscanf((*argv)[1],"%zu", arg_value);
+        int temp = 0;
+        int j = sscanf((*argv)[1],"%d", &temp);
         (*argv)+=2;
+        if(j == -1 || temp < 0){
+			return -1;
+		}
+		
+		*arg_value = (size_t)temp;
+        
 
-        if(j == -1) {
+        /*if(j == -1) {
             return j;
-        }
+        }*/
     }
 
     return 0;

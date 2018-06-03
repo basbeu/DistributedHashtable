@@ -33,12 +33,24 @@ error_code add_Htable_value(Htable_t table, pps_key_t key, pps_value_t value)
 
 
 
-    pps_value_t copied_value = strdup(value);
+    /*pps_value_t copied_value = strdup(value);
     pps_key_t copied_key = strdup(key);
     
     if(copied_value == NULL || copied_key == NULL) {
         return ERR_NOMEM;
+    }*/
+    
+    pps_value_t copied_value = strdup(value);
+     if(copied_value == NULL) {
+        return ERR_NOMEM;
     }
+    pps_key_t copied_key = strdup(key);
+    
+    if(copied_key == NULL) {
+		free_const_ptr(copied_value);
+        return ERR_NOMEM;
+    }
+    
 
     size_t index = hash_function(key, table.size);
     bucket_t* b_temp;
@@ -58,6 +70,9 @@ error_code add_Htable_value(Htable_t table, pps_key_t key, pps_value_t value)
         } else {
             bucket_t* insert = calloc(1, sizeof(bucket_t));
             if(insert == NULL) {
+				//CHGMT
+				free_const_ptr(copied_value);
+				free_const_ptr(copied_key);
                 return ERR_NOMEM;
             }
             insert->next = NULL;
@@ -236,7 +251,21 @@ error_code kv_list_add(kv_list_t *list, kv_pair_t pair)
             return ERR_NOMEM;
         }
     }
-    list->list_pair[list->size] = pair;
+    //CHGMT
+    //list->list_pair[list->size] = pair;
+    kv_pair_t copied_pair;
+   
+	copied_pair.key = strdup(pair.key);
+	if(copied_pair.key == NULL){
+		return ERR_NOMEM;
+	}
+	copied_pair.value = strdup(pair.value);
+	if(copied_pair.value == NULL){
+		free_const_ptr(copied_pair.key);
+		return ERR_NOMEM;
+	}
+	list->list_pair[list->size] = copied_pair;
+	//
     ++list->size;
     return ERR_NONE;
 }
@@ -268,6 +297,16 @@ kv_list_t *get_Htable_content(Htable_t table)
 void kv_list_free(kv_list_t *list)
 {
     if(list != NULL && list->list_pair != NULL) {
+		//CHGMT
+		for(size_t i = 0; i < list->size; ++i){
+			if(list->list_pair[i].key != NULL){
+				free_const_ptr(list->list_pair[i].key);
+			}
+			if(list->list_pair[i].value != NULL){
+				free_const_ptr(list->list_pair[i].value);
+			}		
+		}
+		//
         free(list->list_pair);
         list->list_pair = NULL;
         free(list);

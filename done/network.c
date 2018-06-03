@@ -37,7 +37,8 @@ error_code get_answer(const int socket, pps_value_t* value){
        return ERR_NOMEM;
     }
 	struct sockaddr_in temp_srv_addr;
-    socklen_t addr_len ;
+    //socklen_t addr_len ;
+    socklen_t addr_len = sizeof(struct sockaddr_in);
     ssize_t in_msg_len = recvfrom(socket, temp_value, MAX_MSG_ELEM_SIZE, 0, (struct sockaddr *)&temp_srv_addr, &addr_len);
 
     if (in_msg_len == -1) {
@@ -74,7 +75,8 @@ error_code network_get(client_t client, pps_key_t key, pps_value_t* value)
         return ERR_BAD_PARAMETER;
     }
 
-    Htable_t quorum = construct_Htable(HTABLE_SIZE);
+	//Htable_t quorum = construct_Htable(HTABLE_SIZE);
+    Htable_t quorum = construct_Htable(client.args->N);
     if(quorum.size == 0 || quorum.bucket == NULL) {
         return ERR_NOMEM;
     }
@@ -100,7 +102,14 @@ error_code network_get(client_t client, pps_key_t key, pps_value_t* value)
             pps_value_t counter_value = get_Htable_value(quorum, *value);
 
             if(counter_value!= NULL) {
-                add_Htable_value(quorum, *value, increment_counter(counter_value,&R_reached, client.args->R ));
+				pps_value_t value_temp = increment_counter(counter_value,&R_reached, client.args->R );
+				if(value_temp == NULL){
+					return ERR_NOMEM;
+				}
+				add_Htable_value(quorum, *value, value_temp);
+                free_const_ptr(value_temp);
+                
+                //add_Htable_value(quorum, *value, increment_counter(counter_value,&R_reached, client.args->R ));
             } else {
                 add_Htable_value(quorum, *value, increment_counter("\x00",&R_reached, client.args->R ));
             }
