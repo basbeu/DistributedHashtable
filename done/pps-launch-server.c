@@ -82,7 +82,6 @@ int main(void)
             size_t out_msg_len = 0;
 
             //dump request
-            //if(strncmp(in_msg, "/0", 1) == 0) {
             if(in_msg[0]== '\0' && in_msg_len == 1) {
                 debug_print("DUMP REQUEST\n", 0);
                 //MAX_MSG_SIZE
@@ -174,5 +173,7 @@ void send_answer(const int socket, pps_value_t out_msg, const size_t out_msg_len
 kv_pair_t decompose_msg(char* const msg, const size_t size_msg)
 {
     size_t key_size = strlen(msg);
-    return (kv_pair_t){msg, &(msg[key_size+1])};
+    return (kv_pair_t) {
+        msg, &(msg[key_size+1])
+    };
 }

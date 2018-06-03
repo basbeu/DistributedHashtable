@@ -21,18 +21,18 @@
 int main(int argc, char* argv[])
 {
     uint16_t port = 0;
-	int socket = get_socket(TIMEOUT);
-	if(socket == -1){
-		return 1;
-	}
-	
+    int socket = get_socket(TIMEOUT);
+    if(socket == -1) {
+        return 1;
+    }
+
     int temp_port = 0;
     int j = sscanf(argv[2],"%d", &temp_port);
     if(j == -1 || temp_port < 0) {
         printf("FAIL\n");
         return 1;
     }
-    
+
     port = (uint16_t) temp_port;
 
     node_t node;
@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
     char nb_pair_s[4];
     strncpy(nb_pair_s, in_msg, 4);
     size_t nb_pair= atoi(nb_pair_s);
-    
+
     size_t all_pair_size = nb_pair;
     kv_pair_t all_pair[all_pair_size];
 

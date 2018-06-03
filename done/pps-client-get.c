@@ -25,7 +25,6 @@ int main(int argc, char* argv[])
     &client, REQUIRED_ARGS, TOTAL_SERVERS | GET_NEEDED,
     (size_t) argc, &argv
     }) != ERR_NONE) {
-        debug_print("NO INIT", 0);
         printf("FAIL\n");
         return 1;
     }
