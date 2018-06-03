@@ -33,18 +33,15 @@ int main(int argc, char* argv[])
     while((argv[index+1] != NULL) && (err == ERR_NONE)) {
         err = network_get(client, argv[index], &value_temp);
         if(err == ERR_NONE) {
-			//CHGMT
-			if(strlen(value) + strlen(value_temp) >= MAX_MSG_ELEM_SIZE){
-				free_const_ptr(value_temp);
-				return ERR_NOMEM;
-			}
-			//
+            if(strlen(value) + strlen(value_temp) >= MAX_MSG_ELEM_SIZE) {
+                free_const_ptr(value_temp);
+                return ERR_NOMEM;
+            }
             strncpy(&value[strlen(value)], value_temp, strlen(value_temp));
-            //CHGMT 
-			free_const_ptr(value_temp);
-			//
+            free_const_ptr(value_temp);
+
         }
-        
+
         index++;
     }
 
@@ -58,7 +55,7 @@ int main(int argc, char* argv[])
             printf("OK\n");
         }
     }
-	
+
     client_end(&client);
 
     return 0;

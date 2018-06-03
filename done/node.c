@@ -19,29 +19,29 @@ error_code node_init(node_t *node, const char *ip, uint16_t port, size_t _unused
     M_REQUIRE_NON_NULL(ip);
 
     error_code err = get_server_addr(ip, port, &node->srv_addr);
-    if(err != ERR_NONE){
-		return err;
-	}
+    if(err != ERR_NONE) {
+        return err;
+    }
     node->ip = strdup(ip);
     if(node->ip == NULL) {
         return ERR_NOMEM;
     }
     node->port = port;
-	
-	
+
+
     char sha[MAX_LEN_TO_HASH];
     (void)memset(sha, 0, MAX_LEN_TO_HASH);
-    
-    if(strncpy(sha, ip, strlen(ip)) != NULL){
-		sprintf(&sha[strlen(sha)], " %d ", port);
-		sprintf(&sha[strlen(sha)], "%zu", node_id);
-		(void)memset(node->sha, 0, SHA_DIGEST_LENGTH);
-		SHA1((const unsigned char*)sha, strlen(sha), node->sha);	
-	}
- 
-	else{
-		err = ERR_NOMEM;
-	}
+
+    if(strncpy(sha, ip, strlen(ip)) != NULL) {
+        sprintf(&sha[strlen(sha)], " %d ", port);
+        sprintf(&sha[strlen(sha)], "%zu", node_id);
+        (void)memset(node->sha, 0, SHA_DIGEST_LENGTH);
+        SHA1((const unsigned char*)sha, strlen(sha), node->sha);
+    }
+
+    else {
+        err = ERR_NOMEM;
+    }
     return err;
 }
 
@@ -57,16 +57,17 @@ void node_end(node_t *node)
 }
 
 //Cast to delete warnings
-int node_cmp_sha(const node_t *first, const node_t *second){
-	return strncmp((const char*)first->sha, (const char*)second->sha, SHA_DIGEST_LENGTH);
+int node_cmp_sha(const node_t *first, const node_t *second)
+{
+    return strncmp((const char*)first->sha, (const char*)second->sha, SHA_DIGEST_LENGTH);
 }
 
-int node_cmp_server_addr(const node_t *first, const node_t *second){
-	int srv_ip = strncmp(first->ip, second->ip, strlen(first->ip));
-	if(srv_ip != 0){
-		return srv_ip;
-	}
-	else{
-		return first->port - second->port;
-	}
+int node_cmp_server_addr(const node_t *first, const node_t *second)
+{
+    int srv_ip = strncmp(first->ip, second->ip, strlen(first->ip));
+    if(srv_ip != 0) {
+        return srv_ip;
+    } else {
+        return first->port - second->port;
+    }
 }
