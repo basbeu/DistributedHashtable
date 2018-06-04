@@ -159,11 +159,9 @@ error_code network_put(client_t client, pps_key_t key, pps_value_t value)
 
     int write_counter = 0;
 
-
-
     node_list_t* nodes_for_key = ring_get_nodes_for_key(client.list_servers, client.args->N, key);
     error_code ans = ERR_NONE;
-
+	
     for(size_t i = 0; i < nodes_for_key->size && i < client.args->N; ++i) {
         ans = send_request(nodes_for_key->list_of_nodes[i], socket, out_msg, &value, size_msg);
     }

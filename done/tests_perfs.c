@@ -22,17 +22,17 @@ int main(int argc, char* argv[])
     
     printf("************** Scénario équilibré : R = W = N/2 + 1 **************\n");
     
-    for(size_t n = 1; n < 11; ++ n){
+    for(int n = 1; n < 11; ++ n){
 		
 		//***************** INITIALIZE ARGS ****************
 		
-		size_t w = n/2 + 1;
-		size_t r = w;
+		int w = n/2 + 1;
+		int r = w;
 		
 		char** put_argv;
-		int put_argc = 5;
+		int put_argc = 7;
 		char** get_argv;
-		int get_argc = 4;
+		int get_argc = 6;
 		
 		client_t client_put;
 		client_t client_get;
@@ -44,23 +44,27 @@ int main(int argc, char* argv[])
 			get_argv[i] = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));
 		}
 
-		printf("N = %zu, R = %zu, W = %zu\n", n, w, r);
+		printf("N = %d, R = %d, W = %d\n", n, w, r);
 		
 		//*********** SET ARGS ******************
 		
 		put_argv[0] = "Put";
-		put_argv[3] = "abra";
-		put_argv[4] = "cadabra";
+		put_argv[1] = "-n";
+		put_argv[3] = "-w";
+		put_argv[5] = "abra";
+		put_argv[6] = "cadabra";
 		get_argv[0] = "Get";
-		get_argv[3] = "abra";
-		sprintf(put_argv[1], "-n %zu", n);
-		sprintf(put_argv[2], "-w %zu", w);
-		sprintf(get_argv[1], "-n %zu", n);
-		sprintf(get_argv[2], "-r %zu", r);
+		get_argv[1] = "-n";
+		get_argv[3] = "-r";
+		get_argv[5] = "abra";
+		sprintf(put_argv[2], "%d", n);
+		sprintf(put_argv[4], "%d", w);
+		sprintf(get_argv[2], "%d", n);
+		sprintf(get_argv[4], "%d", r);
 		
 		//*********** INITIALIZE CLIENTS *************
 		 if(client_init((client_init_args_t) {
-			&client_put, REQUIRED_ARGS_PUT, TOTAL_SERVERS | GET_NEEDED,
+			&client_put, REQUIRED_ARGS_PUT, TOTAL_SERVERS | PUT_NEEDED,
 			(size_t) put_argc, &put_argv
 			}) != ERR_NONE) {
 			printf("FAIL\n");
@@ -111,7 +115,7 @@ int main(int argc, char* argv[])
 		
 		
 		char** put_argv;
-		int put_argc = 5;
+		int put_argc = 7;
 		
 		client_t client_put;
 
@@ -126,14 +130,17 @@ int main(int argc, char* argv[])
 		//*********** SET ARGS ******************
 		
 		put_argv[0] = "Put";
-		put_argv[3] = "abra";
-		put_argv[4] = "cadabra";
-		put_argv[1] = "-n 10";
-		sprintf(put_argv[2], "-w %zu", w);
+		put_argv[1] = "-n";
+		put_argv[2] = "10";
+		put_argv[3] = "-w";
+		put_argv[5] = "abra";
+		put_argv[6] = "cadabra";
+		
+		sprintf(put_argv[4], "%zu", w);
 		
 		//*********** INITIALIZE CLIENTS *************
 		 if(client_init((client_init_args_t) {
-			&client_put, REQUIRED_ARGS_PUT, TOTAL_SERVERS | GET_NEEDED,
+			&client_put, REQUIRED_ARGS_PUT, TOTAL_SERVERS | PUT_NEEDED,
 			(size_t) put_argc, &put_argv
 			}) != ERR_NONE) {
 			printf("FAIL\n");
@@ -147,7 +154,6 @@ int main(int argc, char* argv[])
 		int time_start_ret = clock_gettime(CLOCK_MONOTONIC, &time_start);
 		error_code err = put(client_put, put_argc, put_argv);
 		M_EXIT_IF_ERR(err, "Put fail");
-		M_EXIT_IF_ERR(err, "Get fail");
 
 		int time_end_ret = clock_gettime(CLOCK_MONOTONIC, &time_end);
 		printf("Total time : ");
@@ -168,7 +174,7 @@ int main(int argc, char* argv[])
 		//***************** INITIALIZE ARGS ****************
 		
 		char** get_argv;
-		int get_argc = 4;
+		int get_argc = 6;
 		
 		client_t client_get;
 		get_argv = calloc(10, sizeof(char*));
@@ -182,9 +188,12 @@ int main(int argc, char* argv[])
 		//*********** SET ARGS ******************
 		
 		get_argv[0] = "Get";
-		get_argv[3] = "abra";
-		get_argv[1] = "-n 10";
-		sprintf(get_argv[2], "-r %zu", r);
+		get_argv[1] = "-n";
+		get_argv[2] = "10";
+		get_argv[3] = "-r";
+		get_argv[5] = "abra";
+		
+		sprintf(get_argv[4], "%zu", r);
 		
 		//*********** INITIALIZE CLIENTS *************
 
@@ -251,9 +260,9 @@ int main(int argc, char* argv[])
 		//***************** INITIALIZE ARGS ****************
 		
 		char** put_argv;
-		int put_argc = 5;
+		int put_argc = 7;
 		char** get_argv;
-		int get_argc = 4;
+		int get_argc = 6;
 		
 		client_t client_put;
 		client_t client_get;
@@ -270,18 +279,23 @@ int main(int argc, char* argv[])
 		//*********** SET ARGS ******************
 		
 		put_argv[0] = "Put";
-		put_argv[1] = "-n 3";
-		put_argv[2] = "-w 2";
-		put_argv[3] = keys[n];
-		put_argv[4] = "value";
+		put_argv[1] = "-n";
+		put_argv[2] = "3";
+		put_argv[3] = "-w";
+		put_argv[4] = "2";
+		put_argv[5] = keys[n];
+		put_argv[6] = "value";
+		
 		get_argv[0] = "Get";
-		get_argv[1] = "-n 3";
-		get_argv[2] = "-r 2";
-		get_argv[3] = keys[n];
+		get_argv[1] = "-n";
+		get_argv[2] = "3";
+		get_argv[3] = "-r";
+		get_argv[4] = "2";
+		get_argv[5] = keys[n];
 		
 		//*********** INITIALIZE CLIENTS *************
 		 if(client_init((client_init_args_t) {
-			&client_put, REQUIRED_ARGS_PUT, TOTAL_SERVERS | GET_NEEDED,
+			&client_put, REQUIRED_ARGS_PUT, TOTAL_SERVERS | PUT_NEEDED,
 			(size_t) put_argc, &put_argv
 			}) != ERR_NONE) {
 			printf("FAIL\n");
@@ -363,9 +377,9 @@ int main(int argc, char* argv[])
 		//***************** INITIALIZE ARGS ****************
 		
 		char** put_argv;
-		int put_argc = 5;
+		int put_argc = 7;
 		char** get_argv;
-		int get_argc = 4;
+		int get_argc = 6;
 		
 		client_t client_put;
 		client_t client_get;
@@ -382,18 +396,24 @@ int main(int argc, char* argv[])
 		//*********** SET ARGS ******************
 		
 		put_argv[0] = "Put";
-		put_argv[1] = "-n 3";
-		put_argv[2] = "-w 2";
-		put_argv[3] = "key";
-		put_argv[4] = values[n];
+		put_argv[1] = "-n";
+		put_argv[2] = "3";
+		put_argv[3] = "-w";
+		put_argv[4] = "2";
+		put_argv[5] = "key";
+		put_argv[6] = values[n];
+		
 		get_argv[0] = "Get";
-		get_argv[1] = "-n 3";
-		get_argv[2] = "-r 2";
-		get_argv[3] = "key";
+		get_argv[1] = "-n";
+		get_argv[2] = "3";
+		get_argv[3] = "-r";
+		get_argv[4] = "2";
+		get_argv[5] = "key";
+	
 		
 		//*********** INITIALIZE CLIENTS *************
 		 if(client_init((client_init_args_t) {
-			&client_put, REQUIRED_ARGS_PUT, TOTAL_SERVERS | GET_NEEDED,
+			&client_put, REQUIRED_ARGS_PUT, TOTAL_SERVERS | PUT_NEEDED,
 			(size_t) put_argc, &put_argv
 			}) != ERR_NONE) {
 			printf("FAIL\n");

@@ -86,6 +86,7 @@ error_code client_init(client_init_args_t client_to_init)
         ptrdiff_t dp = (*client_to_init.argv - init_ptr);
         if(client_to_init.argc - dp != client_to_init.required_args && client_to_init.required_args != SIZE_MAX) {
             ring_free(client_to_init.client->list_servers);
+            debug_print("PTR DIFF", 0);
             return ERR_BAD_PARAMETER;
         }
 

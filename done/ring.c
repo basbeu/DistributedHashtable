@@ -57,11 +57,12 @@ node_list_t *ring_get_nodes_for_key(const ring_t *ring, size_t wanted_list_size,
     if(list != NULL) {
         while(list->size < wanted_list_size) {
             //cast to remove warning
-            if((first_found || strncmp((char*)ring->list_of_nodes[i].sha, (char*)SHA1((const unsigned char *)key,strlen(key), sha), SHA_DIGEST_LENGTH) > 0)
+           if((first_found || strncmp((char*)ring->list_of_nodes[i].sha, (char*)SHA1((const unsigned char *)key,strlen(key), sha), SHA_DIGEST_LENGTH) > 0)
                && !list_contains_server(list, ring->list_of_nodes[i])) {
                 node_list_add(list, ring->list_of_nodes[i]);
                 first_found = 1;
             }
+            
             i = ((i+1)%ring->size);
             if(i == 0) {
                 first_found = 1;
