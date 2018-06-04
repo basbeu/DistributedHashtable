@@ -19,7 +19,7 @@ error_code send_request(node_t node, const int socket, pps_key_t key, pps_value_
     error_code error = ERR_NONE;
 
     ssize_t out_msg_len = sendto(socket, key, size_data, 0,(struct sockaddr *)&node.srv_addr, sizeof(node.srv_addr));
-    debug_print("IP : %s, port : %d", node.ip, node.port);
+    
     if(out_msg_len == -1) {
         debug_print("ERR_NETWORK", 0);
         error = ERR_NETWORK;

@@ -51,7 +51,7 @@ node_list_t *get_nodes()
             return NULL;
         } else {
             while(fscanf(server_list_file, "%15s", address) == 1 && fscanf(server_list_file, "%" SCNu16, &port) == 1 && fscanf(server_list_file, "%zu", &num_of_nodes) == 1 && !feof(server_list_file) && !ferror(server_list_file)) {
-                debug_print("Adress is : %s, port : %" PRIu16 ", #of nodes : %d\n", address, port, num_of_nodes);
+                
                 for(size_t i = 1; i <= num_of_nodes; ++ i) {
                     error_code err = node_init(&temp_node, address, port, i);
                     if(err != ERR_NONE) {
