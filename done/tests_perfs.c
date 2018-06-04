@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
     
     printf("************** Scénario équilibré : R = W = N/2 + 1 **************\n");
     
-    for(int n = 1; n < 11; ++ n){
+    for(int n = 10; n < 21; ++ n){
 		
 		//***************** INITIALIZE ARGS ****************
 		
@@ -84,9 +84,9 @@ int main(int argc, char* argv[])
 		struct timespec time_start, time_end;
 		int time_start_ret = clock_gettime(CLOCK_MONOTONIC, &time_start);
 		error_code err = put(client_put, put_argc, put_argv);
-		M_EXIT_IF_ERR(err, "Put fail");
+		//M_EXIT_IF_ERR(err, "Put fail");
 		err = get(client_get, get_argc, get_argv);
-		M_EXIT_IF_ERR(err, "Get fail");
+		//M_EXIT_IF_ERR(err, "Get fail");
 
 		int time_end_ret = clock_gettime(CLOCK_MONOTONIC, &time_end);
 		printf("Total time : ");
@@ -125,13 +125,13 @@ int main(int argc, char* argv[])
 			put_argv[i] = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));
 		}
 
-		printf("N = 10, W = %zu\n", w);
+		printf("N = 20, W = %zu\n", w);
 		
 		//*********** SET ARGS ******************
 		
 		put_argv[0] = "Put";
 		put_argv[1] = "-n";
-		put_argv[2] = "10";
+		put_argv[2] = "20";
 		put_argv[3] = "-w";
 		put_argv[5] = "abra";
 		put_argv[6] = "cadabra";
@@ -153,7 +153,7 @@ int main(int argc, char* argv[])
 		struct timespec time_start, time_end;
 		int time_start_ret = clock_gettime(CLOCK_MONOTONIC, &time_start);
 		error_code err = put(client_put, put_argc, put_argv);
-		M_EXIT_IF_ERR(err, "Put fail");
+		//M_EXIT_IF_ERR(err, "Put fail");
 
 		int time_end_ret = clock_gettime(CLOCK_MONOTONIC, &time_end);
 		printf("Total time : ");
@@ -183,13 +183,13 @@ int main(int argc, char* argv[])
 			get_argv[i] = calloc(MAX_MSG_ELEM_SIZE, sizeof(char));
 		}
 
-		printf("N = 10, R = %zu\n", r);
+		printf("N = 20, R = %zu\n", r);
 		
 		//*********** SET ARGS ******************
 		
 		get_argv[0] = "Get";
 		get_argv[1] = "-n";
-		get_argv[2] = "10";
+		get_argv[2] = "20";
 		get_argv[3] = "-r";
 		get_argv[5] = "abra";
 		
@@ -211,7 +211,7 @@ int main(int argc, char* argv[])
 		struct timespec time_start, time_end;
 		int time_start_ret = clock_gettime(CLOCK_MONOTONIC, &time_start);
 		error_code err = get(client_get, get_argc, get_argv);
-		M_EXIT_IF_ERR(err, "Get fail");
+		//M_EXIT_IF_ERR(err, "Get fail");
 
 		int time_end_ret = clock_gettime(CLOCK_MONOTONIC, &time_end);
 		printf("Total time : ");
@@ -224,7 +224,7 @@ int main(int argc, char* argv[])
    
     printf("*********************************************************\n");
     
-    printf("********** TAILLE DES CLES VARIABLES N = 3, W = R = 2 ********\n");
+    printf("********** TAILLE DES CLES VARIABLES N = 20, W = R = 2 ********\n");
     
     char** keys;
 	keys = calloc(20, sizeof(char*));
@@ -280,7 +280,7 @@ int main(int argc, char* argv[])
 		
 		put_argv[0] = "Put";
 		put_argv[1] = "-n";
-		put_argv[2] = "3";
+		put_argv[2] = "20";
 		put_argv[3] = "-w";
 		put_argv[4] = "2";
 		put_argv[5] = keys[n];
@@ -288,7 +288,7 @@ int main(int argc, char* argv[])
 		
 		get_argv[0] = "Get";
 		get_argv[1] = "-n";
-		get_argv[2] = "3";
+		get_argv[2] = "20";
 		get_argv[3] = "-r";
 		get_argv[4] = "2";
 		get_argv[5] = keys[n];
@@ -315,9 +315,9 @@ int main(int argc, char* argv[])
 		struct timespec time_start, time_end;
 		int time_start_ret = clock_gettime(CLOCK_MONOTONIC, &time_start);
 		error_code err = put(client_put, put_argc, put_argv);
-		M_EXIT_IF_ERR(err, "Put fail");
+		//M_EXIT_IF_ERR(err, "Put fail");
 		err = get(client_get, get_argc, get_argv);
-		M_EXIT_IF_ERR(err, "Get fail");
+		//M_EXIT_IF_ERR(err, "Get fail");
 
 		int time_end_ret = clock_gettime(CLOCK_MONOTONIC, &time_end);
 		printf("Total time : ");
@@ -341,7 +341,7 @@ int main(int argc, char* argv[])
    
     printf("*********************************************************\n");
     
-     printf("********** TAILLE DES VALEURS VARIABLES N = 3, W = R = 2 ********\n");
+     printf("********** TAILLE DES VALEURS VARIABLES N = 20, W = R = 2 ********\n");
     
     char** values;
 	values = calloc(20, sizeof(char*));
@@ -397,7 +397,7 @@ int main(int argc, char* argv[])
 		
 		put_argv[0] = "Put";
 		put_argv[1] = "-n";
-		put_argv[2] = "3";
+		put_argv[2] = "20";
 		put_argv[3] = "-w";
 		put_argv[4] = "2";
 		put_argv[5] = "key";
@@ -405,7 +405,7 @@ int main(int argc, char* argv[])
 		
 		get_argv[0] = "Get";
 		get_argv[1] = "-n";
-		get_argv[2] = "3";
+		get_argv[2] = "20";
 		get_argv[3] = "-r";
 		get_argv[4] = "2";
 		get_argv[5] = "key";
@@ -433,9 +433,9 @@ int main(int argc, char* argv[])
 		struct timespec time_start, time_end;
 		int time_start_ret = clock_gettime(CLOCK_MONOTONIC, &time_start);
 		error_code err = put(client_put, put_argc, put_argv);
-		M_EXIT_IF_ERR(err, "Put fail");
+		//M_EXIT_IF_ERR(err, "Put fail");
 		err = get(client_get, get_argc, get_argv);
-		M_EXIT_IF_ERR(err, "Get fail");
+		//M_EXIT_IF_ERR(err, "Get fail");
 
 		int time_end_ret = clock_gettime(CLOCK_MONOTONIC, &time_end);
 		printf("Total time : ");

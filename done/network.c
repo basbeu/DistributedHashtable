@@ -42,10 +42,10 @@ error_code get_answer(const int socket, pps_value_t* value)
     ssize_t in_msg_len = recvfrom(socket, temp_value, MAX_MSG_ELEM_SIZE, 0, (struct sockaddr *)&temp_srv_addr, &addr_len);
 
     if (in_msg_len == -1) {
-        debug_print("ERR_NETWORK", 0);
+        //debug_print("ERR_NETWORK", 0);
         error = ERR_NETWORK;
     } else if(strncmp(temp_value, "\0", 1) == 0 && in_msg_len != 0) {
-        debug_print("ERR_NOT_FOUND", 0);
+        //debug_print("ERR_NOT_FOUND", 0);
         error = ERR_NOT_FOUND;
     }
 
