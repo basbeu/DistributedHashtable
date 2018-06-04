@@ -1,6 +1,4 @@
-Groupe : 100
-
-étapes réalisées :
+Etapes réalisées :
 + Nous avons réalisé toutes les étapes du projet (week 13 inclue)
 + Aucune extension a été réalisée
 
