@@ -1,0 +1,91 @@
+- id: 100
+- nb tests passes: TESTCOUNT
+- Makefile: 3                            # max 3
+- hashtable.h:
+    pps_key_t: 1      # max 1
+    pps_value_t: 1    # max 1
+    kv_pair_t: 3      # max 3
+    kv_list_t: 3      # max 3
+    bucket_t: 3       # max 3
+    Htable_t: 3       # max 3
+- hashtable.c:
+    construct_Htable: 5             # max 5
+    kv_pair_free: 2                 # max 2 
+    kv_list_free: 2                 # max 2 (OPT)
+    bucket_free: 2.5                  # max 2.5
+    delete_Htable_and_content: 2.5    # max 2.5
+    add_Htable_value: 7.5             # max 7.5
+    get_Htable_value: 5             # max 5
+    get_Htable_content: 5           # max 5 (OPT)
+- node.h: 4        # max 4
+- node.c:
+    node_init: 3.5              # max 4
+    node_cmp_sha: 0.5           # max 1
+    node_cmp_server_addr: 1   # max 1
+- client.h: 6    # max 6
+- client.c:
+    client_end: 2.5    # max 2.5
+    client_init: 5.5   # max 5.5
+- network.c:
+    equiv. server_get_send: 2.5    # max 2.5
+    equiv. server_get_recv: 5.5    # max 6
+    network_get: 5               # max 6
+    equiv. server_put_send: 5    # max 5
+    equiv. server_put_recv: 3    # max 3.5
+    network_put: 4               # max 6
+    equiv. has_quorum: 5         # max 5
+    equiv. increment_quorum: 2.5   # max 2.5
+- pps-launch-server.c:
+    init: 10                        # max 10
+    reception: 5                   # max 5
+    reponse: 9                     # max 10
+    equiv. send_back_content: 2.5    # max 10
+- pps-clent-put.c: 10  # max 10
+- pps-client-get.c: 10 # max 10
+- node_list.h: 3   # max 3
+- node_list.c:
+    node_list_new: 1   # max 1
+    node_list_add: 5   # max 5
+    node_list_free: 2.5  # max 2.5
+    node_list_sort: 2  # max 2
+- pps-list-nodes.c:
+    init: 5                  # max 5
+    boucle: 5                # max 5
+    affichage des noeuds: 5  # max 2.5
+    sortie + nettoyage: 4    # max 5
+- pps-dump-node.c:
+    init + 1ère comm.: 3      # max 5
+    séparation/affichages: 5  # max 5
+    comm. suivantes: 4        # max 5
+- pps-client-find.c:
+    init: 2.5                 # max 2.5
+    2ble get: 2.5             # max 2.5
+    find: 2.5                 # max 2.5
+    print + nettoyage: 2.5    # max 2.5
+- pps-client-cat.c:
+    init: 2.5                 # max 2.5
+    multiple get: 5         # max 5
+    (multiple) cat: 2.5       # max 2.5
+    put + print: 2.5          # max 2.5
+    nettoyage: 2.5            # max 2.5
+- pps-client-substr.c:
+    init (dont parse args): 5  # max 5
+    get: 2.5                     # max 2.5
+    substr: 10                  # max 10
+    put + print: 2.5             # max 2.5
+    nettoyage: 2.5               # max 2.5
+- argc.h: 3   # max 3
+- argc.c:
+    boucle générale: 1.5       # max 2.5
+    options fournies: 5      # max 5
+    options non fournies: 2.5  # max 2.5
+    options non connues: 2.5   # max 2.5
+    valeur de retour: 1.5      # max 2.5
+- ring.c:
+    ring_alloc: 1                 # max 1
+    ring_free: 1                  # max 1
+    ring_init: 9.5                  # max 10
+    ring_get_start_pos: 1.5         # max 2.5
+    ring_get_nodes_for_key: 8.5     # max 10
+- style: -1        # max 2, min -2
+- bonus/malus: 0  # max 5, min -5

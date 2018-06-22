@@ -1,0 +1,130 @@
+/**
+ * @file node_list.c
+ * @date 28 Mar 2018
+ */
+#include "node_list.h"
+#include "node.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <inttypes.h> // for uint16_t
+#include <string.h> // for memset()
+#include "config.h"
+#define ADD_LENGTH 15
+#define DOUBLE_SIZE_OF_LIST 2
+
+node_list_t* enlarge_list_of_nodes(node_list_t* list);
+
+node_list_t *node_list_new()
+{
+    node_list_t* node_list_r = NULL;
+    node_list_r = calloc(1 ,sizeof(node_list_t));
+
+    if(node_list_r != NULL) {
+
+        node_list_r->list_of_nodes = calloc(1, sizeof(node_t));
+        if(node_list_r->list_of_nodes == NULL) {
+            free(node_list_r);
+            return NULL;
+        } else {
+            node_list_r->allocated = 1;
+            node_list_r->size = 0;
+            return node_list_r;
+        }
+    }
+
+    return node_list_r;
+}
+node_list_t *get_nodes()
+{
+    node_list_t* complete_list = node_list_new();
+
+    if(complete_list != NULL) {
+        node_t temp_node;
+
+        FILE* server_list_file = NULL;
+        server_list_file = fopen(PPS_SERVERS_LIST_FILENAME, "r");
+        char address[ADD_LENGTH+1];
+        (void)memset(address, 0, ADD_LENGTH);
+        uint16_t port = 0;
+        size_t num_of_nodes = 0;
+        if(server_list_file == NULL) {
+            return NULL;
+        } else {
+                                // correcteur: scanfez tout en une fois!!!! beaucoup plus propre que ces trois scanf à la suite (-0pts)
+            while(fscanf(server_list_file, "%15s", address) == 1 && fscanf(server_list_file, "%" SCNu16, &port) == 1 && fscanf(server_list_file, "%zu", &num_of_nodes) == 1 && !feof(server_list_file) && !ferror(server_list_file)) {
+                
+                for(size_t i = 1; i <= num_of_nodes; ++ i) {
+                    error_code err = node_init(&temp_node, address, port, i);
+                    if(err != ERR_NONE) {
+                        fclose(server_list_file);
+                        return NULL;
+                    } else {
+                        node_list_add(complete_list, temp_node);
+                    }
+                }
+            }
+            fclose(server_list_file);
+
+        }
+    }
+
+    return complete_list;
+
+
+}
+
+//Cast of comparator to delete warnings
+
+void node_list_sort(node_list_t *list, int (*comparator)(const node_t *, const node_t *))
+{
+    qsort(list->list_of_nodes, list->size, sizeof(node_t), (int (*)(const void *, const void *))comparator);
+}
+
+
+error_code node_list_add(node_list_t *list, node_t node)
+{
+    M_REQUIRE_NON_NULL(list);
+    M_REQUIRE_NON_NULL(list->list_of_nodes);
+    while(list->size >= list->allocated) {
+        if(enlarge_list_of_nodes(list) == NULL) {
+            return ERR_NOMEM;
+        }
+    }
+    list->list_of_nodes[list->size] = node;
+    ++list->size;
+    return ERR_NONE;
+}
+
+
+void node_list_free(node_list_t *list)
+{
+    if((list != NULL) && (list->list_of_nodes != NULL)) {
+        for(size_t i = 0; i < list->size; ++ i) {
+            node_end(&list->list_of_nodes[i]);
+        }
+        free(list->list_of_nodes);
+        list->list_of_nodes = NULL;
+        list->size = 0;
+        list->allocated = 0;
+        free(list);
+    }
+}
+
+node_list_t* enlarge_list_of_nodes(node_list_t* list)
+{
+    if(list != NULL) {
+        node_t* const old_list_of_nodes = list->list_of_nodes;
+
+        if(list->allocated < SIZE_MAX / DOUBLE_SIZE_OF_LIST) {
+            list->allocated*=DOUBLE_SIZE_OF_LIST;
+            if((list->allocated > SIZE_MAX / sizeof(node_t)) ||
+               ((list->list_of_nodes = realloc(list->list_of_nodes,
+                                               list->allocated * sizeof(node_t))) == NULL)) {
+                list->list_of_nodes = old_list_of_nodes;
+                list->allocated/=DOUBLE_SIZE_OF_LIST;
+                list = NULL;
+            }
+        }
+    }
+    return list;
+}

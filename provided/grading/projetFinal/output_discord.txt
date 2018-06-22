@@ -1,0 +1,332 @@
+************** Scénario équilibré : R = W = N/2 + 1 **************
+N = 10, R = 6, W = 6
+Total time : 13551381067
+------------------------------
+N = 11, R = 6, W = 6
+OK
+OK cadabra
+Total time : 0063350478
+------------------------------
+N = 12, R = 7, W = 7
+OK
+OK cadabra
+Total time : 0077639937
+------------------------------
+N = 13, R = 7, W = 7
+OK cadabra
+Total time : 9272466913
+------------------------------
+N = 14, R = 8, W = 8
+OK
+Total time : 8254739201
+------------------------------
+N = 15, R = 8, W = 8
+OK
+OK cadabra
+Total time : 0081529837
+------------------------------
+N = 16, R = 9, W = 9
+OK
+Total time : 8297990867
+------------------------------
+N = 17, R = 9, W = 9
+OK cadabra
+Total time : 10294109340
+------------------------------
+N = 18, R = 10, W = 10
+OK
+Total time : 16493844422
+------------------------------
+N = 19, R = 10, W = 10
+OK
+Total time : 13349872087
+------------------------------
+N = 20, R = 11, W = 11
+Total time : 19901889931
+------------------------------
+*********************************************************
+******************Scénario PUT uniquement ***************
+N = 20, W = 1
+OK
+Total time : 0030351868
+------------------------------
+N = 20, W = 2
+OK
+Total time : 1027392848
+------------------------------
+N = 20, W = 3
+OK
+Total time : 0033234203
+------------------------------
+N = 20, W = 4
+OK
+Total time : 0029925086
+------------------------------
+N = 20, W = 5
+OK
+Total time : 0032707604
+------------------------------
+N = 20, W = 6
+OK
+Total time : 0039907106
+------------------------------
+N = 20, W = 7
+Total time : 13337270897
+------------------------------
+N = 20, W = 8
+OK
+Total time : 0037683610
+------------------------------
+N = 20, W = 9
+OK
+Total time : 0039021060
+------------------------------
+N = 20, W = 10
+Total time : 12331617464
+------------------------------
+****************************************************
+************** Scénario GET uniquement *************
+N = 20, R = 1
+OK cadabra
+Total time : 0029399398
+------------------------------
+N = 20, R = 2
+OK cadabra
+Total time : 0034627769
+------------------------------
+N = 20, R = 3
+OK cadabra
+Total time : 1040199512
+------------------------------
+N = 20, R = 4
+OK cadabra
+Total time : 0061209010
+------------------------------
+N = 20, R = 5
+OK cadabra
+Total time : 0067766585
+------------------------------
+N = 20, R = 6
+OK cadabra
+Total time : 0063215763
+------------------------------
+N = 20, R = 7
+OK cadabra
+Total time : 0035586517
+------------------------------
+N = 20, R = 8
+OK cadabra
+Total time : 0041760686
+------------------------------
+N = 20, R = 9
+OK cadabra
+Total time : 0035828658
+------------------------------
+N = 20, R = 10
+Total time : 11323248666
+------------------------------
+*********************************************************
+********** TAILLE DES CLES VARIABLES N = 20, W = R = 2 ********
+Clé de taille 1 : a
+OK
+OK value
+Total time : 0079134165
+------------------------------
+Clé de taille 2 : ab
+OK
+OK value
+Total time : 0139570238
+------------------------------
+Clé de taille 3 : abc
+OK
+OK value
+Total time : 1190956055
+------------------------------
+Clé de taille 4 : abcd
+OK
+OK value
+Total time : 0193260886
+------------------------------
+Clé de taille 5 : abcde
+OK
+OK value
+Total time : 0138139580
+------------------------------
+Clé de taille 6 : abcdef
+OK
+OK value
+Total time : 0143290652
+------------------------------
+Clé de taille 7 : abcdefg
+OK
+OK value
+Total time : 0189178563
+------------------------------
+Clé de taille 8 : abcdefgh
+OK
+OK value
+Total time : 1288742410
+------------------------------
+Clé de taille 9 : abcdefghi
+OK
+OK value
+Total time : 0461040839
+------------------------------
+Clé de taille 10 : abcdefghij
+OK
+OK value
+Total time : 0054899709
+------------------------------
+Clé de taille 11 : abcdefghijk
+OK
+OK value
+Total time : 0067995218
+------------------------------
+Clé de taille 12 : abcdefghijkl
+OK
+OK value
+Total time : 0042607349
+------------------------------
+Clé de taille 13 : abcdefghijklm
+OK
+OK value
+Total time : 0061689556
+------------------------------
+Clé de taille 14 : abcdefghijklmn
+OK
+OK value
+Total time : 0049627824
+------------------------------
+Clé de taille 15 : abcdefghijklmno
+OK
+OK value
+Total time : 0047488845
+------------------------------
+Clé de taille 16 : abcdefghijklmnop
+OK
+OK value
+Total time : 0068472336
+------------------------------
+Clé de taille 17 : abcdefghijklmnopq
+OK
+OK value
+Total time : 0101437851
+------------------------------
+Clé de taille 18 : abcdefghijklmnopqr
+OK
+OK value
+Total time : 1087805974
+------------------------------
+Clé de taille 19 : abcdefghijklmnopqrs
+OK
+OK value
+Total time : 0071354512
+------------------------------
+Clé de taille 20 : abcdefghijklmnopqrst
+OK
+OK value
+Total time : 0054877274
+------------------------------
+*********************************************************
+********** TAILLE DES VALEURS VARIABLES N = 20, W = R = 2 ********
+Valeur de taille 1 : a
+OK
+OK a
+Total time : 0063051647
+------------------------------
+Valeur de taille 2 : ab
+OK
+OK ab
+Total time : 0064990722
+------------------------------
+Valeur de taille 3 : abc
+OK
+OK abc
+Total time : 0084791967
+------------------------------
+Valeur de taille 4 : abcd
+OK
+OK abcd
+Total time : 0050499985
+------------------------------
+Valeur de taille 5 : abcde
+OK
+OK abcde
+Total time : 0102917858
+------------------------------
+Valeur de taille 6 : abcdef
+OK
+OK abcdef
+Total time : 0078269758
+------------------------------
+Valeur de taille 7 : abcdefg
+OK
+OK abcdefg
+Total time : 0082404458
+------------------------------
+Valeur de taille 8 : abcdefgh
+OK
+OK abcdefgh
+Total time : 0073524423
+------------------------------
+Valeur de taille 9 : abcdefghi
+OK
+OK abcdefghi
+Total time : 0063845814
+------------------------------
+Valeur de taille 10 : abcdefghij
+OK
+OK abcdefghij
+Total time : 0072812455
+------------------------------
+Valeur de taille 11 : abcdefghijk
+OK
+OK abcdefghijk
+Total time : 1098103805
+------------------------------
+Valeur de taille 12 : abcdefghijkl
+OK
+OK abcdefghijkl
+Total time : 0072098587
+------------------------------
+Valeur de taille 13 : abcdefghijklm
+OK
+OK abcdefghijklm
+Total time : 0062113270
+------------------------------
+Valeur de taille 14 : abcdefghijklmn
+OK
+OK abcdefghijklmn
+Total time : 0091713955
+------------------------------
+Valeur de taille 15 : abcdefghijklmno
+OK
+OK abcdefghijklmno
+Total time : 0107716751
+------------------------------
+Valeur de taille 16 : abcdefghijklmnop
+OK
+OK abcdefghijklmnop
+Total time : 0066552482
+------------------------------
+Valeur de taille 17 : abcdefghijklmnopq
+OK
+OK abcdefghijklmnopq
+Total time : 0065213907
+------------------------------
+Valeur de taille 18 : abcdefghijklmnopqr
+OK
+OK abcdefghijklmnopqr
+Total time : 0059135666
+------------------------------
+Valeur de taille 19 : abcdefghijklmnopqrs
+OK
+OK abcdefghijklmnopqrs
+Total time : 0072478825
+------------------------------
+Valeur de taille 20 : abcdefghijklmnopqrst
+OK
+OK abcdefghijklmnopqrst
+Total time : 0070872454
+------------------------------
+*********************************************************
