@@ -1,0 +1,2 @@
+name,ratio,comment
+100,58.3333333333333,"You mix time out events with normal latency measurements, which messes up statistics and skews the range of plots to hide meaningful data. You should also measure variability and show std dev. You shouldn’t just drop results when a failure occurs, but handle the failure appropriately. You should make your methodology more clear, including exactly what is measured and how it is processed. Also consider a wider range of key/value size, well beyond 20."
